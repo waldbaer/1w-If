@@ -1,0 +1,15 @@
+*.bin
+*.bin.gz
+
+# PlatformIO
+.pio
+# symbolic link to ~/.platformio
+.platformio
+
+# vscode
+.vscode/c_cpp_properties.json
+.vscode/extensions.json
+.vscode/launch.json
+
+# Datasheets
+doc/datasheets/

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>1-Wire Interface</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <h1>1-Wire Interface</h1>
+
+  <h2>OTA Update</h2>
+  <form id='otaForm' enctype="multipart/form-data">
+    Firmware File: <input type="file" id="firmwareFile" name="firmware">
+    <br />
+    <input type="submit" value="Update">
+    <p id="otaStatus"></p>
+  </form>
+  <script>
+    document.getElementById('otaForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // no classic send
+
+      const fileInput = document.getElementById("firmwareFile");
+      const otaStatus = document.getElementById("otaStatus");
+
+      const formData = new FormData();
+      formData.append("firmware", fileInput.files[0]);
+
+      otaStatus.textContent = "Uploading firmware...";
+
+      fetch('/ota_update', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.text())
+        .then(data => {
+          otaStatus.innerText = data;
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 5000);
+        })
+        .catch(error => {
+          otaStatus.innerText = "Error: " + error;
+        });
+    });
+  </script>
+</body>
+
+</html>

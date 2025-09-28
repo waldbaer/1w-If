@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1wIf: Build",
+      "type": "shell",
+      "command": "${workspaceFolder}/build.sh",
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "1wIf: Flash",
+      "type": "shell",
+      "command": "${workspaceFolder}/flash.sh",
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "1wIf: Build, Flash & Monitor",
+      "type": "shell",
+      "command": "${workspaceFolder}/build.sh && ${workspaceFolder}/flash.sh && ${workspaceFolder}/monitor.sh",
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+    }
+  ]
+}

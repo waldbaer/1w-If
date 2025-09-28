@@ -1,0 +1,23 @@
+# Custom partition table for WT32-ETH01 with 4MiB (4096KiB) flash (0x400000)
+#
+# Partition Builder online tool: https://thelastoutpostworkshop.github.io/microcontroller_devkit/esp32partitionbuilder/
+#
+# Implicit partitions:
+# - bootloader     0x0000, 0x8000 32 KB, automatic by toolchain layout
+# - Partitiontable 0x8000, 0x1000  4 KB
+#
+# Explicit partitions:
+# - nvs       For Preferences, WiFi, Configuration  20 KB
+# - otadata   OTA-Management (which app is active)  8 KB
+# - ota_0     Main-Firmware (current build)	        1728 Kb
+# - ota_1     Second Firmware for OTA-Slot          1728 Kb
+# - littlefs  Filesystem                            512  KB
+#
+#
+# Name,     Type, SubType,  Offset,   Size,     Flags
+nvs,        data, nvs,      0x9000,   0x5000,
+otadata,    data, ota,      0xE000,   0x2000,
+app0,       app,  ota_0,    0x10000,  0x1B0000,
+app1,       app,  ota_1,    0x1C0000, 0x1B0000,
+spiffs,     data, spiffs,   0x370000, 0x80000,
+coredump,   data, coredump, 0x3F0000, 0x10000,
