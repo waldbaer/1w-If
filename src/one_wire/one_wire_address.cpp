@@ -34,7 +34,7 @@ auto OneWireAddress::FromOwfsFormat(String address) -> std::unique_ptr<OneWireAd
     parsed_address = __builtin_bswap64(parsed_address);
 
     // Calc CRC missing in the input string format.
-    std::uint8_t const crc{crc8(reinterpret_cast<std::uint8_t*>(&parsed_address) + 1, 7)};
+    std::uint8_t const crc{util::crc8(reinterpret_cast<std::uint8_t*>(&parsed_address) + 1, 7)};
     parsed_address = (parsed_address >> 8) | (static_cast<std::uint64_t>(crc) << 56);
 
     return std::make_unique<OneWireAddress>(parsed_address);

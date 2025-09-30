@@ -121,7 +121,7 @@ auto Ds18b20::ReadScratchpad() -> bool {
 }
 
 auto Ds18b20::CheckScratchpad() -> bool {
-  bool const result{crc8(scratch_pad_, 8) == scratch_pad_[8]};
+  bool const result{util::crc8(scratch_pad_, 8) == scratch_pad_[8]};
 
   if (!result) {
     logger_.Error(F("[DS1820B] scratchpad CRC error detected"));

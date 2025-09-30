@@ -123,7 +123,7 @@ auto Ds2438::WriteScratchpad(Page page) -> bool {
 }
 
 auto Ds2438::CheckScratchpad() -> bool {
-  bool const result{crc8(scratch_pad_, 8) == scratch_pad_[8]};
+  bool const result{util::crc8(scratch_pad_, 8) == scratch_pad_[8]};
 
   if (!result) {
     logger_.Error(F("[DS2438] scratchpad CRC error detected"));

@@ -1,7 +1,7 @@
 #include "util/crc.h"
 
 namespace owif {
-namespace one_wire {
+namespace util {
 
 auto crc8(std::uint8_t const* data, std::uint8_t len) -> std::uint8_t {
   std::uint8_t crc{0};
@@ -20,5 +20,5 @@ auto crc8(std::uint8_t const* data, std::uint8_t len) -> std::uint8_t {
   return crc;
 }
 
-}  // namespace one_wire
+}  // namespace util
 }  // namespace owif

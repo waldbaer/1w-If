@@ -31,7 +31,7 @@ auto OneWireBus::Search() -> bool {
           break;
         }
         std::uint8_t *address8{reinterpret_cast<std::uint8_t *>(&address)};
-        if (crc8(address8, 7) != address8[7]) {
+        if (util::crc8(address8, 7) != address8[7]) {
           logger_.Warn(F("[OneWireBus] Bus device has invalid CRC"));
         } else {
           devices_.emplace_back(address);
@@ -71,7 +71,7 @@ auto OneWireBus::Search(OneWireAddress::FamilyCode family_code) -> bool {
 
         // Check CRC
         std::uint8_t *address8{reinterpret_cast<std::uint8_t *>(&address)};
-        if (crc8(address8, 7) != address8[7]) {
+        if (util::crc8(address8, 7) != address8[7]) {
           logger_.Warn(F("[OneWireBus] Bus device has invalid CRC"));
         } else {
           devices_.emplace_back(address);
