@@ -76,8 +76,8 @@ class MqttClient {
   auto OnDisconnect(AsyncMqttClientDisconnectReason reason) -> void;
   auto OnMqttSubscribe(MqttMsgId msg_id, MqttQoS qos) -> void;
   auto OnMqttUnsubscribe(MqttMsgId msg_id) -> void;
-  auto OnMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index,
-                     size_t total) -> void;
+  auto OnMqttMessage(char const* topic, char const* payload, AsyncMqttClientMessageProperties properties, size_t len,
+                     size_t index, size_t total) -> void;
 
   auto NotifyConnectionStateChangeHandlers() -> void;
 

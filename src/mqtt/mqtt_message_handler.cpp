@@ -44,7 +44,7 @@ auto MqttMessageHandler::Loop() -> void {
 // ---- Request Handling ----
 
 auto MqttMessageHandler::ProcessMessage(String topic, String payload, MqttMsgProps props) -> void {
-  logger_.Verbose("[MqttMessageHandler] Msg received | topic: %s payload: %s", topic, payload);
+  logger_.Verbose("[MqttMessageHandler] Msg received | topic: %s payload: %s", topic.c_str(), payload.c_str());
 
   JsonDocument json{};
   DeserializationError deserialization_result{deserializeJson(json, payload.c_str())};

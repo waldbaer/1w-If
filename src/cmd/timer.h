@@ -24,9 +24,9 @@ class Timer {
 
   auto Reset() -> void;
   auto Reset(std::uint32_t delay) -> void;
-  auto IsExpired() -> bool;
+  auto IsExpired() const -> bool;
 
-  auto GetDelay() -> std::uint32_t;
+  auto GetDelay() const -> std::uint32_t;
 
  private:
   std::uint32_t delay_{0};

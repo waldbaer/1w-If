@@ -28,7 +28,7 @@ auto OneWireDevice::CheckAddress() -> bool {
   std::vector<OneWireAddress> const& devices{bus_.GetDevices()};
   std::vector<OneWireAddress>::const_iterator found_in_devices{std::find(devices.cbegin(), devices.cend(), address_)};
   if (found_in_devices == devices.end()) {
-    logger_.Error(F("[OneWireDevice] 1-Wire device with address '%s' not found on bus"), address_.Format());
+    logger_.Error(F("[OneWireDevice] 1-Wire device with address '%s' not found on bus"), address_.Format().c_str());
     return false;
   }
 

@@ -25,8 +25,8 @@ auto MqttClient::Begin() -> bool {
     OnMqttSubscribe(MqttMsgId{msg_id}, static_cast<MqttQoS>(qos));
   });
   mqtt_client_.onUnsubscribe([this](MqttMsgId::type msg_id) { OnMqttUnsubscribe(MqttMsgId{msg_id}); });
-  mqtt_client_.onMessage([this](char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len,
-                                size_t index,
+  mqtt_client_.onMessage([this](char const* topic, char const* payload, AsyncMqttClientMessageProperties properties,
+                                size_t len, size_t index,
                                 size_t total) { OnMqttMessage(topic, payload, properties, len, index, total); });
 
   mqtt_client_.setCredentials(config_.GetUser().c_str(), config_.GetPassword().c_str());
@@ -66,12 +66,12 @@ auto MqttClient::Publish(char const* topic, char const* payload, MqttQoS qos, Mq
 }
 
 auto MqttClient::Subscribe(String topic, MessageHandler handler, MqttQoS qos) -> MqttMsgId {
-  logger_.Verbose("[MQTTClient] Subscribing to MQTT topic '%s'", topic);
+  logger_.Verbose("[MQTTClient] Subscribing to MQTT topic '%s'", topic.c_str());
   if (topic_handlers_.find(topic) == topic_handlers_.end()) {
     if (handler) {
       topic_handlers_[topic] = std::move(handler);
     } else {
-      logger_.Warn(F("[MQTTClient] Skip registration of invalid message handler for MQTT topic '%s'"), topic);
+      logger_.Warn(F("[MQTTClient] Skip registration of invalid message handler for MQTT topic '%s'"), topic.c_str());
     }
   }
 
@@ -128,8 +128,8 @@ auto MqttClient::OnMqttUnsubscribe(MqttMsgId msg_id) -> void {
   logger_.Verbose("[MQTTClient] Unsubscribe confirmed for msg %u", msg_id.value);
 }
 
-auto MqttClient::OnMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len,
-                               size_t index, size_t total) -> void {
+auto MqttClient::OnMqttMessage(char const* topic, char const* payload, AsyncMqttClientMessageProperties properties,
+                               size_t len, size_t index, size_t total) -> void {
   // Dispatch to topic-specific message handler
   if (topic_handlers_.find(topic) != topic_handlers_.end()) {
     MessageHandler& message_handler{topic_handlers_.at(topic)};

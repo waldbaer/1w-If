@@ -96,12 +96,12 @@ auto OneWireBus::Search(OneWireAddress const address, bool &is_present) -> bool 
       std::uint64_t const found_address{SearchNextDevice()};
       is_present = (address == found_address);
     } else {
-      logger_.Error(F("[OneWireBus] Failed to write8 in Search(addr) addr: %s"), address.Format());
+      logger_.Error(F("[OneWireBus] Failed to write8 in Search(addr) addr: %s"), address.Format().c_str());
     }
   }
 
   if (!result) {
-    logger_.Warn(F("[OneWireBus] Single address search failed for address '%s'"), address.Format());
+    logger_.Warn(F("[OneWireBus] Single address search failed for address '%s'"), address.Format().c_str());
   }
 
   return result;

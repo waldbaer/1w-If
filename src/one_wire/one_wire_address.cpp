@@ -16,7 +16,7 @@
 namespace owif {
 namespace one_wire {
 
-auto OneWireAddress::FromOwfsFormat(String address) -> std::unique_ptr<OneWireAddress> {
+auto OneWireAddress::FromOwfsFormat(String const& address) -> std::unique_ptr<OneWireAddress> {
   // no CRC, but with separation '.' -> 16 - 2 + 1 = 15
   if (address.length() == 15) {
     char hex[16];  // max. length: 15 characters + null termination
@@ -39,7 +39,7 @@ auto OneWireAddress::FromOwfsFormat(String address) -> std::unique_ptr<OneWireAd
 
     return std::make_unique<OneWireAddress>(parsed_address);
   } else {
-    logging::logger_g.Error(F("[OneWireAddress] Failed to parse 1-Wire address '%s'"), address);
+    logging::logger_g.Error(F("[OneWireAddress] Failed to parse 1-Wire address '%s'"), address.c_str());
     return std::unique_ptr<OneWireAddress>{nullptr};
   }
 }

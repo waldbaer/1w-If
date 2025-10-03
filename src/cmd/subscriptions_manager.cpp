@@ -17,7 +17,7 @@ SubscriptionsManager::SubscriptionsManager(CommandHandler* command_handler) : co
 
 // ---- Public APIs --------------------------------------------------------------------------------------------------
 auto SubscriptionsManager::Loop() -> void {
-  for (SubsciptionsMapDevice::value_type& device_subscription : subscriptions_device_) {
+  for (SubscriptionsMapDevice::value_type& device_subscription : subscriptions_device_) {
     if (device_subscription.second.timer.IsExpired()) {
       logger_.Verbose("[SubscriptionsManager] Trigger command [action=%u] after interval:%u ms",
                       device_subscription.second.command.action, device_subscription.second.timer.GetDelay());
@@ -50,7 +50,7 @@ auto SubscriptionsManager::ProcessActionSubscribe(Command& cmd) -> void {
 
     ConvertSubscribeToReadCommand(cmd);
 
-    std::pair<SubsciptionsMapDevice::iterator, bool> const emplace_result{
+    std::pair<SubscriptionsMapDevice::iterator, bool> const emplace_result{
         subscriptions_device_.emplace(SubscriptionKeyDevice{device_addr, device_attribute},
                                       SubscriptionInfo{Timer{subscription_interval.value}, cmd})};
     if (emplace_result.second) {
@@ -121,7 +121,7 @@ auto SubscriptionsManager::ProcessActionUnsubscribe(Command& cmd) -> void {
     logger_.Debug(F("[SubscriptionsManager] Unsubscribing from device: %s, attribute: %u"),
                   device_addr.Format().c_str(), device_attribute);
 
-    SubsciptionsMapDevice::iterator found_subscription(
+    SubscriptionsMapDevice::iterator found_subscription(
         subscriptions_device_.find(SubscriptionKeyDevice{device_addr, device_attribute}));
     if (found_subscription != subscriptions_device_.end()) {
       subscriptions_device_.erase(found_subscription);

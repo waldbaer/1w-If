@@ -301,7 +301,7 @@ auto OneWireSystem::CreateDevice(OneWireBus& bus, OneWireAddress const& address)
     bool setup_result{result->Begin()};
     if (!setup_result) {
       result = nullptr;
-      logger_.Error(F("[OneWireSystem] Failed to setup 1-wire device with address '%s'"), address.Format());
+      logger_.Error(F("[OneWireSystem] Failed to setup 1-wire device with address '%s'"), address.Format().c_str());
     }
   }
 

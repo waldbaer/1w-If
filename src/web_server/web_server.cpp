@@ -113,7 +113,7 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
 
   config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
 
-  logger_.Debug(F("[WebServer] Checking login from user '%s' with password '<protected>'"), user);
+  logger_.Debug(F("[WebServer] Checking login from user '%s' with password '<protected>'"), user.c_str());
 
   if (user == String{webserver_config.GetUser().c_str()} && pass == String{webserver_config.GetPassword().c_str()}) {
     String token{GenerateAuthenticationToken()};
@@ -157,7 +157,7 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
   config::MqttConfig mqtt_config{config::persistency_g.LoadMqttConfig()};
 
   request->send(LittleFS, "/index.html", "text/html", false,
-                [this, ethernet_config, webserver_config, mqtt_config](const String& var) {
+                [this, ethernet_config, webserver_config, mqtt_config](String const& var) {
                   // EthernetConfig
                   if (var == "ETH_HOSTNAME") {
                     return ethernet_config.GetHostname();
@@ -184,7 +184,7 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
                   }
                   // Unknown
                   else {
-                    logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
+                    logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var.c_str());
                     return String();
                   }
                 });

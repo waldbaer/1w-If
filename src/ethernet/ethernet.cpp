@@ -50,7 +50,7 @@ auto Ethernet::OnEthernetEvent(WiFiEvent_t const event, WiFiEventInfo_t const ev
     } break;
     case ARDUINO_EVENT_ETH_GOT_IP: {
       logger_.Debug(F("[Ethernet] connected | IP: %s MAC: %s Speed: %u Mbit/s (%s) Hostname: %s"),
-                    ETH.localIP().toString(), ETH.macAddress().c_str(), ETH.linkSpeed(),
+                    ETH.localIP().toString().c_str(), ETH.macAddress().c_str(), ETH.linkSpeed(),
                     ETH.fullDuplex() ? F("FULL_DUPLEX") : F("HALF_DUPLEX"), ETH.getHostname());
 
       connection_state_ = ConnectionState::kConnected;

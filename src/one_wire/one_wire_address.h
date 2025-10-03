@@ -16,7 +16,7 @@ class OneWireAddress {
  public:
   using FamilyCode = std::uint8_t;
 
-  static auto FromOwfsFormat(String address) -> std::unique_ptr<OneWireAddress>;
+  static auto FromOwfsFormat(String const& address) -> std::unique_ptr<OneWireAddress>;
 
   OneWireAddress() = default;
   explicit OneWireAddress(std::uint64_t addr);

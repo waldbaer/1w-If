@@ -31,7 +31,7 @@ auto JsonParser::ParseAddressing(JsonDocument const& json, CommandParam& device_
 
           result = true;
         } else {
-          logger.Error(F("[JsonParser] Failed to parse device_id string: %s"), device_id);
+          logger.Error(F("[JsonParser] Failed to parse device_id string: %s"), device_id.c_str());
         }
 
       } else if (has_family_code_param) {

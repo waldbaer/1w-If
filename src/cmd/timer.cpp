@@ -26,11 +26,11 @@ auto Timer::Reset(std::uint32_t delay) -> void {
   }
 }
 
-auto Timer::IsExpired() -> bool {
+auto Timer::IsExpired() const -> bool {
   return (minimum_abs_execution_time_ == 0) || (minimum_abs_execution_time_ <= millis());
 }
 
-auto Timer::GetDelay() -> std::uint32_t { return delay_; }
+auto Timer::GetDelay() const -> std::uint32_t { return delay_; }
 
 }  // namespace cmd
 }  // namespace owif

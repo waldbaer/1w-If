@@ -60,8 +60,8 @@ class SubscriptionsManager final {
 
   CommandHandler* command_handler_;
 
-  using SubsciptionsMapDevice = std::map<SubscriptionKeyDevice, SubscriptionInfo>;
-  SubsciptionsMapDevice subscriptions_device_{};
+  using SubscriptionsMapDevice = std::map<SubscriptionKeyDevice, SubscriptionInfo>;
+  SubscriptionsMapDevice subscriptions_device_{};
 
   using SubsciptionsMapFamily = std::map<SubscriptionKeyFamily, SubscriptionInfo>;
   SubsciptionsMapFamily subscriptions_family_{};
