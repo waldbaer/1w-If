@@ -15,6 +15,7 @@
 #include "mqtt/mqtt_message_handler.h"
 #include "one_wire/ds18b20.h"
 #include "one_wire/one_wire_subsystem.h"
+#include "util/abort_handler.h"
 #include "web_server/web_server.h"
 
 namespace owif {
@@ -29,6 +30,7 @@ auto owif_setup() -> void {
   bool setup_result{true};
 
   setup_result &= logging::logger_g.Begin(kSerialBaudRate, kDefaultLogLevel);
+  SetupTerminateHandler();
 
   logging::logger_g.Info(F("-- 1-Wire Interface --------------------"));
   logging::logger_g.Info(F("Version: %s"), kOwIfVersion);
@@ -48,9 +50,7 @@ auto owif_setup() -> void {
   if (setup_result) {
     logging::logger_g.Info(F("Initialization finished. All sub-subsystems are initialized."));
   } else {
-    logging::logger_g.Error(F("Initialization failed. Please check previous outputs. Restarting in 5sec..."));
-    delay(5000);
-    ESP.restart();
+    logging::logger_g.Abort(F("Initialization failed. Please check previous outputs."));
   }
 }
 

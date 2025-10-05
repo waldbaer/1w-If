@@ -31,25 +31,19 @@ auto Logger::PrintPrefix(Print* log_output, int log_level) -> void {
 }
 
 auto Logger::PrintTimestamp(Print* log_output) -> void {
-  // Division constants
-  const unsigned long MSECS_PER_SEC = 1000;
-  const unsigned long SECS_PER_MIN = 60;
-  const unsigned long SECS_PER_HOUR = 3600;
-  const unsigned long SECS_PER_DAY = 86400;
-
   // Total time
-  const unsigned long msecs = millis();
-  const unsigned long secs = msecs / MSECS_PER_SEC;
+  std::uint32_t const msecs{millis()};
+  std::uint32_t const secs{msecs / MSECS_PER_SEC};
 
   // Time in components
-  const unsigned long MiliSeconds = msecs % MSECS_PER_SEC;
-  const unsigned long Seconds = secs % SECS_PER_MIN;
-  const unsigned long Minutes = (secs / SECS_PER_MIN) % SECS_PER_MIN;
-  const unsigned long Hours = (secs % SECS_PER_DAY) / SECS_PER_HOUR;
+  std::uint32_t const milliseconds{msecs % MSECS_PER_SEC};
+  std::uint32_t const seconds{secs % SECS_PER_MIN};
+  std::uint32_t const minutes{(secs / SECS_PER_MIN) % SECS_PER_MIN};
+  std::uint32_t const hours{(secs % SECS_PER_DAY) / SECS_PER_HOUR};
 
   // Time as string
   char timestamp[20];
-  sprintf(timestamp, "%02d:%02d:%02d.%03d ", Hours, Minutes, Seconds, MiliSeconds);
+  sprintf(timestamp, "%02d:%02d:%02d.%03d ", hours, minutes, seconds, milliseconds);
   log_output->print(timestamp);
 }
 

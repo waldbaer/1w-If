@@ -10,7 +10,7 @@ namespace owif {
 namespace logging {
 
 /*!
- * \brief Available I2C commands
+ * \brief Available log levels
  */
 enum class LogLevel : std::uint8_t {
   Silent = 0,
@@ -36,6 +36,19 @@ class Logger {
 
   auto SetLogLevel(LogLevel log_level) -> void;
   auto GetLogLevel() -> LogLevel;
+
+  template <class T, typename... Args>
+  [[noreturn]] inline auto Abort(T msg, Args... args) -> void {
+    Fatal("%s", F("----------------------------------------------------------------------"));
+    Fatal(F("Aborting further execution. Restarting in 5sec..."));
+    Fatal(F("Reason:"));
+    Fatal(std::forward<T>(msg), std::forward<Args>(args)...);
+    Fatal("%s", F("----------------------------------------------------------------------"));
+
+    delay(5000);
+    ESP.restart();
+    while (true);
+  }
 
   template <class T, typename... Args>
   inline auto Fatal(T msg, Args... args) -> void {
@@ -98,6 +111,12 @@ class Logger {
   }
 
  private:
+  // Division constants
+  static constexpr std::uint32_t MSECS_PER_SEC{1000};
+  static constexpr std::uint32_t SECS_PER_MIN{60};
+  static constexpr std::uint32_t SECS_PER_HOUR{3600};
+  static constexpr std::uint32_t SECS_PER_DAY{86400};
+
   static auto PrintPrefix(Print* log_output, int log_level) -> void;
   static auto PrintTimestamp(Print* log_output) -> void;
   static auto PrintLogLevel(Print* log_output, int log_level) -> void;
