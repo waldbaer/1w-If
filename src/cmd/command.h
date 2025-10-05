@@ -13,7 +13,8 @@ namespace owif {
 namespace cmd {
 
 enum class Action : std::uint8_t {
-  Scan = 0x00,
+  Restart = 0x00,
+  Scan = 0x01,
   Read = 0x02,
   Subscribe = 0x03,
   Unsubscribe = 0x04,

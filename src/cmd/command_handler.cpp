@@ -54,6 +54,9 @@ auto CommandHandler::ProcessCommandQueue() -> void {
   if (queue_receive_result == pdTRUE) {
     if (cmd.timer.IsExpired()) {
       switch (cmd.action) {
+        case cmd::Action::Restart:
+          ProcessActionRestart(cmd);
+          break;
         case cmd::Action::Scan:
           ProcessActionScan(cmd);
           break;
@@ -67,7 +70,7 @@ auto CommandHandler::ProcessCommandQueue() -> void {
           ProcessActionUnsubscribe(cmd);
           break;
         default:
-          logger_.Error(F("[CmdHandler] Unknown/Unsupport command action type: %d"), cmd.action);
+          logger_.Error(F("[CmdHandler] Unknown/Unsupport command action type: %u"), cmd.action);
           SendErrorResponse(cmd, "Unknown/Unsupport command action type");
       }
     } else {
@@ -95,13 +98,27 @@ auto CommandHandler::SendErrorResponse(Command const& cmd, char const* error_mes
 
 // ---- Private APIs ---------------------------------------------------------------------------------------------------
 
-/*
-  param1: [Optional] device_id
-  param2: [Optional] family_code
+/*!
+ * no parameters
+ */
+auto CommandHandler::ProcessActionRestart(Command& cmd) -> void {
+  JsonDocument response_json{};
+  response_json[json::kRootAction] = json::kActionRestart;
+  response_json[json::kActionRestartAcknowledge] = true;
+
+  SendCommandResponse(cmd, response_json);
+
+  logger_.Info(F("[CmdHandler] >> RESTART Hardware << (requested via remote command)"));
+  ESP.restart();
+}
+
+/*!
+ * param1: [Optional] device_id
+ * param2: [Optional] family_code
  */
 auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
-  JsonDocument json{};
-  json[json::kRootAction] = json::kActionScan;
+  JsonDocument response_json{};
+  response_json[json::kRootAction] = json::kActionScan;
 
   if (cmd.param1.param_available) {
     // ---- Scan for specific device ----
@@ -113,7 +130,7 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
     bool const scan_result{one_wire_system_->Scan(searched_device, is_present)};
     if (scan_result) {
       // Add values in the document
-      JsonObject json_device{json[json::kDevice].to<JsonObject>()};
+      JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
       json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, searched_device);
       json_device[json::kActionScanIsPresent] = is_present;
     } else {
@@ -129,9 +146,9 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
     if (scan_result) {
       DeviceMap const ow_devices{one_wire_system_->GetAvailableDevices(searched_family_code)};
 
-      json[json::kFamilyCode] = searched_family_code;
+      response_json[json::kFamilyCode] = searched_family_code;
       // Add values in the document
-      JsonArray json_devices{json[json::kDevices].to<JsonArray>()};
+      JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
       for (DeviceMap::value_type const& ow_device : ow_devices) {
         JsonObject json_device{json_devices.add<JsonObject>()};
         json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
@@ -148,7 +165,7 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
       DeviceMap const& ow_devices{one_wire_system_->GetAvailableDevices()};
 
       // Add values in the document
-      JsonArray json_devices{json[json::kDevices].to<JsonArray>()};
+      JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
       for (DeviceMap::value_type const& ow_device : ow_devices) {
         JsonObject json_device{json_devices.add<JsonObject>()};
         json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
@@ -158,13 +175,13 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
     }
   }
 
-  SendCommandResponse(cmd, json);
+  SendCommandResponse(cmd, response_json);
 }
 
-/*
-  param1: [Optional] device_id
-  param2: [Optional] family_code
-  param3: device_attribute
+/*!
+ * param1: [Optional] device_id
+ * param2: [Optional] family_code
+ * param3: device_attribute
  */
 auto CommandHandler::ProcessActionRead(Command& cmd) -> void {
   if (cmd.param3.param_available) {
@@ -203,11 +220,11 @@ auto CommandHandler::ProcessActionRead(Command& cmd) -> void {
   }
 }
 
-/*
-  param1: [Optional] device_id
-  param2: [Optional] family_code
-  param3: device_attribute
-  param4: interval
+/*!
+ * param1: [Optional] device_id
+ * param2: [Optional] family_code
+ * param3: device_attribute
+ * param4: interval
  */
 auto CommandHandler::ProcessActionSubscribe(Command& cmd) -> void {
   logger_.Debug(F("[CmdHandler] Processing command 'subscribe'"));
@@ -218,10 +235,10 @@ auto CommandHandler::ProcessActionSubscribe(Command& cmd) -> void {
   }
 }
 
-/*
-  param1: [Optional] device_id
-  param2: [Optional] family_code
-  param3: device_attribute
+/*!
+ * param1: [Optional] device_id
+ * param2: [Optional] family_code
+ * param3: device_attribute
  */
 auto CommandHandler::ProcessActionUnsubscribe(Command& cmd) -> void {
   logger_.Debug(F("[CmdHandler] Processing command 'unsubscribe'"));

@@ -20,6 +20,9 @@ static constexpr char const* kErrorRequest{"request"};
 // Actions
 static constexpr char const* kRootAction{"action"};
 
+static constexpr char const* kActionRestart{"restart"};
+static constexpr char const* kActionRestartAcknowledge{"acknowledge"};
+
 static constexpr char const* kActionScan{"scan"};
 static constexpr char const* kActionScanIsPresent{"is_present"};
 

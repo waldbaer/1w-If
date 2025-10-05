@@ -52,7 +52,9 @@ auto MqttMessageHandler::ProcessMessage(String topic, String payload, MqttMsgPro
     JsonVariant action_json{json[cmd::json::kRootAction]};
     String action{action_json.as<String>()};
 
-    if (action == cmd::json::kActionScan) {
+    if (action == cmd::json::kActionRestart) {
+      ProcessActionRestart(json);
+    } else if (action == cmd::json::kActionScan) {
       ProcessActionScan(json);
     } else if (action == cmd::json::kActionRead) {
       ProcessActionRead(json);
@@ -66,6 +68,16 @@ auto MqttMessageHandler::ProcessMessage(String topic, String payload, MqttMsgPro
   } else {
     SendErrorResponse("Failed to deserialize MQTT message.", payload.c_str());
   }
+}
+
+/*!
+ * no parameters
+ */
+auto MqttMessageHandler::ProcessActionRestart(JsonDocument json) -> void {
+  logger_.Debug("[MqttMessageHandler] Process action 'restart'");
+
+  cmd::Command const cmd{InitEmptyCommand(cmd::Action::Restart)};
+  command_handler_->EnqueueCommand(cmd);
 }
 
 /*!

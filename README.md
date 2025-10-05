@@ -46,6 +46,24 @@ Payload Format:
 }
 ```
 
+#### Command 'Restart'
+
+Restart the entire system.
+```
+{
+  "action": "restart",
+}
+```
+
+Response:
+```
+{
+  "action": "restart",
+  "acknowledge": true
+}
+```
+
+
 #### Command 'Scan'
 
 Scan 1-wire buses for all available devices:
@@ -79,7 +97,7 @@ The response lists all available devices and the supported attributes (for `Read
 Example Response:
 ```
 {
-  "action":"scan",
+  "action": "scan",
   "devices": [
     {
       "device_id": "01.D2C79A1A0000",

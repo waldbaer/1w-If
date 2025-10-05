@@ -42,6 +42,7 @@ class CommandHandler {
 
   auto ProcessCommandQueue() -> void;
 
+  auto ProcessActionRestart(Command& cmd) -> void;
   auto ProcessActionScan(Command& cmd) -> void;
   auto ProcessActionRead(Command& cmd) -> void;
   auto ProcessActionSubscribe(Command& cmd) -> void;
