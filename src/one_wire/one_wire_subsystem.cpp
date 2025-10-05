@@ -163,8 +163,9 @@ auto OneWireSystem::Scan(OneWireAddress const& address, bool& is_present) -> boo
       for (DeviceMap::iterator available_device{ow_available_devices_.begin()};
            available_device != ow_available_devices_.end();) {
         if (available_device->first == address) {
-          ow_available_devices_.erase(available_device);
-          break;
+          available_device = ow_available_devices_.erase(available_device);
+        } else {
+          available_device++;
         }
       }
     }
@@ -206,7 +207,7 @@ auto OneWireSystem::Scan(OneWireAddress::FamilyCode const family_code) -> bool {
                       }) == available_addresses.end())) {
       available_device = ow_available_devices_.erase(available_device);
     } else {
-      ++available_device;
+      available_device++;
     }
   }
 
