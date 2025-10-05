@@ -53,6 +53,10 @@ class OneWireSystem {
 
   static constexpr std::uint8_t kMuxedI2cBuses{2};  // Number of muxed I2C buses.
 
+  static constexpr char const* kAttributeTemperature{"temperature"};
+  static constexpr char const* kAttributeVAD{"VAD"};
+  static constexpr char const* kAttributeVDD{"VDD"};
+
   struct OwAddrBus {
     OneWireAddress addr;
     OneWireBus* bus;

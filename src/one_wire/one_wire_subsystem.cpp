@@ -255,11 +255,12 @@ auto OneWireSystem::GetAttributes(OneWireAddress const& ow_address) -> DeviceAtt
       // ID only device. No further attributes.
       break;
     case Ds18b20::kFamilyCode:
-      result.push_back("temperature");
+      result.push_back(kAttributeTemperature);
       break;
     case Ds2438::kFamilyCode:
-      result.push_back("VAD");
-      result.push_back("VDD");
+      result.push_back(kAttributeTemperature);
+      result.push_back(kAttributeVAD);
+      result.push_back(kAttributeVDD);
       break;
     default:
       // Unknown device. Don't add more attributes.

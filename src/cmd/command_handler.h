@@ -9,6 +9,7 @@
 #include "cmd/command.h"
 #include "cmd/ds18b20_command_handler.h"
 #include "cmd/ds2438_command_handler.h"
+#include "cmd/presence_command_handler.h"
 #include "cmd/subscriptions_manager.h"
 #include "logging/logger.h"
 #include "one_wire/one_wire_subsystem.h"
@@ -53,9 +54,10 @@ class CommandHandler {
   one_wire::OneWireSystem* one_wire_system_;
   QueueHandle_t command_queue_{};
 
+  PresenceCommandHandler presence_command_handler_{nullptr, nullptr};  // valid init in Begin()
+  Ds18b20CommandHandler ds18b20_command_handler_{nullptr, nullptr};   // valid init in Begin()
+  Ds2438CommandHandler ds2438_command_handler_{nullptr, nullptr};     // valid init in Begin()
   SubscriptionsManager subscriptions_manager_{nullptr};
-  Ds18b20CommandHandler ds18b20_command_handler_{nullptr, nullptr};  // valid init in Begin()
-  Ds2438CommandHandler ds2438_command_handler_{nullptr, nullptr};    // valid init in Begin()
 };
 
 extern CommandHandler command_handler_g;
