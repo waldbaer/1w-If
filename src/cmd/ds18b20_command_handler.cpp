@@ -44,13 +44,13 @@ auto Ds18b20CommandHandler::ProcessReadSingleDevice(Command& cmd) -> void {
           float sampled_temperature{0};
           bool const get_temp_result{ds18b20->GetTemperature(sampled_temperature)};
           if (get_temp_result) {
-            JsonDocument json{};
-            json[json::kRootAction] = json::kActionRead;
+            JsonDocument response_json{};
+            response_json[json::kRootAction] = json::kActionRead;
 
-            JsonObject json_device{json[json::kDevice].to<JsonObject>()};
+            JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
             json_device[json::kDeviceId] = device_addr.Format().c_str();
             json_device[json::kActionReadAttributeTemperature] = sampled_temperature;
-            command_handler_->SendCommandResponse(cmd, json);
+            command_handler_->SendCommandResponse(cmd, response_json);
           } else {
             command_handler_->SendErrorResponse(cmd, "Failed to get DS18B20 temperature.");
           }
@@ -77,16 +77,16 @@ auto Ds18b20CommandHandler::ProcessReadDeviceFamily(Command& cmd) -> void {
 
     DeviceMap const ow_devices{one_wire_system_->GetAvailableDevices(family_code)};
 
-    JsonDocument json{};
-    json[json::kRootAction] = json::kActionRead;
-    json[json::kFamilyCode] = family_code;
-    JsonArray json_devices{json[json::kDevices].to<JsonArray>()};
-
     if (not ow_devices.empty()) {
+      JsonDocument response_json{};
+      response_json[json::kRootAction] = json::kActionRead;
+      response_json[json::kFamilyCode] = family_code;
+      JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
+
       if (cmd.sub_action == SubAction::None || cmd.sub_action == SubAction::TriggerSampling) {
         bool sample_result{true};
         for (std::reference_wrapper<one_wire::OneWireBus> ow_bus : one_wire_system_->GetAvailableBuses()) {
-          logger_.Verbose(F("[DS18B20 CmdHandler] Trigger temperature sampling on One-Wire bus %u"),
+          logger_.Verbose(F("[DS18B20 CmdHandler] Trigger temperature sampling on 1-wire bus %u"),
                           ow_bus.get().GetId());
           one_wire::Ds18b20 dummy_ds18b20{ow_bus.get(), one_wire::OneWireAddress{0}};
           sample_result &= dummy_ds18b20.SampleTemperature(/* skip_rom_select= */ true);
@@ -114,7 +114,7 @@ auto Ds18b20CommandHandler::ProcessReadDeviceFamily(Command& cmd) -> void {
             return;
           }
         }
-        command_handler_->SendCommandResponse(cmd, json);
+        command_handler_->SendCommandResponse(cmd, response_json);
       } else {
         logger_.Error(F("[DS18B20 CmdHandler] Unknown sub-action state"), cmd.sub_action);
       }

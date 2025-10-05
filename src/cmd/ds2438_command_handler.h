@@ -22,6 +22,8 @@ class Ds2438CommandHandler final {
   Ds2438CommandHandler(Ds2438CommandHandler&&) = default;
   auto operator=(Ds2438CommandHandler&&) -> Ds2438CommandHandler& = default;
 
+  ~Ds2438CommandHandler() = default;
+
   // ---- Public APIs --------------------------------------------------------------------------------------------------
   auto ProcessReadSingleDevice(Command& cmd) -> void;
 
@@ -29,6 +31,24 @@ class Ds2438CommandHandler final {
 
  private:
   using DeviceMap = one_wire::OneWireSystem::DeviceMap;
+
+  auto ProcessDeviceTemperature(Command& cmd, one_wire::Ds2438& ds2438) -> void;
+  auto ProcessFamilyTemperature(Command& cmd, one_wire::OneWireAddress::FamilyCode family_code,
+                                DeviceMap const& ow_devices) -> void;
+
+  auto ProcessDeviceVAD(Command& cmd, one_wire::Ds2438& ds2438) -> void;
+  auto ProcessFamilyVAD(Command& cmd, one_wire::OneWireAddress::FamilyCode family_code, DeviceMap const& ow_devices)
+      -> void;
+
+  auto ProcessDeviceVDD(Command& cmd, one_wire::Ds2438& ds2438) -> void;
+  auto ProcessFamilyVDD(Command& cmd, one_wire::OneWireAddress::FamilyCode family_code, DeviceMap const& ow_devices)
+      -> void;
+
+  auto AddJsonDeviceWithAttribute(JsonDocument& parent, one_wire::OneWireAddress const& device_address,
+                                  char const* attribute_name, float const& attribute_value) -> void;
+
+  auto AddJsonDeviceWithAttribute(JsonArray& parent, one_wire::OneWireAddress const& device_address,
+                                  char const* attribute_name, float const& attribute_value) -> void;
 
   logging::Logger logger_{logging::logger_g};
 

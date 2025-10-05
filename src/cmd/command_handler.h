@@ -47,8 +47,6 @@ class CommandHandler {
   auto ProcessActionSubscribe(Command& cmd) -> void;
   auto ProcessActionUnsubscribe(Command& cmd) -> void;
 
-  auto AddDeviceAttributes(JsonObject& json, one_wire::OneWireAddress const& ow_address) -> void;
-
   logging::Logger& logger_{logging::logger_g};
 
   one_wire::OneWireSystem* one_wire_system_;

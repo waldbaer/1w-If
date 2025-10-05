@@ -6,6 +6,7 @@
 
 #include "cmd/ds18b20_command_handler.h"
 #include "cmd/ds2438_command_handler.h"
+#include "cmd/json_builder.h"
 #include "cmd/json_constants.h"
 
 namespace owif {
@@ -113,7 +114,7 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
     if (scan_result) {
       // Add values in the document
       JsonObject json_device{json[json::kDevice].to<JsonObject>()};
-      AddDeviceAttributes(json_device, searched_device);
+      json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, searched_device);
       json_device[json::kActionScanIsPresent] = is_present;
     } else {
       SendErrorResponse(cmd, "Failed to scan 1-wire device availability.");
@@ -133,7 +134,7 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
       JsonArray json_devices{json[json::kDevices].to<JsonArray>()};
       for (DeviceMap::value_type const& ow_device : ow_devices) {
         JsonObject json_device{json_devices.add<JsonObject>()};
-        AddDeviceAttributes(json_device, ow_device.first);
+        json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
       }
     } else {
       SendErrorResponse(cmd, "Failed to scan 1-wire device family availability.");
@@ -150,7 +151,7 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
       JsonArray json_devices{json[json::kDevices].to<JsonArray>()};
       for (DeviceMap::value_type const& ow_device : ow_devices) {
         JsonObject json_device{json_devices.add<JsonObject>()};
-        AddDeviceAttributes(json_device, ow_device.first);
+        json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
       }
     } else {
       SendErrorResponse(cmd, "Failed to scan 1-wire devices availability.");
@@ -228,18 +229,6 @@ auto CommandHandler::ProcessActionUnsubscribe(Command& cmd) -> void {
     subscriptions_manager_.ProcessActionUnsubscribe(cmd);
   } else {
     SendErrorResponse(cmd, "Missing device_attribute parameter");
-  }
-}
-
-auto CommandHandler::AddDeviceAttributes(JsonObject& json, one_wire::OneWireAddress const& ow_address) -> void {
-  json[json::kDeviceId] = ow_address.Format().c_str();
-
-  one_wire::OneWireSystem::DeviceAttributesList devices_attributes{one_wire_system_->GetAttributes(ow_address)};
-  if (not devices_attributes.empty()) {
-    JsonArray json_device_attributes{json[json::kAttributes].to<JsonArray>()};
-    for (String const& attrib : devices_attributes) {
-      json_device_attributes.add(attrib);
-    }
   }
 }
 

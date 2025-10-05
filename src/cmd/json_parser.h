@@ -20,6 +20,8 @@ class JsonParser final {
   JsonParser(JsonParser&&) = delete;
   auto operator=(JsonParser&&) -> JsonParser& = delete;
 
+  ~JsonParser() = delete;
+
   static auto ParseAddressing(JsonDocument const& json, CommandParam& device_id_param, CommandParam& family_code_param,
                               bool any_attribute_required) -> bool;
 

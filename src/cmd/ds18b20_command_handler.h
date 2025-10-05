@@ -22,6 +22,8 @@ class Ds18b20CommandHandler final {
   Ds18b20CommandHandler(Ds18b20CommandHandler&&) = default;
   auto operator=(Ds18b20CommandHandler&&) -> Ds18b20CommandHandler& = default;
 
+  ~Ds18b20CommandHandler() = default;
+
   // ---- Public APIs --------------------------------------------------------------------------------------------------
   auto ProcessReadSingleDevice(Command& cmd) -> void;
 
