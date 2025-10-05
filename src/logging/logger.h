@@ -29,10 +29,11 @@ class Logger {
   Logger(Logger&&) = default;
   auto operator=(Logger const&) -> Logger& = default;
   auto operator=(Logger&&) -> Logger& = default;
+  ~Logger() = default;
 
   // ---- Public APIs --------------------------------------------------------------------------------------------------
 
-  auto Begin(std::uint32_t baud_rate, LogLevel log_level = LogLevel::Info) -> bool;
+  auto Begin(Print& output_sink = Serial, LogLevel log_level = LogLevel::Info) -> bool;
 
   auto SetLogLevel(LogLevel log_level) -> void;
   auto GetLogLevel() -> LogLevel;
@@ -122,6 +123,9 @@ class Logger {
   static auto PrintLogLevel(Print* log_output, int log_level) -> void;
 };
 
+/*!
+ * \brief Declaration of global logger instance.
+ */
 extern Logger logger_g;
 
 }  // namespace logging
