@@ -101,14 +101,17 @@ Example Response:
   "devices": [
     {
       "device_id": "01.D2C79A1A0000",
+      "presence": true,
       "attributes": ["presence"]
     },
     {
       "device_id": "28.8F0945161301",
+      "presence": true,
       "attributes": ["presence", "temperature"]
     },
     {
       "device_id": "26.563743020000",
+      "presence": true,
       "attributes": ["presence", "VAD", "VDD"]
     },
     ...
@@ -134,7 +137,7 @@ Example Response:
   "action": "read",
   "device": {
      "device_id": "28.8F0945161301",
-     "temperature":24.75
+     "temperature": 24.75
   }
 }
 ```
@@ -163,6 +166,29 @@ Example Response:
   ]
 }
 ```
+
+Also the presence of a device can be accessed via the read command using the attribute `presence`.
+This is similar to the scan command.
+
+```
+{
+  "action": "read",
+  "device_id": "28.8F0945161301",
+  "attribute": "presence"
+}
+```
+
+Example Response:
+```
+{
+  "action": "read",
+  "device": {
+     "device_id": "28.8F0945161301",
+     "presence": true
+  }
+}
+```
+
 
 #### Command 'Subscribe / Unsubscribe'
 
@@ -201,6 +227,27 @@ Unsubscribe from the attribute:
 }
 ```
 
+It is also possible to subscribe to the attribute `presence` to get cyclic updates about the availability of dedicated
+devices:
+```
+{
+    "action": "subscribe",
+    "device_id": "01.D2C79A1A0000",
+    "attribute": "presence",
+    "interval": 2000
+}
+```
+
+Example of the `Read` command for attribute `presence` cyclically triggered by the subscription:
+```
+{
+  "action": "read",
+  "device": {
+     "device_id": "01.D2C79A1A0000",
+     "presence": false
+  }
+}
+```
 
 ## Development
 

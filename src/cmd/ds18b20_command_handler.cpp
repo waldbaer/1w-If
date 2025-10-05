@@ -19,9 +19,20 @@ Ds18b20CommandHandler::Ds18b20CommandHandler(CommandHandler* command_handler, on
 
 // ---- Public APIs --------------------------------------------------------------------------------------------------
 auto Ds18b20CommandHandler::ProcessReadSingleDevice(Command& cmd) -> void {
-  if (cmd.param3.param_value.device_attribute == DeviceAttributeType::Temperature) {
-    one_wire::OneWireAddress const& device_addr{cmd.param1.param_value.device_id};
+  one_wire::OneWireAddress const& device_addr{cmd.param1.param_value.device_id};
 
+  if (cmd.param3.param_value.device_attribute == DeviceAttributeType::Presence) {
+    JsonDocument response_json{};
+    response_json[json::kRootAction] = json::kActionRead;
+    JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
+    json_device[json::kDeviceId] = device_addr.Format().c_str();
+
+    bool is_present{false};
+    bool const scan_result{one_wire_system_->Scan(device_addr, is_present)};
+
+    json_device[json::kAttributePresence] = is_present;
+    command_handler_->SendCommandResponse(cmd, response_json);
+  } else if (cmd.param3.param_value.device_attribute == DeviceAttributeType::Temperature) {
     logger_.Debug(F("[DS18B20 CmdHandler] Processing command 'read' [sub_action=%u][device_id=%s]"), cmd.sub_action,
                   device_addr.Format().c_str());
 

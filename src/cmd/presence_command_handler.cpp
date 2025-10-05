@@ -19,7 +19,8 @@ PresenceCommandHandler::PresenceCommandHandler(CommandHandler* command_handler,
     : command_handler_{command_handler}, one_wire_system_{one_wire_system} {}
 
 // ---- Public APIs --------------------------------------------------------------------------------------------------
-auto PresenceCommandHandler::ProcessPresenceSingleDevice(Command& cmd) -> void {
+auto PresenceCommandHandler::ProcessPresenceSingleDevice(Command& cmd, char const* action, bool add_device_attributes)
+    -> void {
   // ---- Scan for specific device ----
   one_wire::OneWireAddress const& searched_device{cmd.param1.param_value.device_id};
 
@@ -30,18 +31,21 @@ auto PresenceCommandHandler::ProcessPresenceSingleDevice(Command& cmd) -> void {
   if (scan_result) {
     // Add values in the document
     JsonDocument response_json{};
-    response_json[json::kRootAction] = json::kActionScan;
+    response_json[json::kRootAction] = action;
     JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
-    json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, searched_device);
-    json_device[json::kActionScanIsPresent] = is_present;
-
+    json_device[json::kDeviceId] = searched_device.Format().c_str();
+    json_device[json::kAttributePresence] = is_present;
+    if (add_device_attributes) {
+      json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, searched_device);
+    }
     command_handler_->SendCommandResponse(cmd, response_json);
   } else {
     command_handler_->SendErrorResponse(cmd, "Failed to scan 1-wire device availability.");
   }
 }
 
-auto PresenceCommandHandler::ProcessPresenceDeviceFamily(Command& cmd) -> void {
+auto PresenceCommandHandler::ProcessPresenceDeviceFamily(Command& cmd, char const* action, bool add_device_attributes)
+    -> void {
   // ---- Scan for specific device family ----
   one_wire::OneWireAddress::FamilyCode const& searched_family_code{cmd.param2.param_value.family_code};
   logger_.Debug(F("[CmdHandler] Processing command 'Scan' [family_code=%X]"), searched_family_code);
@@ -52,13 +56,17 @@ auto PresenceCommandHandler::ProcessPresenceDeviceFamily(Command& cmd) -> void {
     DeviceMap const ow_devices{one_wire_system_->GetAvailableDevices(searched_family_code)};
 
     JsonDocument response_json{};
-    response_json[json::kRootAction] = json::kActionScan;
+    response_json[json::kRootAction] = action;
     response_json[json::kFamilyCode] = searched_family_code;
     // Add values in the document
     JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
     for (DeviceMap::value_type const& ow_device : ow_devices) {
       JsonObject json_device{json_devices.add<JsonObject>()};
-      json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
+      json_device[json::kDeviceId] = ow_device.first.Format().c_str();
+      json_device[json::kAttributePresence] = true;
+      if (add_device_attributes) {
+        json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
+      }
     }
     command_handler_->SendCommandResponse(cmd, response_json);
   } else {
@@ -80,6 +88,7 @@ auto PresenceCommandHandler::ProcessPresenceScanAll(Command& cmd) -> void {
     JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
     for (DeviceMap::value_type const& ow_device : ow_devices) {
       JsonObject json_device{json_devices.add<JsonObject>()};
+      json_device[json::kAttributePresence] = true;
       json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
     }
     command_handler_->SendCommandResponse(cmd, response_json);

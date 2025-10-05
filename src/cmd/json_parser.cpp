@@ -67,7 +67,10 @@ auto JsonParser::ParseDeviceAttribute(JsonDocument const& json, CommandParam& cm
   if (has_attribute_param) {
     String const attribute_string{json[cmd::json::kAttribute].as<String>()};
 
-    if (attribute_string == kActionReadAttributeTemperature) {
+    if (attribute_string == kAttributePresence) {
+      cmd_param.param_available = true;
+      cmd_param.param_value.device_attribute = DeviceAttributeType::Presence;
+    } else if (attribute_string == kActionReadAttributeTemperature) {
       cmd_param.param_available = true;
       cmd_param.param_value.device_attribute = DeviceAttributeType::Temperature;
     } else if (attribute_string == kActionReadAttributeVAD) {

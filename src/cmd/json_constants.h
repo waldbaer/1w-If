@@ -24,7 +24,7 @@ static constexpr char const* kActionRestart{"restart"};
 static constexpr char const* kActionRestartAcknowledge{"acknowledge"};
 
 static constexpr char const* kActionScan{"scan"};
-static constexpr char const* kActionScanIsPresent{"is_present"};
+static constexpr char const* kAttributePresence{"presence"};
 
 static constexpr char const* kActionRead{"read"};
 static constexpr char const* kActionReadAttributeTemperature{"temperature"};

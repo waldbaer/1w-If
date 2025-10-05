@@ -119,9 +119,9 @@ auto CommandHandler::ProcessActionRestart(Command& cmd) -> void {
  */
 auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
   if (cmd.param1.param_available) {
-    presence_command_handler_.ProcessPresenceSingleDevice(cmd);
+    presence_command_handler_.ProcessPresenceSingleDevice(cmd, json::kActionScan, /*add_device_attributes=*/true);
   } else if (cmd.param2.param_available) {
-    presence_command_handler_.ProcessPresenceDeviceFamily(cmd);
+    presence_command_handler_.ProcessPresenceDeviceFamily(cmd, json::kActionScan, /*add_device_attributes=*/true);
   } else {
     presence_command_handler_.ProcessPresenceScanAll(cmd);
   }
@@ -133,35 +133,46 @@ auto CommandHandler::ProcessActionScan(Command& cmd) -> void {
  * param3: device_attribute
  */
 auto CommandHandler::ProcessActionRead(Command& cmd) -> void {
+  logger_.Debug(F("[CmdHandler] Processing command 'read'"));
   if (cmd.param3.param_available) {
     if (cmd.param1.param_available) {
       // ---- Read a specific device ----
-      one_wire::OneWireAddress const& device_addr{cmd.param1.param_value.device_id};
-      one_wire::OneWireAddress::FamilyCode const family_code{device_addr.GetFamilyCode()};
-      switch (family_code) {
-        case one_wire::Ds2438::kFamilyCode:
-          ds2438_command_handler_.ProcessReadSingleDevice(cmd);
-          break;
-        case one_wire::Ds18b20::kFamilyCode:
-          ds18b20_command_handler_.ProcessReadSingleDevice(cmd);
-          break;
-        default:
-          SendErrorResponse(cmd, "Action 'read' for device family not supported");
-          break;
+      if (cmd.param3.param_value.device_attribute == DeviceAttributeType::Presence) {
+        // Dispatch handling of attribute 'presence' to PresenceHandler instead of device family specific handlers.
+        presence_command_handler_.ProcessPresenceSingleDevice(cmd, json::kActionRead, /*add_device_attributes=*/false);
+      } else {
+        one_wire::OneWireAddress const& device_addr{cmd.param1.param_value.device_id};
+        one_wire::OneWireAddress::FamilyCode const family_code{device_addr.GetFamilyCode()};
+        switch (family_code) {
+          case one_wire::Ds2438::kFamilyCode:
+            ds2438_command_handler_.ProcessReadSingleDevice(cmd);
+            break;
+          case one_wire::Ds18b20::kFamilyCode:
+            ds18b20_command_handler_.ProcessReadSingleDevice(cmd);
+            break;
+          default:
+            SendErrorResponse(cmd, "Action 'read' for device family not supported");
+            break;
+        }
       }
     } else if (cmd.param2.param_available) {
       // ---- Read a specific device family ----
-      one_wire::OneWireAddress::FamilyCode const& family_code{cmd.param2.param_value.family_code};
-      switch (family_code) {
-        case one_wire::Ds2438::kFamilyCode:
-          ds2438_command_handler_.ProcessReadDeviceFamily(cmd);
-          break;
-        case one_wire::Ds18b20::kFamilyCode:
-          ds18b20_command_handler_.ProcessReadDeviceFamily(cmd);
-          break;
-        default:
-          SendErrorResponse(cmd, "Action 'read' for device family not supported");
-          break;
+      if (cmd.param3.param_value.device_attribute == DeviceAttributeType::Presence) {
+        // Dispatch handling of attribute 'presence' to PresenceHandler instead of device family specific handlers.
+        presence_command_handler_.ProcessPresenceDeviceFamily(cmd, json::kActionRead, /*add_device_attributes=*/false);
+      } else {
+        one_wire::OneWireAddress::FamilyCode const& family_code{cmd.param2.param_value.family_code};
+        switch (family_code) {
+          case one_wire::Ds2438::kFamilyCode:
+            ds2438_command_handler_.ProcessReadDeviceFamily(cmd);
+            break;
+          case one_wire::Ds18b20::kFamilyCode:
+            ds18b20_command_handler_.ProcessReadDeviceFamily(cmd);
+            break;
+          default:
+            SendErrorResponse(cmd, "Action 'read' for device family not supported");
+            break;
+        }
       }
     }
   } else {

@@ -253,12 +253,14 @@ auto OneWireSystem::GetAttributes(OneWireAddress const& ow_address) -> DeviceAtt
 
   switch (ow_address.GetFamilyCode()) {
     case Ds2411::kFamilyCode:
-      // ID only device. No further attributes.
+      result.push_back(kAttributePresence);
       break;
     case Ds18b20::kFamilyCode:
+      result.push_back(kAttributePresence);
       result.push_back(kAttributeTemperature);
       break;
     case Ds2438::kFamilyCode:
+      result.push_back(kAttributePresence);
       result.push_back(kAttributeTemperature);
       result.push_back(kAttributeVAD);
       result.push_back(kAttributeVDD);

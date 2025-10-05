@@ -24,11 +24,10 @@ class PresenceCommandHandler final {
   ~PresenceCommandHandler() = default;
 
   // ---- Public APIs --------------------------------------------------------------------------------------------------
+
+  auto ProcessPresenceSingleDevice(Command& cmd, char const* action, bool add_device_attributes) -> void;
+  auto ProcessPresenceDeviceFamily(Command& cmd, char const* action, bool add_device_attributes) -> void;
   auto ProcessPresenceScanAll(Command& cmd) -> void;
-
-  auto ProcessPresenceSingleDevice(Command& cmd) -> void;
-
-  auto ProcessPresenceDeviceFamily(Command& cmd) -> void;
 
  private:
   using DeviceMap = one_wire::OneWireSystem::DeviceMap;

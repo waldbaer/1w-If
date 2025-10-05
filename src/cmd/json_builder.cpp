@@ -13,8 +13,6 @@ namespace json {
 
 auto JsonBuilder::AddDeviceAttributes(one_wire::OneWireSystem* one_wire_system, JsonObject& json,
                                       one_wire::OneWireAddress const& ow_address) -> void {
-  json[json::kDeviceId] = ow_address.Format().c_str();
-
   one_wire::OneWireSystem::DeviceAttributesList devices_attributes{one_wire_system->GetAttributes(ow_address)};
   if (not devices_attributes.empty()) {
     JsonArray json_device_attributes{json[json::kAttributes].to<JsonArray>()};

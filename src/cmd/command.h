@@ -27,9 +27,10 @@ enum class SubAction : std::uint8_t {
 };
 
 enum class DeviceAttributeType : std::uint8_t {
-  Temperature = 0x00,
-  VAD = 0x01,
-  VDD = 0x02,
+  Presence = 0x00,
+  Temperature = 0x01,
+  VAD = 0x02,
+  VDD = 0x03,
 };
 
 struct TimeIntervalType {
