@@ -15,6 +15,7 @@
 #include "mqtt/mqtt_message_handler.h"
 #include "one_wire/ds18b20.h"
 #include "one_wire/one_wire_subsystem.h"
+#include "ota/ota.h"
 #include "util/abort_handler.h"
 #include "web_server/web_server.h"
 
@@ -40,7 +41,8 @@ auto owif_setup() -> void {
 
   setup_result &= cmd::command_handler_g.Begin(&one_wire::one_wire_system_g);
 
-  // Setup WebServer & MqttClient before Ethernet to allow registration of ConnectionStateChangeHandlers
+  // Setup OTA / WebServer / MqttClient before Ethernet to allow registration of ConnectionStateChangeHandlers
+  setup_result &= ota::ota_system_g.Begin();
   setup_result &= web_server::web_server_g.Begin();
   setup_result &= mqtt::mqtt_client_g.Begin();
   setup_result &= mqtt::mqtt_msg_handler_g.Begin(&mqtt::mqtt_client_g, &cmd::command_handler_g);
@@ -55,6 +57,7 @@ auto owif_setup() -> void {
 }
 
 auto owif_loop() -> void {
+  ota::ota_system_g.Loop();
   one_wire::one_wire_system_g.Loop();
   web_server::web_server_g.Loop();
   mqtt::mqtt_client_g.Loop();
