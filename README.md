@@ -262,3 +262,12 @@ Example of the `Read` command for attribute `presence` cyclically triggered by t
 # Optional: Monitor via serial outputs
 ./monitor.sh
 ```
+
+Flash / upload with dedicated method:
+```
+# via espota
+pio run --target upload -e wt32-eth01_espota
+
+# via esptool (serial)
+pio run --target upload -e wt32-eth01_esptool
+```

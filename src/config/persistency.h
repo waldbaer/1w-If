@@ -5,6 +5,7 @@
 
 #include "config/ethernet_config.h"
 #include "config/mqtt_config.h"
+#include "config/ota_config.h"
 #include "config/webserver_config.h"
 
 namespace owif {
@@ -26,6 +27,9 @@ class Persistency {
   auto LoadEthernetConfig() -> EthernetConfig;
   auto StoreEthernetConfig(EthernetConfig const& ethernet_config) -> void;
 
+  auto LoadOtaConfig() -> OtaConfig;
+  auto StoreOtaConfig(OtaConfig const& ota_config) -> void;
+
   auto LoadWebServerConfig() -> WebServerConfig;
   auto StoreWebServerConfig(WebServerConfig const& webserver_config) -> void;
 
@@ -33,6 +37,9 @@ class Persistency {
   auto StoreMqttConfig(MqttConfig const& mqtt_config) -> void;
 
  private:
+  static constexpr char const* kOtaKeyPort{"port"};
+  static constexpr char const* kOtaKeyPassword{"password"};
+
   Preferences preferences_;
 };
 

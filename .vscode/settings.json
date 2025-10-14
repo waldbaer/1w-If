@@ -60,6 +60,7 @@
     "mutex": "cpp",
     "thread": "cpp",
     "variant": "cpp",
-    "terminate_handler": "cpp"
+    "terminate_handler": "cpp",
+    "charconv": "cpp"
   },
 }

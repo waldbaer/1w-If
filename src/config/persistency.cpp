@@ -5,6 +5,7 @@
 
 #include "config/ethernet_config.h"
 #include "config/mqtt_config.h"
+#include "config/ota_config.h"
 #include "config/webserver_config.h"
 
 namespace owif {
@@ -27,6 +28,29 @@ auto Persistency::StoreEthernetConfig(EthernetConfig const& ethernet_config) -> 
   preferences_.begin("eth", false);
 
   preferences_.putString("hostname", ethernet_config.GetHostname());
+
+  preferences_.end();
+}
+
+// ---- Ethernet ----
+auto Persistency::LoadOtaConfig() -> OtaConfig {
+  OtaConfig config{};
+
+  preferences_.begin("ota", false);
+
+  config.SetPort(preferences_.getUInt(kOtaKeyPort, OtaConfig::kDefaultPort));
+  config.SetPassword(preferences_.getString(kOtaKeyPassword, OtaConfig::kDefaultPassword));
+
+  preferences_.end();
+
+  return config;
+}
+
+auto Persistency::StoreOtaConfig(OtaConfig const& ota_config) -> void {
+  preferences_.begin("ota", false);
+
+  preferences_.putUInt(kOtaKeyPort, ota_config.GetPort());
+  preferences_.putString(kOtaKeyPassword, ota_config.GetPassword());
 
   preferences_.end();
 }

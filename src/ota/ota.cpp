@@ -1,5 +1,6 @@
 #include "ota/ota.h"
 
+#include "config/persistency.h"
 #include "ethernet/ethernet.h"
 
 namespace owif {
@@ -21,12 +22,14 @@ auto OtaSystem::Loop() -> void { ArduinoOTA.handle(); }
 
 auto OtaSystem::SetupOta(ethernet::ConnectionState connection_state) -> void {
   if (connection_state == ethernet::ConnectionState::kConnected) {
-    logger_.Info(F("[OTA] Ethernet connected. Setup OTA...  Port: %u"), kPort);
+    config::OtaConfig const& ota_config{config::persistency_g.LoadOtaConfig()};
+
+    logger_.Info(F("[OTA] Ethernet connected. Setup OTA... | Port: %u"), ota_config.GetPort());
 
     // OTA Configuration
     ArduinoOTA.setHostname(kHostname);
-    ArduinoOTA.setPassword(kPassword);
-    ArduinoOTA.setPort(kPort);
+    ArduinoOTA.setPassword(ota_config.GetPassword().c_str());
+    ArduinoOTA.setPort(ota_config.GetPort());
 
     ArduinoOTA.onStart([this]() { logger_.Info(F("[OTA] Starting update...")); });
 

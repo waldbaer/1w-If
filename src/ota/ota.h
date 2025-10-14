@@ -18,8 +18,6 @@ class OtaSystem {
 
  private:
   static constexpr char const* kHostname{"1w-If"};
-  static constexpr char const* kPassword{"1w-If"};
-  static constexpr std::uint16_t kPort{3232};
 
   auto SetupOta(ethernet::ConnectionState connection_state) -> void;
 
