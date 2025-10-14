@@ -10,6 +10,8 @@ namespace config {
 
 class EthernetConfig {
  public:
+  static constexpr char const* kDefaultHostname{"owif"};
+
   EthernetConfig() = default;
   EthernetConfig(EthernetConfig const&) = default;
   EthernetConfig(EthernetConfig&&) = default;

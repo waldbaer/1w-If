@@ -8,6 +8,13 @@ namespace config {
 
 class MqttConfig {
  public:
+  static constexpr char const* kDefaultServerAddr{"192.168.0.10"};
+  static constexpr std::uint16_t kDefaultServerPort{1883};
+  static constexpr char const* kDefaultUser{"admin"};
+  static constexpr char const* kDefaultPassword{"1w-If"};
+  static constexpr std::uint32_t kDefaultReconnectTimeout{30 * 1000};  // ms
+  static constexpr char const* kDefaultTopic{"1wIf"};
+
   MqttConfig() = default;
   MqttConfig(MqttConfig const&) = default;
   MqttConfig(MqttConfig&&) = default;
@@ -36,14 +43,14 @@ class MqttConfig {
   auto SetTopic(String topic) -> void;
 
  private:
-  String server_addr_{"192.168.0.10"};
-  std::uint16_t server_port_{1883};
-  String user_{"user"};
-  String password_{"password"};
+  String server_addr_{kDefaultServerAddr};
+  std::uint16_t server_port_{kDefaultServerPort};
+  String user_{kDefaultUser};
+  String password_{kDefaultPassword};
 
-  std::uint32_t reconnect_timeout_{30 * 1000};  // ms
+  std::uint32_t reconnect_timeout_{kDefaultReconnectTimeout};  // ms
 
-  String topic_{"1wIf"};
+  String topic_{kDefaultTopic};
 };
 
 }  // namespace config

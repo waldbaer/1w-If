@@ -5,6 +5,7 @@
 
 #include "config/ethernet_config.h"
 #include "config/mqtt_config.h"
+#include "config/ota_config.h"
 #include "config/webserver_config.h"
 
 namespace owif {
@@ -26,6 +27,9 @@ class Persistency {
   auto LoadEthernetConfig() -> EthernetConfig;
   auto StoreEthernetConfig(EthernetConfig const& ethernet_config) -> void;
 
+  auto LoadOtaConfig() -> OtaConfig;
+  auto StoreOtaConfig(OtaConfig const& ota_config) -> void;
+
   auto LoadWebServerConfig() -> WebServerConfig;
   auto StoreWebServerConfig(WebServerConfig const& webserver_config) -> void;
 
@@ -33,6 +37,25 @@ class Persistency {
   auto StoreMqttConfig(MqttConfig const& mqtt_config) -> void;
 
  private:
+  static constexpr char const* kEthKey{"eth"};
+  static constexpr char const* kEthKeyHostname{"hostname"};
+
+  static constexpr char const* kOtaKey{"ota"};
+  static constexpr char const* kOtaKeyPort{"port"};
+  static constexpr char const* kOtaKeyPassword{"password"};
+
+  static constexpr char const* kWebServerKey{"webserver"};
+  static constexpr char const* kWebServerKeyUser{"user"};
+  static constexpr char const* kWebServerKeyPassword{"password"};
+
+  static constexpr char const* kMqttKey{"mqtt"};
+  static constexpr char const* kMqttKeyServerAddr{"server_addr"};
+  static constexpr char const* kMqttKeyServerPort{"server_port"};
+  static constexpr char const* kMqttKeyUser{"user"};
+  static constexpr char const* kMqttKeyPassword{"password"};
+  static constexpr char const* kMqttKeyReconnectTime{"reconnect_t"};
+  static constexpr char const* kMqttKeyTopic{"topic"};
+
   Preferences preferences_;
 };
 

@@ -9,6 +9,7 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 * Access 1-wire devices via ethernet / MQTT protocol
 * 1-Wire bus access via hardware IC
 * Configuration via web interface
+* Over-the-air (OTA) updates (web interface and espota protocol)
 
 ## Supported 1-Wire devices
 
@@ -260,4 +261,13 @@ Example of the `Read` command for attribute `presence` cyclically triggered by t
 
 # Optional: Monitor via serial outputs
 ./monitor.sh
+```
+
+Flash / upload with dedicated method:
+```
+# via espota
+pio run --target upload -e wt32-eth01_espota
+
+# via esptool (serial)
+pio run --target upload -e wt32-eth01_esptool
 ```

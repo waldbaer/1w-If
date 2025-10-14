@@ -10,6 +10,9 @@ namespace config {
 
 class WebServerConfig {
  public:
+  static constexpr char const* kDefaultUser{"admin"};
+  static constexpr char const* kDefaultPassword{"1w-If"};
+
   WebServerConfig() = default;
 
   WebServerConfig(WebServerConfig const&) = default;
@@ -28,8 +31,8 @@ class WebServerConfig {
   auto SetPassword(String password) -> void;
 
  private:
-  String user_{"admin"};
-  String password_{"1w-If"};
+  String user_{kDefaultUser};
+  String password_{kDefaultPassword};
 };
 
 }  // namespace config

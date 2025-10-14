@@ -106,15 +106,15 @@ auto MqttClient::OnConnected(bool session_present) -> void {
 }
 
 auto MqttClient::OnDisconnect(AsyncMqttClientDisconnectReason reason) -> void {
-  logger_.DebugNoLn(F("[MQTTClient] disconnected. | reason: %u"), reason);
+  logger_.Debug(F("[MQTTClient] disconnected. | reason: %u"), reason);
 
   connection_state_ = ConnectionState::kDisconnected;
 
   if (ethernet::ethernet_g.IsConnected()) {
-    logger_.Debug(F(" | Reconnect in %u ms"), config_.GetReconnectTimeout());
+    logger_.Debug(F("Try to reconnect in %u ms"), config_.GetReconnectTimeout());
     reconnect_time_ = millis() + config_.GetReconnectTimeout();
   } else {
-    logger_.Debug(F(" | No auto-reconnect as ethernet is disconnected."));
+    logger_.Debug(F("No auto-reconnect as ethernet is disconnected."));
   }
 
   NotifyConnectionStateChangeHandlers();

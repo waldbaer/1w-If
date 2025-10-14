@@ -153,14 +153,21 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
   logger_.Verbose(F("[WebServer] Handle root request"));
 
   config::EthernetConfig ethernet_config{config::persistency_g.LoadEthernetConfig()};
+  config::OtaConfig ota_config{config::persistency_g.LoadOtaConfig()};
   config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
   config::MqttConfig mqtt_config{config::persistency_g.LoadMqttConfig()};
 
   request->send(LittleFS, "/index.html", "text/html", false,
-                [this, ethernet_config, webserver_config, mqtt_config](String const& var) {
+                [this, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
                   // EthernetConfig
                   if (var == "ETH_HOSTNAME") {
                     return ethernet_config.GetHostname();
+                  }
+                  // OtaConfig
+                  else if (var == "OTA_PORT") {
+                    return String{ota_config.GetPort()};
+                  } else if (var == "OTA_PASS") {
+                    return ota_config.GetPassword();
                   }
                   // WebServerConfig
                   else if (var == "WEBSERVER_USER") {
@@ -196,7 +203,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
     return;
   }
 
-  logger_.Verbose(F("[WebServer] saving config..."));
+  logger_.Debug(F("[WebServer] saving config..."));
 
   // ---- Store EthernetConfig ----
   config::EthernetConfig ethernet_config{};
@@ -206,6 +213,20 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   }
 
   config::persistency_g.StoreEthernetConfig(ethernet_config);
+
+  // ---- Store OTA Config ----
+
+  config::OtaConfig ota_config{};
+
+  if (request->hasParam("ota_port", true)) {
+    ota_config.SetPort(request->getParam("ota_port", true)->value().toInt());
+    logger_.Verbose(F("[WebServer] storing OTA port %u..."), ota_config.GetPort());
+  }
+  if (request->hasParam("ota_pass", true)) {
+    ota_config.SetPassword(request->getParam("ota_pass", true)->value().c_str());
+  }
+
+  config::persistency_g.StoreOtaConfig(ota_config);
 
   // ---- Store WebServer Config ----
 
