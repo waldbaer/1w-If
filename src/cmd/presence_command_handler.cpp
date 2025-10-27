@@ -88,6 +88,7 @@ auto PresenceCommandHandler::ProcessPresenceScanAll(Command& cmd) -> void {
     JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
     for (DeviceMap::value_type const& ow_device : ow_devices) {
       JsonObject json_device{json_devices.add<JsonObject>()};
+      json_device[json::kDeviceId] = ow_device.first.Format().c_str();
       json_device[json::kAttributePresence] = true;
       json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
     }
