@@ -4,6 +4,7 @@
 #include <Preferences.h>
 
 #include "config/ethernet_config.h"
+#include "config/logging_config.h"
 #include "config/mqtt_config.h"
 #include "config/ota_config.h"
 #include "config/webserver_config.h"
@@ -23,6 +24,8 @@ class Persistency {
   ~Persistency() = default;
 
   // ---- Public APIs ----
+  auto LoadLoggingConfig() -> LoggingConfig;
+  auto StoreLoggingConfig(LoggingConfig const& logging_config) -> void;
 
   auto LoadEthernetConfig() -> EthernetConfig;
   auto StoreEthernetConfig(EthernetConfig const& ethernet_config) -> void;
@@ -37,6 +40,11 @@ class Persistency {
   auto StoreMqttConfig(MqttConfig const& mqtt_config) -> void;
 
  private:
+  static constexpr char const* kLoggingKey{"log"};
+  static constexpr char const* kLoggingKeyLogLevel{"loglevel"};
+  static constexpr char const* kLoggingKeySerialLog{"serial"};
+  static constexpr char const* kLoggingKeyWebLog{"web"};
+
   static constexpr char const* kEthKey{"eth"};
   static constexpr char const* kEthKeyHostname{"hostname"};
 

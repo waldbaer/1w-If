@@ -4,12 +4,39 @@
 #include <string>
 
 #include "config/ethernet_config.h"
+#include "config/logging_config.h"
 #include "config/mqtt_config.h"
 #include "config/ota_config.h"
 #include "config/webserver_config.h"
 
 namespace owif {
 namespace config {
+
+// ---- Logging ----
+auto Persistency::LoadLoggingConfig() -> LoggingConfig {
+  LoggingConfig config{};
+
+  preferences_.begin(kLoggingKey, false);
+
+  config.SetLogLevel(static_cast<LoggingConfig::LogLevel>(
+      preferences_.getChar(kLoggingKeyLogLevel, static_cast<char>(LoggingConfig::kDefaultLogLevel))));
+  config.SetSerialLogEnabled(preferences_.getBool(kLoggingKeySerialLog, LoggingConfig::kDefaultSerialLogEnabled));
+  config.SetWebLogEnabled(preferences_.getBool(kLoggingKeyWebLog, LoggingConfig::kDefaultWebLogEnabled));
+
+  preferences_.end();
+
+  return config;
+}
+
+auto Persistency::StoreLoggingConfig(LoggingConfig const& logging_config) -> void {
+  preferences_.begin(kLoggingKey, false);
+
+  preferences_.putChar(kLoggingKeyLogLevel, static_cast<char>(logging_config.GetLogLevel()));
+  preferences_.putBool(kLoggingKeySerialLog, logging_config.GetSerialLogEnabled());
+  preferences_.putBool(kLoggingKeyWebLog, logging_config.GetWebLogEnabled());
+
+  preferences_.end();
+}
 
 // ---- Ethernet ----
 auto Persistency::LoadEthernetConfig() -> EthernetConfig {

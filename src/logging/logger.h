@@ -6,21 +6,10 @@
 
 #include <cstdint>
 
+#include "logging/log_level.h"
+
 namespace owif {
 namespace logging {
-
-/*!
- * \brief Available log levels
- */
-enum class LogLevel : std::uint8_t {
-  Silent = 0,
-  Fatal = 1,
-  Error = 2,
-  Warning = 3,
-  Info = 4,
-  Debug = 5,
-  Verbose = 6,
-};
 
 class Logger {
  public:
@@ -29,10 +18,11 @@ class Logger {
   Logger(Logger&&) = default;
   auto operator=(Logger const&) -> Logger& = default;
   auto operator=(Logger&&) -> Logger& = default;
+  ~Logger() = default;
 
   // ---- Public APIs --------------------------------------------------------------------------------------------------
 
-  auto Begin(std::uint32_t baud_rate, LogLevel log_level = LogLevel::Info) -> bool;
+  auto Begin(Print& output_sink = Serial, LogLevel log_level = LogLevel::Info) -> bool;
 
   auto SetLogLevel(LogLevel log_level) -> void;
   auto GetLogLevel() -> LogLevel;
@@ -122,6 +112,9 @@ class Logger {
   static auto PrintLogLevel(Print* log_output, int log_level) -> void;
 };
 
+/*!
+ * \brief Declaration of global logger instance.
+ */
 extern Logger logger_g;
 
 }  // namespace logging

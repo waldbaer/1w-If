@@ -11,6 +11,8 @@
 #include "config/persistency.h"
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
+#include "logging/multi_logger.h"
+#include "logging/web_socket_logger.h"
 #include "mqtt/mqtt_client.h"
 #include "mqtt/mqtt_message_handler.h"
 #include "one_wire/ds18b20.h"
@@ -23,18 +25,25 @@ namespace owif {
 
 static char const kOwIfVersion[] PROGMEM = "0.1.0";
 static constexpr std::uint32_t kSerialBaudRate{SERIAL_BAUD};  // SERIAL_BAUD defined by build process
-static constexpr logging::LogLevel kDefaultLogLevel{logging::LogLevel::Verbose};
 
 std::size_t publish_counter{0};
 
 auto owif_setup() -> void {
   bool setup_result{true};
 
-  setup_result &= logging::logger_g.Begin(kSerialBaudRate, kDefaultLogLevel);
+  // Setup Logging
+  config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
+  if (logging_config.GetSerialLogEnabled()) {
+    Serial.begin(kSerialBaudRate);
+    setup_result &= logging::multi_logger_g.RegisterLogSink(Serial);
+  }
+  setup_result &= logging::logger_g.Begin(logging::multi_logger_g, logging_config.GetLogLevel());
+
+  // Terminate Handler
   SetupTerminateHandler();
 
   logging::logger_g.Info(F("-- 1-Wire Interface --------------------"));
-  logging::logger_g.Info(F("Version: %s"), kOwIfVersion);
+  logging::logger_g.Info(F("| Version: %s                        |"), kOwIfVersion);
   logging::logger_g.Info(F("----------------------------------------"));
 
   setup_result &= one_wire::one_wire_system_g.Begin(/* run_initial_scan= */ true);
@@ -48,6 +57,11 @@ auto owif_setup() -> void {
   setup_result &= mqtt::mqtt_msg_handler_g.Begin(&mqtt::mqtt_client_g, &cmd::command_handler_g);
 
   setup_result &= ethernet::ethernet_g.Begin();
+
+  if (logging_config.GetWebLogEnabled()) {
+    setup_result &= logging::web_socket_logger_g.Begin(web_server::web_server_g.GetWebSocket());
+    setup_result &= logging::multi_logger_g.RegisterLogSink(logging::web_socket_logger_g);
+  }
 
   if (setup_result) {
     logging::logger_g.Info(F("Initialization finished. All sub-subsystems are initialized."));

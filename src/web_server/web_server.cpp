@@ -7,6 +7,8 @@
 
 #include "config/persistency.h"
 #include "ethernet/ethernet.h"
+#include "logging/web_socket_logger.h"
+#include "util/language.h"
 
 namespace owif {
 namespace web_server {
@@ -21,7 +23,6 @@ auto WebServer::Begin() -> bool {
 
   // Register static handlers
   web_server_.serveStatic("/style.css", LittleFS, "/style.css");
-  web_server_.serveStatic("/ota", LittleFS, "/ota.html");
 
   // Register path/page handlers
   web_server_.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleRoot(request); });
@@ -32,6 +33,7 @@ auto WebServer::Begin() -> bool {
   web_server_.on("/restart", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleRestart(request); });
 
   web_server_.on("/ota", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleOta(request); });
+  web_server_.on("/console", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleConsole(request); });
   web_server_.on(
       "/ota_update", HTTP_POST,
       // RequestHandler
@@ -41,6 +43,18 @@ auto WebServer::Begin() -> bool {
              std::size_t len, bool final) { HandleOtaUpdate(request, filename, index, data, len, final); }
 
   );
+
+  // Register additional handlers
+  web_socket_.onEvent([this](AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type, void* arg,
+                             uint8_t* data, size_t len) {
+    if (type == WS_EVT_CONNECT) {
+      logger_.Debug(F("[WebServer] client %u connected to WebSocket"), client->id());
+      owif::logging::web_socket_logger_g.LogFullHistory(client);
+    } else if (type == WS_EVT_DISCONNECT) {
+      logger_.Debug(F("[WebServer] client %u disconnected from WebSocket"), client->id());
+    }
+  });
+  web_server_.addHandler(&web_socket_);
 
   // Register Ethernet connection state change handler starting / stopping the WebServer
   ethernet::ethernet_g.OnConnectionStateChange(
@@ -58,6 +72,9 @@ auto WebServer::Loop() -> void {
   }
 
   // WebServer is handled asynchronously by base OS
+
+  // Cleanup WebSocket clients not properly closed by WebBrowsers
+  web_socket_.cleanupClients();
 }
 
 auto WebServer::OnConnectionStateChange(ethernet::ConnectionState connection_state) -> void {
@@ -72,6 +89,8 @@ auto WebServer::OnConnectionStateChange(ethernet::ConnectionState connection_sta
   }
 }
 
+auto WebServer::GetWebSocket() -> ::AsyncWebSocket& { return web_socket_; }
+
 // ---- Authentication -------------------------------------------------------------------------------------------------
 auto WebServer::GenerateAuthenticationToken() -> String {
   const char chars[]{"abcdefghijklmnopqrstuvwxyz0123456789"};
@@ -83,20 +102,30 @@ auto WebServer::GenerateAuthenticationToken() -> String {
 }
 
 auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
+  bool result{false};
+
   if (request->hasHeader("Cookie")) {
     String cookie = request->header("Cookie");
-    int pos{cookie.indexOf("ESPSESSIONID=")};
+    int pos{cookie.indexOf(kSessionCookieName)};
     if (pos != -1) {
-      String token{cookie.substring(pos + strlen("ESPSESSIONID="))};
-      if (sessions.count(token)) {
-        // Optional: check session timeout
-        sessions[token] = millis();  // Update activity
-        return true;
+      String token{cookie.substring(pos + strlen(kSessionCookieName))};
+
+      SessionsMap::iterator found_session{sessions_.find(token)};
+      if (found_session != sessions_.end()) {
+        std::uint32_t const session_age{millis() - found_session->second};
+        if (session_age < kSessionTimeoutMs) {
+          found_session->second = millis();  // Update session
+          result = true;
+        } else {
+          logger_.Debug(F("[WebServer] Session expired (age: %u ms)"), session_age);
+          sessions_.erase(found_session);  // Session expired
+        }
       }
     }
   }
-  return false;
+  return result;
 }
+
 auto WebServer::RedirectTo(AsyncWebServerRequest* request, char const* location) -> void {
   AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Please login")};
   response->addHeader("Location", location);
@@ -117,11 +146,11 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
 
   if (user == String{webserver_config.GetUser().c_str()} && pass == String{webserver_config.GetPassword().c_str()}) {
     String token{GenerateAuthenticationToken()};
-    sessions[token] = millis();
+    sessions_[token] = millis();
 
     AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Login successful")};
     response->addHeader("Location", "/");
-    response->addHeader("Set-Cookie", "ESPSESSIONID=" + token);
+    response->addHeader("Set-Cookie", kSessionCookieName + token + "; Max-Age=" + kSessionTimeoutSec);
     request->send(response);
   } else {
     request->send(401, "text/plain", "Login failed");
@@ -131,15 +160,15 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
 auto WebServer::HandleLogout(AsyncWebServerRequest* request) -> void {
   if (request->hasHeader("Cookie")) {
     String cookie{request->header("Cookie")};
-    int pos{cookie.indexOf("ESPSESSIONID=")};
+    int pos{cookie.indexOf(kSessionCookieName)};
     if (pos != -1) {
-      String token{cookie.substring(pos + strlen("ESPSESSIONID="))};
-      sessions.erase(token);
+      String token{cookie.substring(pos + strlen(kSessionCookieName))};
+      sessions_.erase(token);
     }
   }
   AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Logged out.")};
   response->addHeader("Location", "/login");
-  response->addHeader("Set-Cookie", "ESPSESSIONID=deleted; Max-Age=0");
+  response->addHeader("Set-Cookie", String{kSessionCookieName} + "deleted; Max-Age=0");
   request->send(response);
 }
 
@@ -152,13 +181,22 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
   }
   logger_.Verbose(F("[WebServer] Handle root request"));
 
+  config::LoggingConfig logging_config{config::persistency_g.LoadLoggingConfig()};
   config::EthernetConfig ethernet_config{config::persistency_g.LoadEthernetConfig()};
   config::OtaConfig ota_config{config::persistency_g.LoadOtaConfig()};
   config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
   config::MqttConfig mqtt_config{config::persistency_g.LoadMqttConfig()};
 
   request->send(LittleFS, "/index.html", "text/html", false,
-                [this, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
+                [this, logging_config, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
+                  // LoggingConfig
+                  if (var == "LOG_LEVEL") {
+                    return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
+                  } else if (var == "LOG_SERIAL") {
+                    return logging_config.GetSerialLogEnabled() ? String{"checked"} : String{""};
+                  } else if (var == "LOG_WEB") {
+                    return logging_config.GetWebLogEnabled() ? String{"checked"} : String{""};
+                  }
                   // EthernetConfig
                   if (var == "ETH_HOSTNAME") {
                     return ethernet_config.GetHostname();
@@ -204,6 +242,21 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   }
 
   logger_.Debug(F("[WebServer] saving config..."));
+
+  // ---- Store LoggingConfig ----
+  config::LoggingConfig logging_config{};
+
+  if (request->hasParam("log_level", true)) {
+    logging_config.SetLogLevel(static_cast<logging::LogLevel>(request->getParam("log_level", true)->value().toInt()));
+  }
+  if (request->hasParam("serial_log", true)) {
+    logging_config.SetSerialLogEnabled(request->getParam("serial_log", true)->value() == "on");
+  }
+  if (request->hasParam("web_log", true)) {
+    logging_config.SetWebLogEnabled(request->getParam("web_log", true)->value() == "on");
+  }
+
+  config::persistency_g.StoreLoggingConfig(logging_config);
 
   // ---- Store EthernetConfig ----
   config::EthernetConfig ethernet_config{};
@@ -320,6 +373,14 @@ auto WebServer::HandleOtaUpdate(AsyncWebServerRequest* request, String const& fi
       Update.printError(Serial);
     }
   }
+}
+
+auto WebServer::HandleConsole(AsyncWebServerRequest* request) -> void {
+  if (!CheckAuthentication(request)) {
+    RedirectTo(request, "/login");
+    return;
+  }
+  request->send(LittleFS, "/console.html", "text/html");
 }
 
 /*!

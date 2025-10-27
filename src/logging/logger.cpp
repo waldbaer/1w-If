@@ -10,11 +10,9 @@ namespace logging {
 
 // ---- Public APIs ----------------------------------------------------------------------------------------------------
 
-auto Logger::Begin(std::uint32_t baud_rate, LogLevel log_level) -> bool {
-  Serial.begin(baud_rate);
-
+auto Logger::Begin(Print& output_sink, LogLevel log_level) -> bool {
   Log.setPrefix(Logger::PrintPrefix);  // set logger output prefix
-  Log.begin(static_cast<int>(log_level), &Serial);
+  Log.begin(static_cast<int>(log_level), &output_sink);
   Log.setShowLevel(false);  // Do not show loglevel, we will do this in the prefix
 
   return true;
@@ -52,25 +50,25 @@ auto Logger::PrintLogLevel(Print* log_output, int log_level) -> void {
   switch (log_level) {
     default:
     case 0:
-      log_output->print("SILENT ");
+      log_output->print("[S] ");
       break;
     case 1:
-      log_output->print("FATAL ");
+      log_output->print("[F] ");
       break;
     case 2:
-      log_output->print("ERROR ");
+      log_output->print("[E] ");
       break;
     case 3:
-      log_output->print("WARN  ");
+      log_output->print("[W] ");
       break;
     case 4:
-      log_output->print("INFO  ");
+      log_output->print("[I] ");
       break;
     case 5:
-      log_output->print("DEBUG ");
+      log_output->print("[D] ");
       break;
     case 6:
-      log_output->print("VERB  ");
+      log_output->print("[V] ");
       break;
   }
 }
