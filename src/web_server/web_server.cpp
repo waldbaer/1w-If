@@ -8,6 +8,7 @@
 #include "config/persistency.h"
 #include "ethernet/ethernet.h"
 #include "logging/web_socket_logger.h"
+#include "util/language.h"
 
 namespace owif {
 namespace web_server {
@@ -49,7 +50,6 @@ auto WebServer::Begin() -> bool {
     if (type == WS_EVT_CONNECT) {
       logger_.Debug(F("[WebServer] client %u connected to WebSocket"), client->id());
       owif::logging::web_socket_logger_g.LogFullHistory(client);
-
     } else if (type == WS_EVT_DISCONNECT) {
       logger_.Debug(F("[WebServer] client %u disconnected from WebSocket"), client->id());
     }
@@ -73,7 +73,7 @@ auto WebServer::Loop() -> void {
 
   // WebServer is handled asynchronously by base OS
 
-  // Cleanup WebSocket
+  // Cleanup WebSocket clients not properly closed by WebBrowsers
   web_socket_.cleanupClients();
 }
 
@@ -181,13 +181,22 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
   }
   logger_.Verbose(F("[WebServer] Handle root request"));
 
+  config::LoggingConfig logging_config{config::persistency_g.LoadLoggingConfig()};
   config::EthernetConfig ethernet_config{config::persistency_g.LoadEthernetConfig()};
   config::OtaConfig ota_config{config::persistency_g.LoadOtaConfig()};
   config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
   config::MqttConfig mqtt_config{config::persistency_g.LoadMqttConfig()};
 
   request->send(LittleFS, "/index.html", "text/html", false,
-                [this, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
+                [this, logging_config, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
+                  // LoggingConfig
+                  if (var == "LOG_LEVEL") {
+                    return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
+                  } else if (var == "LOG_SERIAL") {
+                    return logging_config.GetSerialLogEnabled() ? String{"checked"} : String{""};
+                  } else if (var == "LOG_WEB") {
+                    return logging_config.GetWebLogEnabled() ? String{"checked"} : String{""};
+                  }
                   // EthernetConfig
                   if (var == "ETH_HOSTNAME") {
                     return ethernet_config.GetHostname();
@@ -233,6 +242,21 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   }
 
   logger_.Debug(F("[WebServer] saving config..."));
+
+  // ---- Store LoggingConfig ----
+  config::LoggingConfig logging_config{};
+
+  if (request->hasParam("log_level", true)) {
+    logging_config.SetLogLevel(static_cast<logging::LogLevel>(request->getParam("log_level", true)->value().toInt()));
+  }
+  if (request->hasParam("serial_log", true)) {
+    logging_config.SetSerialLogEnabled(request->getParam("serial_log", true)->value() == "on");
+  }
+  if (request->hasParam("web_log", true)) {
+    logging_config.SetWebLogEnabled(request->getParam("web_log", true)->value() == "on");
+  }
+
+  config::persistency_g.StoreLoggingConfig(logging_config);
 
   // ---- Store EthernetConfig ----
   config::EthernetConfig ethernet_config{};

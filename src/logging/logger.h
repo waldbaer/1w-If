@@ -6,21 +6,10 @@
 
 #include <cstdint>
 
+#include "logging/log_level.h"
+
 namespace owif {
 namespace logging {
-
-/*!
- * \brief Available log levels
- */
-enum class LogLevel : std::uint8_t {
-  Silent = 0,
-  Fatal = 1,
-  Error = 2,
-  Warning = 3,
-  Info = 4,
-  Debug = 5,
-  Verbose = 6,
-};
 
 class Logger {
  public:

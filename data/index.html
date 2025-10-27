@@ -5,6 +5,12 @@
   <meta charset="UTF-8" />
   <title>1-Wire Interface (%ETH_HOSTNAME%)</title>
   <link rel="stylesheet" href="/style.css">
+  <script>
+    // Select configured log-level on page load
+    window.addEventListener('load', function () {
+      document.getElementById('log_level-select').value = "%LOG_LEVEL%";
+    });
+  </script>
 </head>
 
 <body>
@@ -16,6 +22,19 @@
 
   <h2>Configuration</h2>
   <form id='configForm'>
+    <h3>Logging Config</h3>
+    Log-Level: <select id="log_level-select" name="log_level">
+      <option value="0">OFF</option>
+      <option value="1">Fatal</option>
+      <option value="2">Error</option>
+      <option value="3">Warning</option>
+      <option value="4">Info</option>
+      <option value="5">Debug</option>
+      <option value="6">Verbose</option>
+    </select><br />
+    Serial Log: <input type="checkbox" name="serial_log" %LOG_SERIAL%><br />
+    Web Log: <input type="checkbox" name="web_log" %LOG_WEB%>
+
     <h3>Ethernet Config</h3>
     Hostname: <input name='eth_hostname' value='%ETH_HOSTNAME%'><br>
 

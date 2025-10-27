@@ -25,7 +25,6 @@ namespace owif {
 
 static char const kOwIfVersion[] PROGMEM = "0.1.0";
 static constexpr std::uint32_t kSerialBaudRate{SERIAL_BAUD};  // SERIAL_BAUD defined by build process
-static constexpr logging::LogLevel kDefaultLogLevel{logging::LogLevel::Verbose};
 
 std::size_t publish_counter{0};
 
@@ -33,10 +32,14 @@ auto owif_setup() -> void {
   bool setup_result{true};
 
   // Setup Logging
-  Serial.begin(kSerialBaudRate);
-  setup_result &= logging::multi_logger_g.RegisterLogSink(Serial);
+  config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
+  if (logging_config.GetSerialLogEnabled()) {
+    Serial.begin(kSerialBaudRate);
+    setup_result &= logging::multi_logger_g.RegisterLogSink(Serial);
+  }
+  setup_result &= logging::logger_g.Begin(logging::multi_logger_g, logging_config.GetLogLevel());
 
-  setup_result &= logging::logger_g.Begin(logging::multi_logger_g, kDefaultLogLevel);
+  // Terminate Handler
   SetupTerminateHandler();
 
   logging::logger_g.Info(F("-- 1-Wire Interface --------------------"));
@@ -55,8 +58,10 @@ auto owif_setup() -> void {
 
   setup_result &= ethernet::ethernet_g.Begin();
 
-  logging::web_socket_logger_g.Begin(web_server::web_server_g.GetWebSocket());
-  logging::multi_logger_g.RegisterLogSink(logging::web_socket_logger_g);
+  if (logging_config.GetWebLogEnabled()) {
+    setup_result &= logging::web_socket_logger_g.Begin(web_server::web_server_g.GetWebSocket());
+    setup_result &= logging::multi_logger_g.RegisterLogSink(logging::web_socket_logger_g);
+  }
 
   if (setup_result) {
     logging::logger_g.Info(F("Initialization finished. All sub-subsystems are initialized."));
