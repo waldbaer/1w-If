@@ -13,6 +13,12 @@
 namespace owif {
 namespace web_server {
 
+enum class ResponseCode : int {
+  OK = 200,          //
+  BadRequest = 400,  //
+  Unauthorized = 401
+};
+
 class WebServer {
  public:
   WebServer() = default;

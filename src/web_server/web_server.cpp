@@ -177,7 +177,7 @@ auto WebServer::HandleLoginGet(AsyncWebServerRequest* request) -> void {
 auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
   if (!request->hasParam(kLoginParamUser, true) || !request->hasParam(kLoginParamPassword, true)) {
     logger_.Debug(F("[WebServer] Missing/Inconsistent login parameters"));
-    request->send(400, kContextTypePlain, "Missing parameters");
+    request->send(ToUnderlying(ResponseCode::BadRequest), kContextTypePlain, "Missing parameters");
     return;
   }
 
@@ -185,7 +185,7 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
   AsyncWebParameter const* param_pass{request->getParam(kLoginParamPassword, true)};
   if (param_user == nullptr || param_pass == nullptr) {
     logger_.Debug(F("[WebServer] Missing/Inconsistent login parameters"));
-    request->send(400, kContextTypePlain, "Bad request");
+    request->send(ToUnderlying(ResponseCode::BadRequest), kContextTypePlain, "Bad request");
     return;
   }
 
@@ -206,7 +206,7 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
                         kSessionCookieName + token + "; Path=/; HttpOnly; SameSite=Lax; Max-Age=" + kSessionTimeoutSec);
     request->send(response);
   } else {
-    request->send(401, kContextTypePlain, "Login failed");
+    request->send(ToUnderlying(ResponseCode::Unauthorized), kContextTypePlain, "Login failed");
   }
 }
 
@@ -375,11 +375,11 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
   // Send positive response
-  request->send(200, kContextTypeHtml, "Stored! Restart necessary...");
+  request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Stored! Restart necessary...");
 }
 
 auto WebServer::HandleRestart(AsyncWebServerRequest* request) -> void {
-  request->send(200, kContextTypeHtml, "Restarting... (Reloading page in 5sec)");
+  request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Restarting... (Reloading page in 5sec)");
 
   restart_time_ = millis() + kRestartDelay;
 }
@@ -399,7 +399,8 @@ auto WebServer::HandleOtaRequest(AsyncWebServerRequest* request) -> void {
   }
 
   bool const update_result{!Update.hasError()};
-  request->send(200, kContextTypePlain, update_result ? "Update success! Restarting..." : "Update failed!");
+  request->send(ToUnderlying(ResponseCode::OK), kContextTypePlain,
+                update_result ? "Update success! Restarting..." : "Update failed!");
 
   if (update_result) {
     restart_time_ = millis() + kRestartDelay;
