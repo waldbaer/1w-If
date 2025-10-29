@@ -70,7 +70,7 @@ auto WebServer::Loop() -> void {
 
   for (SessionsMap::iterator session = sessions_.begin(); session != sessions_.end();) {
     if (session->second.expires_at_ms <= now) {
-      logger_.Verbose(F("[WebServer] session expired. Last activity: %s"), session->first,
+      logger_.Verbose(F("[WebServer] session expired. Last activity: %s"),
                       util::TimeUtil::Format(session->second.last_activity_ms));
       session = sessions_.erase(session);
     } else {
@@ -108,7 +108,7 @@ auto WebServer::GetWebSocket() -> ::AsyncWebSocket& { return web_socket_; }
 // ---- Authentication -------------------------------------------------------------------------------------------------
 auto WebServer::GenerateAuthenticationToken() -> String {
   uint8_t buf[20];
-  esp_fill_random(buf, sizeof(buf));  // kryptographic safe random bytes
+  esp_fill_random(buf, sizeof(buf));  // cryptographic safe random bytes
 
   const char hex[] = "0123456789abcdef";
   String token{};
@@ -139,7 +139,7 @@ auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
           found_session->second.expires_at_ms = now + kSessionTimeoutMs;
           result = true;
         } else {
-          logger_.Verbose(F("[WebServer] session expired. Last activity: %s"), found_session->first,
+          logger_.Verbose(F("[WebServer] session expired. Last activity: %s"),
                           util::TimeUtil::Format(found_session->second.last_activity_ms));
           sessions_.erase(found_session);  // Session expired
         }
@@ -149,51 +149,80 @@ auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
   return result;
 }
 
+auto WebServer::ConstTimeEquals(const String& left, const String& right) -> bool {
+  bool result{false};
+
+  if (left.length() == right.length()) {
+    std::uint8_t character_xor{0};
+    for (std::size_t i{0}; i < left.length(); ++i) {
+      character_xor |= static_cast<std::uint8_t>(left[i]) ^ static_cast<std::uint8_t>(right[i]);
+    }
+
+    result = (character_xor == 0);
+  }
+
+  return result;
+}
+
 auto WebServer::RedirectTo(AsyncWebServerRequest* request, char const* location) -> void {
-  AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Please login")};
-  response->addHeader("Location", location);
+  AsyncWebServerResponse* response{request->beginResponse(302, kContextTypePlain, "Please login")};
+  response->addHeader(kHeaderLocation, location);
   request->send(response);
 }
 
 auto WebServer::HandleLoginGet(AsyncWebServerRequest* request) -> void {
-  request->send(LittleFS, "/login.html", "text/html");
+  request->send(LittleFS, "/login.html", kContextTypeHtml);
 }
 
 auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
-  String user{request->getParam("user", true)->value()};
-  String pass{request->getParam("pass", true)->value()};
+  if (!request->hasParam(kLoginParamUser, true) || !request->hasParam(kLoginParamPassword, true)) {
+    logger_.Debug(F("[WebServer] Missing/Inconsistent login parameters"));
+    request->send(400, kContextTypePlain, "Missing parameters");
+    return;
+  }
 
-  config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
+  AsyncWebParameter const* param_user{request->getParam(kLoginParamUser, true)};
+  AsyncWebParameter const* param_pass{request->getParam(kLoginParamPassword, true)};
+  if (param_user == nullptr || param_pass == nullptr) {
+    logger_.Debug(F("[WebServer] Missing/Inconsistent login parameters"));
+    request->send(400, kContextTypePlain, "Bad request");
+    return;
+  }
 
-  logger_.Debug(F("[WebServer] Checking login from user '%s' with password '<protected>'"), user.c_str());
+  String const& user{param_user->value()};
+  String const& pass{param_pass->value()};
+  logger_.Debug(F("[WebServer] Checking login from user '%s'"), user);
 
-  if (user == String{webserver_config.GetUser().c_str()} && pass == String{webserver_config.GetPassword().c_str()}) {
+  config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
+  if (ConstTimeEquals(user, webserver_config.GetUser()) && ConstTimeEquals(pass, webserver_config.GetPassword())) {
     util::TimeStampMs const now{millis()};
 
     String const token{GenerateAuthenticationToken()};
     sessions_[token] = SessionInfo{/*last_activity_ms=*/now, /*expires_at_ms=*/now + kSessionTimeoutMs};
 
-    AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Login successful")};
-    response->addHeader("Location", "/");
-    response->addHeader("Set-Cookie", kSessionCookieName + token + "; Max-Age=" + kSessionTimeoutSec);
+    AsyncWebServerResponse* response{request->beginResponse(302, kContextTypePlain, "Login successful")};
+    response->addHeader(kHeaderLocation, "/");
+    response->addHeader(kHeaderSetCookie,
+                        kSessionCookieName + token + "; Path=/; HttpOnly; SameSite=Lax; Max-Age=" + kSessionTimeoutSec);
     request->send(response);
   } else {
-    request->send(401, "text/plain", "Login failed");
+    request->send(401, kContextTypePlain, "Login failed");
   }
 }
 
 auto WebServer::HandleLogout(AsyncWebServerRequest* request) -> void {
-  if (request->hasHeader("Cookie")) {
-    String const cookie{request->header("Cookie")};
+  if (request->hasHeader(kHeaderCookie)) {
+    String const cookie{request->header(kHeaderCookie)};
     int const pos{cookie.indexOf(kSessionCookieName)};
     if (pos != -1) {
       String const token{cookie.substring(pos + strlen(kSessionCookieName))};
       sessions_.erase(token);
     }
   }
-  AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Logged out.")};
-  response->addHeader("Location", "/login");
-  response->addHeader("Set-Cookie", String{kSessionCookieName} + "deleted; Max-Age=0");
+
+  AsyncWebServerResponse* response{request->beginResponse(302, kContextTypePlain, "Logged out.")};
+  response->addHeader(kHeaderLocation, "/login");
+  response->addHeader(kHeaderSetCookie, String{kSessionCookieName} + "deleted; Max-Age=0");
   request->send(response);
 }
 
@@ -206,13 +235,13 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
   }
   logger_.Verbose(F("[WebServer] Handle root request"));
 
-  config::LoggingConfig logging_config{config::persistency_g.LoadLoggingConfig()};
-  config::EthernetConfig ethernet_config{config::persistency_g.LoadEthernetConfig()};
-  config::OtaConfig ota_config{config::persistency_g.LoadOtaConfig()};
-  config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
-  config::MqttConfig mqtt_config{config::persistency_g.LoadMqttConfig()};
+  config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
+  config::EthernetConfig const ethernet_config{config::persistency_g.LoadEthernetConfig()};
+  config::OtaConfig const ota_config{config::persistency_g.LoadOtaConfig()};
+  config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
+  config::MqttConfig const mqtt_config{config::persistency_g.LoadMqttConfig()};
 
-  request->send(LittleFS, "/index.html", "text/html", false,
+  request->send(LittleFS, "/index.html", kContextTypeHtml, false,
                 [this, logging_config, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
                   // LoggingConfig
                   if (var == "LOG_LEVEL") {
@@ -254,7 +283,7 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
                   }
                   // Unknown
                   else {
-                    logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var.c_str());
+                    logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
                     return String();
                   }
                 });
@@ -266,19 +295,20 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
     return;
   }
 
-  logger_.Debug(F("[WebServer] saving config..."));
+  logger_.Debug(F("[WebServer] Saving config..."));
 
   // ---- Store LoggingConfig ----
   config::LoggingConfig logging_config{};
 
-  if (request->hasParam("log_level", true)) {
-    logging_config.SetLogLevel(static_cast<logging::LogLevel>(request->getParam("log_level", true)->value().toInt()));
+  if (request->hasParam(kConfigSaveLogLevel, true)) {
+    logging_config.SetLogLevel(
+        static_cast<logging::LogLevel>(request->getParam(kConfigSaveLogLevel, true)->value().toInt()));
   }
-  if (request->hasParam("serial_log", true)) {
-    logging_config.SetSerialLogEnabled(request->getParam("serial_log", true)->value() == "on");
+  if (request->hasParam(kConfigSaveSerialLog, true)) {
+    logging_config.SetSerialLogEnabled(request->getParam(kConfigSaveSerialLog, true)->value() == "on");
   }
-  if (request->hasParam("web_log", true)) {
-    logging_config.SetWebLogEnabled(request->getParam("web_log", true)->value() == "on");
+  if (request->hasParam(kConfigSaveWebLog, true)) {
+    logging_config.SetWebLogEnabled(request->getParam(kConfigSaveWebLog, true)->value() == "on");
   }
 
   config::persistency_g.StoreLoggingConfig(logging_config);
@@ -286,8 +316,8 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   // ---- Store EthernetConfig ----
   config::EthernetConfig ethernet_config{};
 
-  if (request->hasParam("eth_hostname", true)) {
-    ethernet_config.SetHostname(request->getParam("eth_hostname", true)->value().c_str());
+  if (request->hasParam(kConfigSaveEthHostname, true)) {
+    ethernet_config.SetHostname(request->getParam(kConfigSaveEthHostname, true)->value());
   }
 
   config::persistency_g.StoreEthernetConfig(ethernet_config);
@@ -296,12 +326,11 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   config::OtaConfig ota_config{};
 
-  if (request->hasParam("ota_port", true)) {
-    ota_config.SetPort(request->getParam("ota_port", true)->value().toInt());
-    logger_.Verbose(F("[WebServer] storing OTA port %u..."), ota_config.GetPort());
+  if (request->hasParam(kConfigSaveOtaPort, true)) {
+    ota_config.SetPort(request->getParam(kConfigSaveOtaPort, true)->value().toInt());
   }
-  if (request->hasParam("ota_pass", true)) {
-    ota_config.SetPassword(request->getParam("ota_pass", true)->value().c_str());
+  if (request->hasParam(kConfigSaveOtaPass, true)) {
+    ota_config.SetPassword(request->getParam(kConfigSaveOtaPass, true)->value());
   }
 
   config::persistency_g.StoreOtaConfig(ota_config);
@@ -310,11 +339,11 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   config::WebServerConfig webserver_config{};
 
-  if (request->hasParam("webserver_user", true)) {
-    webserver_config.SetUser(request->getParam("webserver_user", true)->value().c_str());
+  if (request->hasParam(kConfigSaveWebServerUser, true)) {
+    webserver_config.SetUser(request->getParam(kConfigSaveWebServerUser, true)->value());
   }
-  if (request->hasParam("webserver_pass", true)) {
-    webserver_config.SetPassword(request->getParam("webserver_pass", true)->value().c_str());
+  if (request->hasParam(kConfigSaveWebServerPass, true)) {
+    webserver_config.SetPassword(request->getParam(kConfigSaveWebServerPass, true)->value());
   }
 
   config::persistency_g.StoreWebServerConfig(webserver_config);
@@ -323,35 +352,34 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   config::MqttConfig mqtt_config{};
 
-  if (request->hasParam("mqtt_server", true)) {
-    mqtt_config.SetServerAddr(request->getParam("mqtt_server", true)->value().c_str());
+  if (request->hasParam(kConfigSaveMqttServer, true)) {
+    mqtt_config.SetServerAddr(request->getParam(kConfigSaveMqttServer, true)->value());
   }
-  if (request->hasParam("mqtt_port", true)) {
-    mqtt_config.SetServerPort(request->getParam("mqtt_port", true)->value().toInt());
+  if (request->hasParam(kConfigSaveMqttPort, true)) {
+    mqtt_config.SetServerPort(request->getParam(kConfigSaveMqttPort, true)->value().toInt());
   }
-  if (request->hasParam("mqtt_user", true)) {
-    mqtt_config.SetUser(request->getParam("mqtt_user", true)->value().c_str());
+  if (request->hasParam(kConfigSaveMqttUser, true)) {
+    mqtt_config.SetUser(request->getParam(kConfigSaveMqttUser, true)->value());
   }
-  if (request->hasParam("mqtt_pass", true)) {
-    mqtt_config.SetPassword(request->getParam("mqtt_pass", true)->value().c_str());
+  if (request->hasParam(kConfigSaveMqttPass, true)) {
+    mqtt_config.SetPassword(request->getParam(kConfigSaveMqttPass, true)->value());
   }
-  if (request->hasParam("MQTT_RECON_TIMEOUT", true)) {
-    std::string reconnect_timeout_str{request->getParam("MQTT_RECON_TIMEOUT", true)->value().c_str()};
-    std::uint32_t reconnect_timeout{static_cast<std::uint32_t>(std::stoul(reconnect_timeout_str, nullptr, 10))};
-    mqtt_config.SetReconnectTimeout(reconnect_timeout);
+  if (request->hasParam(kConfigSaveMqttReconTimeout, true)) {
+    String const reconnect_timeout_str{request->getParam(kConfigSaveMqttReconTimeout, true)->value()};
+    mqtt_config.SetReconnectTimeout(std::strtoul(reconnect_timeout_str.c_str(), nullptr, 10));
   }
-  if (request->hasParam("mqtt_topic", true)) {
-    mqtt_config.SetTopic(request->getParam("mqtt_topic", true)->value().c_str());
+  if (request->hasParam(kConfigSaveMqttTopic, true)) {
+    mqtt_config.SetTopic(request->getParam(kConfigSaveMqttTopic, true)->value());
   }
 
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
   // Send positive response
-  request->send(200, "text/html", "Stored! Restart necessary...");
+  request->send(200, kContextTypeHtml, "Stored! Restart necessary...");
 }
 
 auto WebServer::HandleRestart(AsyncWebServerRequest* request) -> void {
-  request->send(200, "text/html", "Restarting... (Reloading page in 5sec)");
+  request->send(200, kContextTypeHtml, "Restarting... (Reloading page in 5sec)");
 
   restart_time_ = millis() + kRestartDelay;
 }
@@ -361,7 +389,7 @@ auto WebServer::HandleOta(AsyncWebServerRequest* request) -> void {
     RedirectTo(request, "/login");
     return;
   }
-  request->send(LittleFS, "/ota.html", "text/html");
+  request->send(LittleFS, "/ota.html", kContextTypeHtml);
 }
 
 auto WebServer::HandleOtaRequest(AsyncWebServerRequest* request) -> void {
@@ -371,7 +399,7 @@ auto WebServer::HandleOtaRequest(AsyncWebServerRequest* request) -> void {
   }
 
   bool const update_result{!Update.hasError()};
-  request->send(200, "text/plain", update_result ? "Update success! Restarting..." : "Update failed!");
+  request->send(200, kContextTypePlain, update_result ? "Update success! Restarting..." : "Update failed!");
 
   if (update_result) {
     restart_time_ = millis() + kRestartDelay;
@@ -381,7 +409,7 @@ auto WebServer::HandleOtaRequest(AsyncWebServerRequest* request) -> void {
 auto WebServer::HandleOtaUpdate(AsyncWebServerRequest* request, String const& filename, std::size_t index,
                                 std::uint8_t* data, std::size_t len, bool final) -> void {
   if (!index) {
-    logger_.Debug(F("[WebServer] OTA update start: %s"), filename.c_str());
+    logger_.Debug(F("[WebServer] OTA update start: %s"), filename);
     if (!Update.begin(UPDATE_SIZE_UNKNOWN)) {
       Update.printError(Serial);
     }
@@ -393,7 +421,7 @@ auto WebServer::HandleOtaUpdate(AsyncWebServerRequest* request, String const& fi
   }
   if (final) {
     if (Update.end(true)) {
-      logger_.Debug(F("[WebServer] OTA update completed: %u Bytes"), index + len);
+      logger_.Debug(F("[WebServer] OTA update completed: %u bytes"), index + len);
     } else {
       Update.printError(Serial);
     }
@@ -405,7 +433,7 @@ auto WebServer::HandleConsole(AsyncWebServerRequest* request) -> void {
     RedirectTo(request, "/login");
     return;
   }
-  request->send(LittleFS, "/console.html", "text/html");
+  request->send(LittleFS, "/console.html", kContextTypeHtml);
 }
 
 /*!

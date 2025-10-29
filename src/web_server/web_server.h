@@ -37,11 +37,36 @@ class WebServer {
   static constexpr std::uint32_t kSessionTimeoutSec{kSessionTimeoutMin * 60};
   static constexpr std::uint32_t kSessionTimeoutMs{kSessionTimeoutSec * 1000};
 
+  static constexpr char const* kHeaderLocation{"Location"};
+  static constexpr char const* kHeaderCookie{"Cookie"};
+  static constexpr char const* kHeaderSetCookie{"Set-Cookie"};
   static constexpr char const* kSessionCookieName{"OWIF_SESSION_ID="};
+
+  static constexpr char const* kLoginParamUser{"user"};
+  static constexpr char const* kLoginParamPassword{"pass"};
+
+  static constexpr char const* kContextTypePlain{"text/plain"};
+  static constexpr char const* kContextTypeHtml{"text/html"};
+
+  static constexpr char const* kConfigSaveLogLevel{"log_level"};
+  static constexpr char const* kConfigSaveSerialLog{"serial_log"};
+  static constexpr char const* kConfigSaveWebLog{"web_log"};
+  static constexpr char const* kConfigSaveEthHostname{"eth_hostname"};
+  static constexpr char const* kConfigSaveOtaPort{"ota_port"};
+  static constexpr char const* kConfigSaveOtaPass{"ota_pass"};
+  static constexpr char const* kConfigSaveWebServerUser{"webserver_user"};
+  static constexpr char const* kConfigSaveWebServerPass{"webserver_pass"};
+  static constexpr char const* kConfigSaveMqttServer{"mqtt_server"};
+  static constexpr char const* kConfigSaveMqttPort{"mqtt_port"};
+  static constexpr char const* kConfigSaveMqttUser{"mqtt_user"};
+  static constexpr char const* kConfigSaveMqttPass{"mqtt_pass"};
+  static constexpr char const* kConfigSaveMqttTopic{"mqtt_topic"};
+  static constexpr char const* kConfigSaveMqttReconTimeout{"mqtt_recon_timeout"};
 
   auto OnConnectionStateChange(ethernet::ConnectionState connection_state) -> void;
 
   auto CheckAuthentication(AsyncWebServerRequest* request) -> bool;
+  auto ConstTimeEquals(String const& left, String const& right) -> bool;
   auto GenerateAuthenticationToken() -> String;
   auto RedirectTo(AsyncWebServerRequest* request, char const* location) -> void;
 
