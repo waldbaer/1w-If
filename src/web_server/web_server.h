@@ -8,6 +8,7 @@
 
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
+#include "util/time_util.h"
 
 namespace owif {
 namespace web_server {
@@ -32,7 +33,7 @@ class WebServer {
   static constexpr std::uint16_t kWebServerPort{80};
   static constexpr char const* kWebSocketUrl{"/"};  // reachable via root URL ws://
 
-  static constexpr std::uint32_t kSessionTimeoutMin{30};
+  static constexpr std::uint32_t kSessionTimeoutMin{1};
   static constexpr std::uint32_t kSessionTimeoutSec{kSessionTimeoutMin * 60};
   static constexpr std::uint32_t kSessionTimeoutMs{kSessionTimeoutSec * 1000};
 
@@ -66,7 +67,12 @@ class WebServer {
   ::AsyncWebServer web_server_{kWebServerPort};
   ::AsyncWebSocket web_socket_{kWebSocketUrl};
 
-  using SessionsMap = std::map<String, std::size_t>;
+  struct SessionInfo {
+    util::TimeStampMs last_activity_ms;
+    util::TimeStampMs expires_at_ms;  // millis() + TTL
+    // String csrf_token;                // for CSRF-Schutz
+  };
+  using SessionsMap = std::map<String, SessionInfo>;
   SessionsMap sessions_;  // token -> timestamp
 
   std::size_t restart_time_{0};                      // ms

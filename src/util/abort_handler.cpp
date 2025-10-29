@@ -1,6 +1,3 @@
-#ifndef OWIF_UTIL_ABORT_HANDLER_H
-#define OWIF_UTIL_ABORT_HANDLER_H
-
 #include "util/abort_handler.h"
 
 #include <exception>
@@ -16,5 +13,3 @@ extern "C" [[noreturn]] auto abort() -> void {
 }
 
 auto SetupTerminateHandler() -> void { std::set_terminate(TerminateHandler); }
-
-#endif  // OWIF_UTIL_ABORT_HANDLER_H

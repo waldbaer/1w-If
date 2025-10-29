@@ -101,12 +101,6 @@ class Logger {
   }
 
  private:
-  // Division constants
-  static constexpr std::uint32_t MSECS_PER_SEC{1000};
-  static constexpr std::uint32_t SECS_PER_MIN{60};
-  static constexpr std::uint32_t SECS_PER_HOUR{3600};
-  static constexpr std::uint32_t SECS_PER_DAY{86400};
-
   static auto PrintPrefix(Print* log_output, int log_level) -> void;
   static auto PrintTimestamp(Print* log_output) -> void;
   static auto PrintLogLevel(Print* log_output, int log_level) -> void;

@@ -4,6 +4,7 @@
 #include <ArduinoLog.h>
 
 #include "util/language.h"
+#include "util/time_util.h"
 
 namespace owif {
 namespace logging {
@@ -29,20 +30,10 @@ auto Logger::PrintPrefix(Print* log_output, int log_level) -> void {
 }
 
 auto Logger::PrintTimestamp(Print* log_output) -> void {
-  // Total time
-  std::uint32_t const msecs{millis()};
-  std::uint32_t const secs{msecs / MSECS_PER_SEC};
+  char formatted_time[20];
+  util::TimeUtil::Format(millis(), formatted_time);
 
-  // Time in components
-  std::uint32_t const milliseconds{msecs % MSECS_PER_SEC};
-  std::uint32_t const seconds{secs % SECS_PER_MIN};
-  std::uint32_t const minutes{(secs / SECS_PER_MIN) % SECS_PER_MIN};
-  std::uint32_t const hours{(secs % SECS_PER_DAY) / SECS_PER_HOUR};
-
-  // Time as string
-  char timestamp[20];
-  sprintf(timestamp, "%02d:%02d:%02d.%03d ", hours, minutes, seconds, milliseconds);
-  log_output->print(timestamp);
+  log_output->print(formatted_time);
 }
 
 auto Logger::PrintLogLevel(Print* log_output, int log_level) -> void {

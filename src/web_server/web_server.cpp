@@ -9,6 +9,7 @@
 #include "ethernet/ethernet.h"
 #include "logging/web_socket_logger.h"
 #include "util/language.h"
+#include "util/time_util.h"
 
 namespace owif {
 namespace web_server {
@@ -64,8 +65,21 @@ auto WebServer::Begin() -> bool {
 }
 
 auto WebServer::Loop() -> void {
+  // Update sessions
+  util::TimeStampMs const now{millis()};
+
+  for (SessionsMap::iterator session = sessions_.begin(); session != sessions_.end();) {
+    if (session->second.expires_at_ms <= now) {
+      logger_.Verbose(F("[WebServer] session expired. Last activity: %s"), session->first,
+                      util::TimeUtil::Format(session->second.last_activity_ms));
+      session = sessions_.erase(session);
+    } else {
+      ++session;
+    }
+  }
+
   // Execute restart command
-  if (restart_time_ != 0 && millis() >= restart_time_) {
+  if (restart_time_ != 0 && now >= restart_time_) {
     restart_time_ = 0;
     logger_.Info(F("[WebServer] >> RESTART Hardware << (requested by WebServer)"));
     ESP.restart();
@@ -93,16 +107,22 @@ auto WebServer::GetWebSocket() -> ::AsyncWebSocket& { return web_socket_; }
 
 // ---- Authentication -------------------------------------------------------------------------------------------------
 auto WebServer::GenerateAuthenticationToken() -> String {
-  const char chars[]{"abcdefghijklmnopqrstuvwxyz0123456789"};
-  String token;
-  for (int i = 0; i < 20; i++) {
-    token += chars[random(0, sizeof(chars) - 1)];
+  uint8_t buf[20];
+  esp_fill_random(buf, sizeof(buf));  // kryptographic safe random bytes
+
+  const char hex[] = "0123456789abcdef";
+  String token{};
+  token.reserve(sizeof(buf) * 2);
+  for (size_t i = 0; i < sizeof(buf); ++i) {
+    token += hex[(buf[i] >> 4) & 0x0F];
+    token += hex[buf[i] & 0x0F];
   }
   return token;
 }
 
 auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
   bool result{false};
+  util::TimeStampMs const now{millis()};
 
   if (request->hasHeader("Cookie")) {
     String cookie = request->header("Cookie");
@@ -112,12 +132,15 @@ auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
 
       SessionsMap::iterator found_session{sessions_.find(token)};
       if (found_session != sessions_.end()) {
-        std::uint32_t const session_age{millis() - found_session->second};
-        if (session_age < kSessionTimeoutMs) {
-          found_session->second = millis();  // Update session
+        // Check if session is still valid or already expired
+        if (found_session->second.expires_at_ms > now) {
+          // Update session
+          found_session->second.last_activity_ms = now;
+          found_session->second.expires_at_ms = now + kSessionTimeoutMs;
           result = true;
         } else {
-          logger_.Debug(F("[WebServer] Session expired (age: %u ms)"), session_age);
+          logger_.Verbose(F("[WebServer] session expired. Last activity: %s"), found_session->first,
+                          util::TimeUtil::Format(found_session->second.last_activity_ms));
           sessions_.erase(found_session);  // Session expired
         }
       }
@@ -145,8 +168,10 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
   logger_.Debug(F("[WebServer] Checking login from user '%s' with password '<protected>'"), user.c_str());
 
   if (user == String{webserver_config.GetUser().c_str()} && pass == String{webserver_config.GetPassword().c_str()}) {
-    String token{GenerateAuthenticationToken()};
-    sessions_[token] = millis();
+    util::TimeStampMs const now{millis()};
+
+    String const token{GenerateAuthenticationToken()};
+    sessions_[token] = SessionInfo{/*last_activity_ms=*/now, /*expires_at_ms=*/now + kSessionTimeoutMs};
 
     AsyncWebServerResponse* response{request->beginResponse(302, "text/plain", "Login successful")};
     response->addHeader("Location", "/");
@@ -159,10 +184,10 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
 
 auto WebServer::HandleLogout(AsyncWebServerRequest* request) -> void {
   if (request->hasHeader("Cookie")) {
-    String cookie{request->header("Cookie")};
-    int pos{cookie.indexOf(kSessionCookieName)};
+    String const cookie{request->header("Cookie")};
+    int const pos{cookie.indexOf(kSessionCookieName)};
     if (pos != -1) {
-      String token{cookie.substring(pos + strlen(kSessionCookieName))};
+      String const token{cookie.substring(pos + strlen(kSessionCookieName))};
       sessions_.erase(token);
     }
   }
