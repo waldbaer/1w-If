@@ -8,6 +8,7 @@
 
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
+#include "one_wire/one_wire_subsystem.h"
 #include "util/time_util.h"
 
 namespace owif {
@@ -30,7 +31,7 @@ class WebServer {
 
   // ---- Public APIs --------------------------------------------------------------------------------------------------
 
-  auto Begin() -> bool;
+  auto Begin(one_wire::OneWireSystem& one_wire_system) -> bool;
   auto Loop() -> void;
 
   auto GetWebSocket() -> ::AsyncWebSocket&;
@@ -80,11 +81,12 @@ class WebServer {
   auto HandleLoginPost(AsyncWebServerRequest* request) -> void;
   auto HandleLogout(AsyncWebServerRequest* request) -> void;
 
-  auto HandleRoot(AsyncWebServerRequest* request) -> void;
-  auto HandleSave(AsyncWebServerRequest* request) -> void;
+  auto HandleDashboard(AsyncWebServerRequest* request) -> void;
   auto HandleRestart(AsyncWebServerRequest* request) -> void;
 
   auto HandleConfig(AsyncWebServerRequest* request) -> void;
+  auto HandleSave(AsyncWebServerRequest* request) -> void;
+
   auto HandleOta(AsyncWebServerRequest* request) -> void;
   auto HandleOtaRequest(AsyncWebServerRequest* request) -> void;
   auto HandleOtaUpdate(AsyncWebServerRequest* request, String const& filename, std::size_t index, std::uint8_t* data,
@@ -93,6 +95,7 @@ class WebServer {
   auto HandleConsole(AsyncWebServerRequest* request) -> void;
 
   logging::Logger& logger_{logging::logger_g};
+  one_wire::OneWireSystem* one_wire_system_{nullptr};
 
   bool is_running_{false};
 

@@ -52,7 +52,7 @@ auto owif_setup() -> void {
 
   // Setup OTA / WebServer / MqttClient before Ethernet to allow registration of ConnectionStateChangeHandlers
   setup_result &= ota::ota_system_g.Begin();
-  setup_result &= web_server::web_server_g.Begin();
+  setup_result &= web_server::web_server_g.Begin(one_wire::one_wire_system_g);
   setup_result &= mqtt::mqtt_client_g.Begin();
   setup_result &= mqtt::mqtt_msg_handler_g.Begin(&mqtt::mqtt_client_g, &cmd::command_handler_g);
 

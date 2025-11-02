@@ -26,10 +26,12 @@ auto WebSocketLogger::write(std::uint8_t character) -> std::size_t {
       // Store the raw line (without JSON wrapper) to keep history compact.
       StoreHistory(line_buffer_);
 
-      // Serialize the complete line once and send.
-      String const serialized_log_json{web_server::web_socket::WebSocketProtocol::SerializeLog(line_buffer_)};
-      web_socket_->textAll(serialized_log_json);
-      line_buffer_.clear();
+      if (web_socket_->count() > 0) {
+        // Serialize the complete line once and send.
+        String const serialized_log_json{web_server::web_socket::WebSocketProtocol::SerializeLog(line_buffer_)};
+        web_socket_->textAll(serialized_log_json);
+        line_buffer_.clear();
+      }
     }
     return 1;
   }
