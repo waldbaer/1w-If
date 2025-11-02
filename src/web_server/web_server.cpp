@@ -10,12 +10,15 @@
 #include "logging/web_socket_logger.h"
 #include "util/language.h"
 #include "util/time_util.h"
+#include "web_server/web_socket_protocol.h"
 
 namespace owif {
 namespace web_server {
 
-auto WebServer::Begin() -> bool {
+auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
   logger_.Debug(F("[WebServer] Setup..."));
+
+  one_wire_system_ = &one_wire_system;
 
   if (!LittleFS.begin()) {
     logger_.Error(F("[WebServer] LittleFS setup failed"));
@@ -24,10 +27,11 @@ auto WebServer::Begin() -> bool {
 
   // Register static handlers
   web_server_.serveStatic("/style.css", LittleFS, "/style.css");
+  web_server_.serveStatic("/js/menu.js", LittleFS, "/js/menu.js");
   web_server_.serveStatic("/js/config-util.js", LittleFS, "/js/config-util.js");
 
   // Register path/page handlers
-  web_server_.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleRoot(request); });
+  web_server_.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleDashboard(request); });
   web_server_.on("/login", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleLoginGet(request); });
   web_server_.on("/login", HTTP_POST, [this](AsyncWebServerRequest* request) { HandleLoginPost(request); });
   web_server_.on("/logout", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleLogout(request); });
@@ -230,13 +234,27 @@ auto WebServer::HandleLogout(AsyncWebServerRequest* request) -> void {
 
 // ---- Sites ----------------------------------------------------------------------------------------------------------
 
-auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
+auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
   if (!CheckAuthentication(request)) {
     RedirectTo(request, "/login");
     return;
   }
-  logger_.Verbose(F("[WebServer] Handle root request"));
-  request->send(LittleFS, "/index.html", kContextTypeHtml);
+  logger_.Verbose(F("[WebServer] Handle dashboard request"));
+
+  request->send(LittleFS, "/index.html", kContextTypeHtml, false, [this](String const& var) {
+    if (var == "OW_DEVICES") {
+      return web_socket::WebSocketProtocol::SerializeOneWireDeviceMap(*one_wire_system_);
+    } else {
+      logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
+      return String{};
+    }
+  });
+}
+
+auto WebServer::HandleRestart(AsyncWebServerRequest* request) -> void {
+  request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Restarting... (Reloading page in 5sec)");
+
+  restart_time_ = millis() + kRestartDelay;
 }
 
 auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
@@ -326,12 +344,6 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   // Send positive response
   request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Stored! Restart necessary...");
-}
-
-auto WebServer::HandleRestart(AsyncWebServerRequest* request) -> void {
-  request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Restarting... (Reloading page in 5sec)");
-
-  restart_time_ = millis() + kRestartDelay;
 }
 
 auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {

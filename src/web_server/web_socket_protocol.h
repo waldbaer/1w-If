@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#include "one_wire/one_wire_subsystem.h"
+
 namespace owif {
 namespace web_server {
 namespace web_socket {
@@ -10,6 +12,7 @@ namespace web_socket {
 class WebSocketProtocol {
  public:
   static auto SerializeLog(String const& log_message) -> String;
+  static auto SerializeOneWireDeviceMap(one_wire::OneWireSystem& one_wire_system) -> String;
 
  private:
   static constexpr char const* kWebSocketKeyLogging{"LOG"};

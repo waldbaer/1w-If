@@ -5,16 +5,13 @@
   <meta charset="UTF-8" />
   <title>1-Wire Interface</title>
   <link rel="stylesheet" href="/style.css">
-  <script src="js/config-util.js" defer></script>
+  <script src="/js/menu.js"></script>
+  <script src="/js/config-util.js" defer></script>
 </head>
 
 <body>
-  <h1>1-Wire Interface</h1>
-
-  <p><a href='/'>Dashboard</a></p>
-  <p><a href='/ota'>OTA Update</a></p>
-  <p><a href='/console'>Console</a></p>
-  <p><a href='/logout'>Logout</a></p>
+  <div id="title-container"></div>
+  <div id="menu-container"></div>
 
   <h2>Configuration</h2>
   <form id='configForm'>
@@ -55,6 +52,9 @@
   </form>
 
   <script>
+    LoadTitle('title-container');
+    LoadMenu('menu-container');
+
     // Select configured log-level on page load
     window.addEventListener('load', function () {
       document.getElementById('log_level-select').value = "%LOG_LEVEL%";
@@ -63,9 +63,9 @@
     setupConfigForm();
   </script>
 
-  <h2>Control</h1>
-    <button onclick="restartHardware()">Restart Hardware</button>
-    <p id="restartHardwareStatus"></p>
+  <h2>Control</h2>
+  <button onclick="restartHardware()">Restart Hardware</button>
+  <p id="restartHardwareStatus"></p>
 </body>
 
 </html>

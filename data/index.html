@@ -4,21 +4,58 @@
 <head>
   <meta charset="UTF-8" />
   <title>1-Wire Interface</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="/js/menu.js"></script>
   <script src="/js/config-util.js"></script>
 </head>
 
 <body>
-  <h1>1-Wire Interface</h1>
+  <div id="title-container"></div>
+  <div id="menu-container"></div>
 
-  <p><a href='/config'>Configuration</a></p>
-  <p><a href='/ota'>OTA Update</a></p>
-  <p><a href='/console'>Console</a></p>
-  <p><a href='/logout'>Logout</a></p>
+  <h2>Devices</h2>
+  <div id="ow-devices-table"></div>
 
-  <h2>Control</h1>
-    <button onclick="restartHardware()">Restart Hardware</button>
-    <p id="restartHardwareStatus"></p>
+  <h2>Control</h2>
+  <button onclick="restartHardware()">Restart Hardware</button>
+  <p id="restartHardwareStatus"></p>
+
+  <script>
+    LoadTitle('title-container');
+    LoadMenu('menu-container');
+
+    // Visualize available 1-wire devices
+    const ow_devices_json = '{"devices":[{"device_id":"26.563743020000","attributes":["presence","temperature","VAD","VDD"]},{"device_id":"01.D2C79A1A0000","attributes":["presence"]},{"device_id":"28.8F0945161301","attributes":["presence","temperature"]},{"device_id":"01.FEF49A1A0000","attributes":["presence"]}]}';
+    const ow_devices = JSON.parse(ow_devices_json);
+
+    // Create table
+    const ow_devices_table = document.getElementById("ow-devices-table");
+    const table = document.createElement("table");
+
+    // Create table header
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+
+    const th1 = document.createElement("th");
+    th1.textContent = "Device ID";
+    const th2 = document.createElement("th");
+    th2.textContent = "Attributes";
+
+    headerRow.appendChild(th1);
+    headerRow.appendChild(th2);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create rows
+    ow_devices.devices.forEach(device => {
+      const row = table.insertRow();
+      row.insertCell().textContent = device.device_id;
+      row.insertCell().textContent = device.attributes.join(", ");
+    });
+
+    // Add table to container
+    ow_devices_table.appendChild(table);
+  </script>
 </body>
 
 </html>
