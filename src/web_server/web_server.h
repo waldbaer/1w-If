@@ -84,6 +84,7 @@ class WebServer {
   auto HandleSave(AsyncWebServerRequest* request) -> void;
   auto HandleRestart(AsyncWebServerRequest* request) -> void;
 
+  auto HandleConfig(AsyncWebServerRequest* request) -> void;
   auto HandleOta(AsyncWebServerRequest* request) -> void;
   auto HandleOtaRequest(AsyncWebServerRequest* request) -> void;
   auto HandleOtaUpdate(AsyncWebServerRequest* request, String const& filename, std::size_t index, std::uint8_t* data,
@@ -101,7 +102,6 @@ class WebServer {
   struct SessionInfo {
     util::TimeStampMs last_activity_ms;
     util::TimeStampMs expires_at_ms;  // millis() + TTL
-    // String csrf_token;                // for CSRF-Schutz
   };
   using SessionsMap = std::map<String, SessionInfo>;
   SessionsMap sessions_;  // token -> timestamp

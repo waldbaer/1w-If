@@ -24,6 +24,7 @@ auto WebServer::Begin() -> bool {
 
   // Register static handlers
   web_server_.serveStatic("/style.css", LittleFS, "/style.css");
+  web_server_.serveStatic("/js/config-util.js", LittleFS, "/js/config-util.js");
 
   // Register path/page handlers
   web_server_.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleRoot(request); });
@@ -33,6 +34,7 @@ auto WebServer::Begin() -> bool {
   web_server_.on("/save", HTTP_POST, [this](AsyncWebServerRequest* request) { HandleSave(request); });
   web_server_.on("/restart", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleRestart(request); });
 
+  web_server_.on("/config", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleConfig(request); });
   web_server_.on("/ota", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleOta(request); });
   web_server_.on("/console", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleConsole(request); });
   web_server_.on(
@@ -234,59 +236,7 @@ auto WebServer::HandleRoot(AsyncWebServerRequest* request) -> void {
     return;
   }
   logger_.Verbose(F("[WebServer] Handle root request"));
-
-  config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
-  config::EthernetConfig const ethernet_config{config::persistency_g.LoadEthernetConfig()};
-  config::OtaConfig const ota_config{config::persistency_g.LoadOtaConfig()};
-  config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
-  config::MqttConfig const mqtt_config{config::persistency_g.LoadMqttConfig()};
-
-  request->send(LittleFS, "/index.html", kContextTypeHtml, false,
-                [this, logging_config, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
-                  // LoggingConfig
-                  if (var == "LOG_LEVEL") {
-                    return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
-                  } else if (var == "LOG_SERIAL") {
-                    return logging_config.GetSerialLogEnabled() ? String{"checked"} : String{""};
-                  } else if (var == "LOG_WEB") {
-                    return logging_config.GetWebLogEnabled() ? String{"checked"} : String{""};
-                  }
-                  // EthernetConfig
-                  if (var == "ETH_HOSTNAME") {
-                    return ethernet_config.GetHostname();
-                  }
-                  // OtaConfig
-                  else if (var == "OTA_PORT") {
-                    return String{ota_config.GetPort()};
-                  } else if (var == "OTA_PASS") {
-                    return ota_config.GetPassword();
-                  }
-                  // WebServerConfig
-                  else if (var == "WEBSERVER_USER") {
-                    return webserver_config.GetUser();
-                  } else if (var == "WEBSERVER_PASS") {
-                    return webserver_config.GetPassword();
-                  }
-                  // MqttConfig
-                  else if (var == "MQTT_SERVER") {
-                    return mqtt_config.GetServerAddr();
-                  } else if (var == "MQTT_PORT") {
-                    return String{mqtt_config.GetServerPort()};
-                  } else if (var == "MQTT_USER") {
-                    return mqtt_config.GetUser();
-                  } else if (var == "MQTT_PASS") {
-                    return mqtt_config.GetPassword();
-                  } else if (var == "MQTT_RECON_TIMEOUT") {
-                    return String{mqtt_config.GetReconnectTimeout()};
-                  } else if (var == "MQTT_TOPIC") {
-                    return mqtt_config.GetTopic();
-                  }
-                  // Unknown
-                  else {
-                    logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
-                    return String();
-                  }
-                });
+  request->send(LittleFS, "/index.html", kContextTypeHtml);
 }
 
 auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
@@ -382,6 +332,67 @@ auto WebServer::HandleRestart(AsyncWebServerRequest* request) -> void {
   request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Restarting... (Reloading page in 5sec)");
 
   restart_time_ = millis() + kRestartDelay;
+}
+
+auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
+  if (!CheckAuthentication(request)) {
+    RedirectTo(request, "/login");
+    return;
+  }
+  logger_.Verbose(F("[WebServer] Handle config request"));
+
+  config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
+  config::EthernetConfig const ethernet_config{config::persistency_g.LoadEthernetConfig()};
+  config::OtaConfig const ota_config{config::persistency_g.LoadOtaConfig()};
+  config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
+  config::MqttConfig const mqtt_config{config::persistency_g.LoadMqttConfig()};
+
+  request->send(LittleFS, "/config.html", kContextTypeHtml, false,
+                [this, logging_config, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
+                  // LoggingConfig
+                  if (var == "LOG_LEVEL") {
+                    return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
+                  } else if (var == "LOG_SERIAL") {
+                    return logging_config.GetSerialLogEnabled() ? String{"checked"} : String{""};
+                  } else if (var == "LOG_WEB") {
+                    return logging_config.GetWebLogEnabled() ? String{"checked"} : String{""};
+                  }
+                  // EthernetConfig
+                  if (var == "ETH_HOSTNAME") {
+                    return ethernet_config.GetHostname();
+                  }
+                  // OtaConfig
+                  else if (var == "OTA_PORT") {
+                    return String{ota_config.GetPort()};
+                  } else if (var == "OTA_PASS") {
+                    return ota_config.GetPassword();
+                  }
+                  // WebServerConfig
+                  else if (var == "WEBSERVER_USER") {
+                    return webserver_config.GetUser();
+                  } else if (var == "WEBSERVER_PASS") {
+                    return webserver_config.GetPassword();
+                  }
+                  // MqttConfig
+                  else if (var == "MQTT_SERVER") {
+                    return mqtt_config.GetServerAddr();
+                  } else if (var == "MQTT_PORT") {
+                    return String{mqtt_config.GetServerPort()};
+                  } else if (var == "MQTT_USER") {
+                    return mqtt_config.GetUser();
+                  } else if (var == "MQTT_PASS") {
+                    return mqtt_config.GetPassword();
+                  } else if (var == "MQTT_RECON_TIMEOUT") {
+                    return String{mqtt_config.GetReconnectTimeout()};
+                  } else if (var == "MQTT_TOPIC") {
+                    return mqtt_config.GetTopic();
+                  }
+                  // Unknown
+                  else {
+                    logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
+                    return String();
+                  }
+                });
 }
 
 auto WebServer::HandleOta(AsyncWebServerRequest* request) -> void {

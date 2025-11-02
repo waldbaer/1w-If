@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>1-Wire Interface</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="js/config-util.js" defer></script>
+</head>
+
+<body>
+  <h1>1-Wire Interface</h1>
+
+  <p><a href='/'>Dashboard</a></p>
+  <p><a href='/ota'>OTA Update</a></p>
+  <p><a href='/console'>Console</a></p>
+  <p><a href='/logout'>Logout</a></p>
+
+  <h2>Configuration</h2>
+  <form id='configForm'>
+    <h3>Logging Config</h3>
+    Log-Level: <select id="log_level-select" name="log_level">
+      <option value="0">OFF</option>
+      <option value="1">Fatal</option>
+      <option value="2">Error</option>
+      <option value="3">Warning</option>
+      <option value="4">Info</option>
+      <option value="5">Debug</option>
+      <option value="6">Verbose</option>
+    </select><br />
+    Serial Log: <input type="checkbox" name="serial_log" %LOG_SERIAL%><br />
+    Web Log: <input type="checkbox" name="web_log" %LOG_WEB%>
+
+    <h3>Ethernet Config</h3>
+    Hostname: <input name='eth_hostname' value='%ETH_HOSTNAME%'><br>
+
+    <h3>OTA Config (espota)</h3>
+    Port: <input name='ota_port' value='%OTA_PORT%'><br>
+    Password: <input name='ota_pass' value='%OTA_PASS%' type='password'><br>
+
+    <h3>WebServer Config</h3>
+    User: <input name='webserver_user' value='%WEBSERVER_USER%'><br>
+    Password: <input name='webserver_pass' value='%WEBSERVER_PASS%' type='password'><br>
+
+    <h3>MQTT Config</h3>
+    Server: <input name='mqtt_server' value='%MQTT_SERVER%'><br>
+    Port: <input name='mqtt_port' value='%MQTT_PORT%' type='number' min='1'><br>
+    User: <input name='mqtt_user' value='%MQTT_USER%'><br>
+    Password: <input name='mqtt_pass' value='%MQTT_PASS%' type='password'><br>
+    Reconnect Timeout: <input name='mqtt_recon_timeout' value='%MQTT_RECON_TIMEOUT%' type='number' min='1'><br>
+    Topic: <input name='mqtt_topic' value='%MQTT_TOPIC%'><br>
+    <br />
+    <input type='submit' value='Save'>
+    <p id="configSaveStatus"></p>
+  </form>
+
+  <script>
+    // Select configured log-level on page load
+    window.addEventListener('load', function () {
+      document.getElementById('log_level-select').value = "%LOG_LEVEL%";
+    });
+
+    setupConfigForm();
+  </script>
+
+  <h2>Control</h1>
+    <button onclick="restartHardware()">Restart Hardware</button>
+    <p id="restartHardwareStatus"></p>
+</body>
+
+</html>
