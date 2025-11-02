@@ -24,13 +24,13 @@ auto WebSocketProtocol::SerializeLog(String const& log_message) -> String {
 
 auto WebSocketProtocol::SerializeOneWireDeviceMap(one_wire::OneWireSystem& one_wire_system) -> String {
   JsonDocument json{};
-  JsonArray devices_array{json.createNestedArray(cmd::json::kDevices)};
+  JsonArray devices_json{json[cmd::json::kDevices].to<JsonArray>()};
 
   one_wire::OneWireSystem::DeviceMap const& devices_map{one_wire_system.GetAvailableDevices()};
 
   for (std::pair<one_wire::OneWireAddress, std::shared_ptr<one_wire::OneWireDevice>> const& device_entry :
        devices_map) {
-    JsonObject device_json = devices_array.createNestedObject();
+    JsonObject device_json{devices_json.add<JsonObject>()};
     device_json[cmd::json::kDeviceId] = device_entry.first.Format();
     cmd::json::JsonBuilder::AddDeviceAttributes(&one_wire_system, device_json, device_entry.first);
   }
