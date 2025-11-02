@@ -3,24 +3,23 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>1-Wire Interface</title>
-  <link rel="stylesheet" href="/style.css">
-  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/menu.js"></script>
 </head>
 
 <body>
-  <div id="title-container"></div>
   <div id="menu-container"></div>
 
-  <h2>OTA Update</h2>
-  <form id='otaForm' enctype="multipart/form-data">
-    Firmware File: <input type="file" id="firmwareFile" name="firmware">
-    <br />
-    <input type="submit" value="Update">
-    <p id="otaStatus"></p>
+  <form class="form-grid" id='otaForm' enctype="multipart/form-data">
+    <label>Firmware File</label><input type="file" id="firmwareFile" name="firmware">
+    <label></label><input type="submit" value="Upload">
   </form>
+
+  <p id="otaStatus"></p>
+
   <script>
-    LoadTitle('title-container');
     LoadMenu('menu-container');
 
     document.getElementById('otaForm').addEventListener('submit', function (event) {

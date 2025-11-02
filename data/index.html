@@ -3,29 +3,29 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>1-Wire Interface</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="/js/menu.js"></script>
-  <script src="/js/config-util.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/menu.js"></script>
+  <script src="js/config-util.js"></script>
 </head>
 
 <body>
-  <div id="title-container"></div>
   <div id="menu-container"></div>
 
-  <h2>Devices</h2>
+  <h1>Available 1-Wire Devices</h1>
   <div id="ow-devices-table"></div>
 
-  <h2>Control</h2>
+  <h1>Control</h1>
   <button onclick="restartHardware()">Restart Hardware</button>
   <p id="restartHardwareStatus"></p>
 
   <script>
-    LoadTitle('title-container');
     LoadMenu('menu-container');
 
     // Visualize available 1-wire devices
-    const ow_devices_json = '{"devices":[{"device_id":"26.563743020000","attributes":["presence","temperature","VAD","VDD"]},{"device_id":"01.D2C79A1A0000","attributes":["presence"]},{"device_id":"28.8F0945161301","attributes":["presence","temperature"]},{"device_id":"01.FEF49A1A0000","attributes":["presence"]}]}';
+    const ow_devices_json = '%OW_DEVICES%';
+    //const ow_devices_json = '{"devices":[{"device_id":"26.563743020000","attributes":["VAD","VDD"]},{"device_id":"01.D2C79A1A0000","attributes":["presence"]}]}';
     const ow_devices = JSON.parse(ow_devices_json);
 
     // Create table
@@ -47,11 +47,13 @@
     table.appendChild(thead);
 
     // Create rows
+    const tbody = document.createElement("tbody");
     ow_devices.devices.forEach(device => {
-      const row = table.insertRow();
+      const row = tbody.insertRow();
       row.insertCell().textContent = device.device_id;
       row.insertCell().textContent = device.attributes.join(", ");
     });
+    table.appendChild(tbody)
 
     // Add table to container
     ow_devices_table.appendChild(table);

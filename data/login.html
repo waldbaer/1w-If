@@ -3,23 +3,54 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>1-Wire Interface</title>
-  <link rel="stylesheet" href="/style.css">
-  <script src="/js/menu.js"></script>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <div id="title-container"></div>
+  <div class="menubar">
+    <img class="logo" src="img/logo.png">
+    <div>1-Wire Interface</div>
+  </div>
 
-  <form action="/login" method="POST" id='configForm'>
-    User: <input name="user"><br>
-    Password: <input type="password" name="pass"><br>
+  <form class="form-grid" id="loginForm">
+    <label for="user">User</label>
+    <input type="text" name="user" id="user">
+
+    <label for="pass">Password</label>
+    <input type="password" name="pass" id="pass">
+
+    <div></div>
     <input type="submit" value="Login">
   </form>
 
+  <p id="loginResult"></p>
+
   <script>
-    LoadTitle('title-container');
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // no classic send
+      const formData = new FormData(this);
+
+      fetch('/login', {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin' // take server credentials
+      })
+        .then(response => response.text())
+        .then(data => {
+          if (data === "LOGIN_SUCCESS") {
+            window.location.href = "/";
+          } else {
+            document.getElementById('loginResult').innerHTML = "<strong>Error:</strong> " + data;
+          }
+        })
+        .catch(error => {
+          document.getElementById('loginResult').innerHTML = "<strong>Error:</strong> " + error;
+        });
+    });
   </script>
 </body>
+
 
 </html>
