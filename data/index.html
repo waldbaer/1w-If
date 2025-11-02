@@ -4,22 +4,27 @@
 <head>
   <meta charset="UTF-8" />
   <title>1-Wire Interface</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="/js/menu.js"></script>
   <script src="/js/config-util.js"></script>
 </head>
 
 <body>
-  <h1>1-Wire Interface</h1>
-
-  <p><a href='/config'>Configuration</a></p>
-  <p><a href='/ota'>OTA Update</a></p>
-  <p><a href='/console'>Console</a></p>
-  <p><a href='/logout'>Logout</a></p>
+  <div id="title-container"></div>
+  <div id="menu-container"></div>
 
   <h2>Devices</h2>
   <div id="ow-devices-table"></div>
 
+  <h2>Control</h2>
+  <button onclick="restartHardware()">Restart Hardware</button>
+  <p id="restartHardwareStatus"></p>
+
   <script>
+    LoadTitle('title-container');
+    LoadMenu('menu-container');
+
+    // Visualize available 1-wire devices
     const ow_devices_json = '{"devices":[{"device_id":"26.563743020000","attributes":["presence","temperature","VAD","VDD"]},{"device_id":"01.D2C79A1A0000","attributes":["presence"]},{"device_id":"28.8F0945161301","attributes":["presence","temperature"]},{"device_id":"01.FEF49A1A0000","attributes":["presence"]}]}';
     const ow_devices = JSON.parse(ow_devices_json);
 
@@ -51,10 +56,6 @@
     // Add table to container
     ow_devices_table.appendChild(table);
   </script>
-
-  <h2>Control</h1>
-    <button onclick="restartHardware()">Restart Hardware</button>
-    <p id="restartHardwareStatus"></p>
 </body>
 
 </html>

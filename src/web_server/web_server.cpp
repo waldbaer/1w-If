@@ -27,6 +27,7 @@ auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
 
   // Register static handlers
   web_server_.serveStatic("/style.css", LittleFS, "/style.css");
+  web_server_.serveStatic("/js/menu.js", LittleFS, "/js/menu.js");
   web_server_.serveStatic("/js/config-util.js", LittleFS, "/js/config-util.js");
 
   // Register path/page handlers
