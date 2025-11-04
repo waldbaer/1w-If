@@ -3,20 +3,21 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>1-Wire Interface</title>
-  <link rel="stylesheet" href="/style.css">
-  <script src="/js/menu.js"></script>
-  <script src="/js/config-util.js" defer></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/menu.js"></script>
+  <script src="js/config-util.js" defer></script>
 </head>
 
 <body>
-  <div id="title-container"></div>
   <div id="menu-container"></div>
 
-  <h2>Configuration</h2>
-  <form id='configForm'>
-    <h3>Logging Config</h3>
-    Log-Level: <select id="log_level-select" name="log_level">
+  <form class="form-grid" id="configForm">
+    <label></label>
+    <h1>Logging</h1>
+    <label for="user">Log-Level</label>
+    <select id="log_level-select" name="log_level">
       <option value="0">OFF</option>
       <option value="1">Fatal</option>
       <option value="2">Error</option>
@@ -24,35 +25,44 @@
       <option value="4">Info</option>
       <option value="5">Debug</option>
       <option value="6">Verbose</option>
-    </select><br />
-    Serial Log: <input type="checkbox" name="serial_log" %LOG_SERIAL%><br />
-    Web Log: <input type="checkbox" name="web_log" %LOG_WEB%>
+    </select>
 
-    <h3>Ethernet Config</h3>
-    Hostname: <input name='eth_hostname' value='%ETH_HOSTNAME%'><br>
+    <label for="user">Serial Log</label>
+    <input type="checkbox" name="serial_log" %LOG_SERIAL%>
 
-    <h3>OTA Config (espota)</h3>
-    Port: <input name='ota_port' value='%OTA_PORT%'><br>
-    Password: <input name='ota_pass' value='%OTA_PASS%' type='password'><br>
+    <label for="user">Web Log</label>
+    <input type="checkbox" name="web_log" %LOG_WEB%>
 
-    <h3>WebServer Config</h3>
-    User: <input name='webserver_user' value='%WEBSERVER_USER%'><br>
-    Password: <input name='webserver_pass' value='%WEBSERVER_PASS%' type='password'><br>
+    <label></label>
+    <h1>Ethernet</h1>
+    <label>Hostname</label><input type="text" name="eth_hostname" value="%ETH_HOSTNAME%">
 
-    <h3>MQTT Config</h3>
-    Server: <input name='mqtt_server' value='%MQTT_SERVER%'><br>
-    Port: <input name='mqtt_port' value='%MQTT_PORT%' type='number' min='1'><br>
-    User: <input name='mqtt_user' value='%MQTT_USER%'><br>
-    Password: <input name='mqtt_pass' value='%MQTT_PASS%' type='password'><br>
-    Reconnect Timeout: <input name='mqtt_recon_timeout' value='%MQTT_RECON_TIMEOUT%' type='number' min='1'><br>
-    Topic: <input name='mqtt_topic' value='%MQTT_TOPIC%'><br>
-    <br />
-    <input type='submit' value='Save'>
-    <p id="configSaveStatus"></p>
+    <label></label>
+    <h1>OTA Config (espota)</h1>
+    <label>Port</label><input type="number" name="ota_port" value="%OTA_PORT%" min="1">
+    <label>Password</label><input type="password" name="ota_pass" value="%OTA_PASS%">
+
+
+    <label></label>
+    <h1>WebServer</h1>
+    <label>User</label><input type="text" name="webserver_user" value="%WEBSERVER_USER%">
+    <label>Password</label><input type="password" name="webserver_pass" value="%WEBSERVER_PASS%">
+
+    <label></label>
+    <h1>MQTT</h1>
+    <label>Server</label> <input type="text" name="mqtt_server" value="%MQTT_SERVER%">
+    <label>Port</label> <input type="number" name="mqtt_port" value="%MQTT_PORT%">
+    <label>User</label> <input type="text" name="mqtt_user" value="%MQTT_USER%">
+    <label>Password</label><input type="password" name="mqtt_pass" value="%MQTT_PASS%">
+    <label>Reconnect Timeout</label><input type="number" name="mqtt_recon_timeout" value="%MQTT_RECON_TIMEOUT%" min="1">
+    <label>Topic</label><input type="text" name="mqtt_topic" value="%MQTT_TOPIC%">
+
+    <label></label><input type="submit" value="Save">
   </form>
 
+  <p id="configSaveStatus"></p>
+
   <script>
-    LoadTitle('title-container');
     LoadMenu('menu-container');
 
     // Select configured log-level on page load
@@ -60,7 +70,22 @@
       document.getElementById('log_level-select').value = "%LOG_LEVEL%";
     });
 
-    setupConfigForm();
+    document.getElementById('configForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // no classic send
+      const formData = new FormData(this);
+
+      fetch('/save', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('configSaveStatus').innerText = data;
+        })
+        .catch(error => {
+          document.getElementById('configSaveStatus').innerText = "Error: " + error;
+        });
+    });
   </script>
 
   <h2>Control</h2>

@@ -26,9 +26,10 @@ auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
   }
 
   // Register static handlers
-  web_server_.serveStatic("/style.css", LittleFS, "/style.css");
+  web_server_.serveStatic("/css/style.css", LittleFS, "/css/style.css");
   web_server_.serveStatic("/js/menu.js", LittleFS, "/js/menu.js");
   web_server_.serveStatic("/js/config-util.js", LittleFS, "/js/config-util.js");
+  web_server_.serveStatic("/img/logo.png", LittleFS, "/img/logo.png");
 
   // Register path/page handlers
   web_server_.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleDashboard(request); });
@@ -206,10 +207,10 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
     String const token{GenerateAuthenticationToken()};
     sessions_[token] = SessionInfo{/*last_activity_ms=*/now, /*expires_at_ms=*/now + kSessionTimeoutMs};
 
-    AsyncWebServerResponse* response{request->beginResponse(302, kContextTypePlain, "Login successful")};
-    response->addHeader(kHeaderLocation, "/");
-    response->addHeader(kHeaderSetCookie,
-                        kSessionCookieName + token + "; Path=/; HttpOnly; SameSite=Lax; Max-Age=" + kSessionTimeoutSec);
+    AsyncWebServerResponse* response = request->beginResponse(200, "text/plain", "LOGIN_SUCCESS");
+    String const cookie_header{kSessionCookieName + token +
+                               "; Path=/; HttpOnly; SameSite=Lax; Max-Age=" + String(kSessionTimeoutSec)};
+    response->addHeader("Set-Cookie", cookie_header);
     request->send(response);
   } else {
     request->send(ToUnderlying(ResponseCode::Unauthorized), kContextTypePlain, "Login failed");
