@@ -12,4 +12,14 @@ function LoadMenu(containerId) {
       <a href="/logout">Logout</a>
     </div>
   `;
+
+  // mark current menu element active
+  const links = document.querySelectorAll('.menubar a');
+  const current = window.location.pathname;
+
+  links.forEach(link => {
+    if (link.getAttribute('href') === current) {
+      link.classList.add('active');
+    }
+  });
 }

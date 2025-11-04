@@ -51,6 +51,7 @@ h2 {
   transition: color 0.2s ease;
 }
 
+.menubar a.active,
 .menubar a:hover {
   color: rgba(255, 255, 255, 0.4);
 }
