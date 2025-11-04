@@ -11,8 +11,10 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 
 * Access 1-wire devices via ethernet / MQTT protocol
 * 1-Wire bus access via hardware IC
-* Configuration via web interface
 * Over-the-air (OTA) updates (web interface and espota protocol)
+* Responsive web interface
+  <br/>
+  <img src="doc/screenshots/web-dashboard.png" title="Dashboard"  width="400"/> <img src="doc/screenshots/web-console.png" title="Dashboard" width="400"/>
 
 ## Supported 1-Wire devices
 
