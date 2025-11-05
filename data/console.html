@@ -21,16 +21,6 @@
     let ws = new WebSocket(`ws://${location.host}`);
     //let ws = new WebSocket('ws://192.168.0.41');
 
-    const colors = {
-      S: '#888888',   // System - light grey, low importance messages
-      V: '#AAAAAA',   // Verbose - very light grey, detailed information
-      D: '#61AFEF',   // Debug - light blue, development information
-      I: '#98C379',   // Info - light green, standard operational messages
-      W: '#E5C07B',   // Warning - light yellow/orange, potential issues
-      E: '#E06C75',   // Error - light red, actual errors
-      F: '#FF1A1A'    // Fatal - bright red, critical errors
-    };
-
     ws.onmessage = e => {
       const json = JSON.parse(e.data);
 
@@ -42,8 +32,8 @@
           if (app == undefined) {
             app = "<unknown>";
           }
-          const color = colors[loglevel] || '#BBB';
-          log.innerHTML += `<span style="color:${color}">${timestamp} [${loglevel}] ${("[" + app + "]").padEnd(15)} ${message}</span><br/>`
+          const formatted_log_line = `<span class="log-${loglevel}">${timestamp} [${loglevel}] ${("[" + app + "]").padEnd(15)} ${message}</span><br/>`;
+          log.innerHTML += formatted_log_line
         } else {
           log.textContent += `JSON PARSE ERROR: ${log_content}`
         }
