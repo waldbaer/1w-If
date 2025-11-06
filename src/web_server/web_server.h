@@ -40,7 +40,7 @@ class WebServer {
   static constexpr std::uint16_t kWebServerPort{80};
   static constexpr char const* kWebSocketUrl{"/"};  // reachable via root URL ws://
 
-  static constexpr std::uint32_t kSessionTimeoutMin{1};
+  static constexpr std::uint32_t kSessionTimeoutMin{30};
   static constexpr std::uint32_t kSessionTimeoutSec{kSessionTimeoutMin * 60};
   static constexpr std::uint32_t kSessionTimeoutMs{kSessionTimeoutSec * 1000};
 
