@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python Debugger: Module pytest",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "justMyCode": true,
+      "args": [
+        "-v",
+        "-s",
+        "-k",
+        "test_mqtt_protocol"
+      ]
+    },
+  ]
+}
