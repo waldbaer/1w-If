@@ -1,0 +1,14 @@
+.py[cod]
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.pdm-python
+.coverage
+
+# pdm
+#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+pdm.lock
+
+#MQTT environment config with passwords etc
+test_env_config.yaml

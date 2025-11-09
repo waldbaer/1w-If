@@ -136,7 +136,7 @@ auto SubscriptionsManager::ProcessActionUnsubscribe(Command& cmd) -> void {
     } else {
       logger_.Error(F("[SubscriptionsManager] No subscription found for device: %s, attribute: %u"),
                     device_addr.Format().c_str(), device_attribute);
-      command_handler_->SendErrorResponse(cmd, "No subscription for requested device / attribute found.");
+      command_handler_->SendErrorResponse(cmd, "WARN: No subscription for requested device / attribute found.");
     }
 
   } else if (cmd.param2.param_available) {
@@ -160,7 +160,7 @@ auto SubscriptionsManager::ProcessActionUnsubscribe(Command& cmd) -> void {
     } else {
       logger_.Error(F("[SubscriptionsManager] No subscription found for device family: 0x%X, attribute: %u"),
                     family_code, device_attribute);
-      command_handler_->SendErrorResponse(cmd, "No subscription for requested device family found.");
+      command_handler_->SendErrorResponse(cmd, "WARN: No subscription for requested device family found.");
     }
   }
 }
