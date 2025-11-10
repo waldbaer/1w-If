@@ -3,14 +3,18 @@
 
 An ESP32-based 1-Wire interface supporting access with physical ethernet and MQTT protocol.
 
+**Overview**
 ![Overview Diagram](doc/overview.excalidraw.png)
+
+**Hardware**
+![PCB Rendeing](doc/hardware/1w-If_rendering_lowres.png)
 
 
 
 ## Key Features
 
 * Access 1-wire devices via ethernet / MQTT protocol
-* 1-Wire bus access via hardware IC
+* 4 independent 1-Wire channels with hardware bus masters
 * Over-the-air (OTA) updates (web interface and espota protocol)
 * Multiple independent 1-wire buses.
 * Responsive web interface
@@ -264,6 +268,7 @@ Example of the `Read` command for attribute `presence` cyclically triggered by t
 
 ## Development
 
+### Software
 ```
 # Build firmware
 ./build.sh
@@ -303,3 +308,8 @@ pdm run tests -k "<test name filter>"
 pdm run lint
 pdm run format
 ```
+
+### Hardware
+
+- PCB designed with [KiCad](https://www.kicad.org/)
+- Production files created with KiCad plugin [KiCAD JLCPCB tools](https://github.com/Bouni/kicad-jlcpcb-tools)
