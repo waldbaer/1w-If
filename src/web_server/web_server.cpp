@@ -299,7 +299,10 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
     ota_config.SetPort(request->getParam(kConfigSaveOtaPort, true)->value().toInt());
   }
   if (request->hasParam(kConfigSaveOtaPass, true)) {
-    ota_config.SetPassword(request->getParam(kConfigSaveOtaPass, true)->value());
+    String const password{request->getParam(kConfigSaveOtaPass, true)->value()};
+    if (password != "") {
+      ota_config.SetPassword(password);
+    }
   }
 
   config::persistency_g.StoreOtaConfig(ota_config);
@@ -312,7 +315,10 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
     webserver_config.SetUser(request->getParam(kConfigSaveWebServerUser, true)->value());
   }
   if (request->hasParam(kConfigSaveWebServerPass, true)) {
-    webserver_config.SetPassword(request->getParam(kConfigSaveWebServerPass, true)->value());
+    String const password{request->getParam(kConfigSaveWebServerPass, true)->value()};
+    if (password != "") {
+      webserver_config.SetPassword(password);
+    }
   }
 
   config::persistency_g.StoreWebServerConfig(webserver_config);
@@ -331,7 +337,10 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
     mqtt_config.SetUser(request->getParam(kConfigSaveMqttUser, true)->value());
   }
   if (request->hasParam(kConfigSaveMqttPass, true)) {
-    mqtt_config.SetPassword(request->getParam(kConfigSaveMqttPass, true)->value());
+    String const password{request->getParam(kConfigSaveMqttPass, true)->value()};
+    if (password != "") {
+      mqtt_config.SetPassword(password);
+    }
   }
   if (request->hasParam(kConfigSaveMqttReconTimeout, true)) {
     String const reconnect_timeout_str{request->getParam(kConfigSaveMqttReconTimeout, true)->value()};
@@ -377,14 +386,10 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
                   // OtaConfig
                   else if (var == "OTA_PORT") {
                     return String{ota_config.GetPort()};
-                  } else if (var == "OTA_PASS") {
-                    return ota_config.GetPassword();
                   }
                   // WebServerConfig
                   else if (var == "WEBSERVER_USER") {
                     return webserver_config.GetUser();
-                  } else if (var == "WEBSERVER_PASS") {
-                    return webserver_config.GetPassword();
                   }
                   // MqttConfig
                   else if (var == "MQTT_SERVER") {
@@ -393,8 +398,6 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
                     return String{mqtt_config.GetServerPort()};
                   } else if (var == "MQTT_USER") {
                     return mqtt_config.GetUser();
-                  } else if (var == "MQTT_PASS") {
-                    return mqtt_config.GetPassword();
                   } else if (var == "MQTT_RECON_TIMEOUT") {
                     return String{mqtt_config.GetReconnectTimeout()};
                   } else if (var == "MQTT_TOPIC") {
