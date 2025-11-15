@@ -3,7 +3,7 @@
 
 An ESP32-based 1-Wire interface supporting access with physical ethernet and MQTT protocol.
 
-![alt text](doc/overview.excalidraw.png)
+![Overview Diagram](doc/overview.excalidraw.png)
 
 
 
