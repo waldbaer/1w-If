@@ -64,9 +64,9 @@ auto owif_setup() -> void {
   }
 
   if (setup_result) {
-    logging::logger_g.Info(F("Initialization finished. All sub-subsystems are initialized."));
+    logging::logger_g.Info(F("[main] Initialization finished. All sub-subsystems are initialized."));
   } else {
-    logging::logger_g.Abort(F("Initialization failed. Please check previous outputs."));
+    logging::logger_g.Abort(F("[main] Initialization failed. Please check previous outputs."));
   }
 }
 

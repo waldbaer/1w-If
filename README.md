@@ -283,7 +283,7 @@ cd test
 pdm install --dev
 
 # Create a test_env_config.yaml in the test directory
-cpexample_test_env_config.yaml test_env_config.yaml
+cp example_test_env_config.yaml test_env_config.yaml
 # Adapt all MQTT / device settings test_env_config.yaml
 vim test_env_config.yaml
 
