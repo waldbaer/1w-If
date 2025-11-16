@@ -11,7 +11,7 @@
         "-v",
         "-s",
         "-k",
-        "test_mqtt_protocol"
+        "test_mqtt_protocol_scan_all"
       ]
     },
   ]

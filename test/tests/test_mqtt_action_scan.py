@@ -33,6 +33,7 @@ def test_mqtt_protocol_scan_all(mqtt_capture) -> None:
     for expected_device in config.devices:
         match = next((d for d in response_devices if d[p.ATTRIB_DEVICE_ID] == str(expected_device.device_id)), None)
         assert match is not None
+        assert match.get(p.ATTRIB_CHANNEL) == expected_device.channel
         assert match.get(p.ATTRIB_PRESENCE) is True
         assert match.get(p.ATTRIB_ATTRIBUTES) == ow_dd.get_attributes(expected_device.device_id)
 
@@ -52,6 +53,7 @@ def test_mqtt_protocol_scan_single_device(mqtt_capture, device) -> None:
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_SCAN
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) == device.channel
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
     assert response_device.get(p.ATTRIB_PRESENCE) is True
     assert response_device.get(p.ATTRIB_ATTRIBUTES) == ow_dd.get_attributes(device.device_id)
@@ -72,6 +74,7 @@ def test_mqtt_protocol_scan_single_device_not_available(mqtt_capture) -> None:
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_SCAN
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(unknown_device_id)
     assert response_device.get(p.ATTRIB_PRESENCE) is False
     assert response_device.get(p.ATTRIB_ATTRIBUTES) == ow_dd.get_attributes(unknown_device_id)
@@ -101,6 +104,7 @@ def test_mqtt_protocol_scan_family(mqtt_capture, family_code) -> None:
     for expected_device in expected_devices:
         match = next((d for d in response_devices if d[p.ATTRIB_DEVICE_ID] == str(expected_device.device_id)), None)
         assert match is not None
+        assert match.get(p.ATTRIB_CHANNEL) is expected_device.channel
         assert match.get(p.ATTRIB_PRESENCE) is True
         assert match.get(p.ATTRIB_ATTRIBUTES) == ow_dd.get_attributes(expected_device.device_id)
 
@@ -127,6 +131,7 @@ def test_mqtt_protocol_scan_device_and_family(mqtt_capture) -> None:
     response_request = error.get(p.ATTRIB_REQUEST)
     assert response_request is not None
     assert response_request.get(p.ATTRIB_ACTION) == p.ACTION_SCAN
+    assert response_request.get(p.ATTRIB_CHANNEL) is None
     assert response_request.get(p.ATTRIB_DEVICE_ID) == str(device_id)
     assert response_request.get(p.ATTRIB_FAMILY_CODE) == family_code
 
@@ -150,6 +155,7 @@ def test_mqtt_protocol_scan_invalid_device_ID(mqtt_capture) -> None:
     response_request = error.get(p.ATTRIB_REQUEST)
     assert response_request is not None
     assert response_request.get(p.ATTRIB_ACTION) == p.ACTION_SCAN
+    assert response_request.get(p.ATTRIB_CHANNEL) is None
     assert response_request.get(p.ATTRIB_DEVICE_ID) == invalid_device_id
 
 

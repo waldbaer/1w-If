@@ -85,8 +85,7 @@ auto Ds2438CommandHandler::ProcessDeviceTemperature(Command& cmd, one_wire::Ds24
     if (get_temperature_result) {
       JsonDocument response_json{};
       response_json[json::kRootAction] = json::kActionRead;
-      AddJsonDeviceWithAttribute(response_json, ds2438.GetAddress(), json::kActionReadAttributeTemperature,
-                                 sampled_temperature);
+      AddJsonDeviceWithAttribute(response_json, ds2438, json::kActionReadAttributeTemperature, sampled_temperature);
       command_handler_->SendCommandResponse(cmd, response_json);
     } else {
       command_handler_->SendErrorResponse(cmd, "Failed to get DS2438 temperature.");
@@ -125,8 +124,7 @@ auto Ds2438CommandHandler::ProcessFamilyTemperature(Command& cmd, one_wire::OneW
       float sampled_temperature{0};
       bool const get_temp_result{ds2438->GetTemperature(sampled_temperature)};
       if (get_temp_result) {
-        AddJsonDeviceWithAttribute(json_devices, ds2438->GetAddress(), json::kActionReadAttributeTemperature,
-                                   sampled_temperature);
+        AddJsonDeviceWithAttribute(json_devices, *ds2438, json::kActionReadAttributeTemperature, sampled_temperature);
       } else {
         command_handler_->SendErrorResponse(cmd, "Failed to get DS2438 temperature.");
         return;
@@ -155,7 +153,7 @@ auto Ds2438CommandHandler::ProcessDeviceVAD(Command& cmd, one_wire::Ds2438& ds24
     if (get_vad_result) {
       JsonDocument response_json{};
       response_json[json::kRootAction] = json::kActionRead;
-      AddJsonDeviceWithAttribute(response_json, ds2438.GetAddress(), json::kActionReadAttributeVAD, sampled_vad);
+      AddJsonDeviceWithAttribute(response_json, ds2438, json::kActionReadAttributeVAD, sampled_vad);
       command_handler_->SendCommandResponse(cmd, response_json);
     } else {
       command_handler_->SendErrorResponse(cmd, "Failed to get DS2438 VAD.");
@@ -195,7 +193,7 @@ auto Ds2438CommandHandler::ProcessFamilyVAD(Command& cmd, one_wire::OneWireAddre
       float sampled_vad{0};
       bool const get_vad_result{ds2438->GetVAD(sampled_vad)};
       if (get_vad_result) {
-        AddJsonDeviceWithAttribute(json_devices, ds2438->GetAddress(), json::kActionReadAttributeVAD, sampled_vad);
+        AddJsonDeviceWithAttribute(json_devices, *ds2438, json::kActionReadAttributeVAD, sampled_vad);
       } else {
         command_handler_->SendErrorResponse(cmd, "Failed to get DS2438 VAD.");
         return;
@@ -224,7 +222,7 @@ auto Ds2438CommandHandler::ProcessDeviceVDD(Command& cmd, one_wire::Ds2438& ds24
     if (get_vdd_result) {
       JsonDocument response_json{};
       response_json[json::kRootAction] = json::kActionRead;
-      AddJsonDeviceWithAttribute(response_json, ds2438.GetAddress(), json::kActionReadAttributeVDD, sampled_vdd);
+      AddJsonDeviceWithAttribute(response_json, ds2438, json::kActionReadAttributeVDD, sampled_vdd);
       command_handler_->SendCommandResponse(cmd, response_json);
     } else {
       command_handler_->SendErrorResponse(cmd, "Failed to get DS2438 VDD.");
@@ -264,7 +262,7 @@ auto Ds2438CommandHandler::ProcessFamilyVDD(Command& cmd, one_wire::OneWireAddre
       float sampled_vdd{0};
       bool const get_temp_result{ds2438->GetVDD(sampled_vdd)};
       if (get_temp_result) {
-        AddJsonDeviceWithAttribute(json_devices, ds2438->GetAddress(), json::kActionReadAttributeVDD, sampled_vdd);
+        AddJsonDeviceWithAttribute(json_devices, *ds2438, json::kActionReadAttributeVDD, sampled_vdd);
       } else {
         command_handler_->SendErrorResponse(cmd, "Failed to get DS2438 VDD.");
         return;
@@ -276,20 +274,21 @@ auto Ds2438CommandHandler::ProcessFamilyVDD(Command& cmd, one_wire::OneWireAddre
   }
 }
 
-auto Ds2438CommandHandler::AddJsonDeviceWithAttribute(JsonDocument& parent,
-                                                      one_wire::OneWireAddress const& device_address,
+auto Ds2438CommandHandler::AddJsonDeviceWithAttribute(JsonDocument& parent, one_wire::OneWireDevice const& device,
                                                       char const* attribute_name, float const& attribute_value)
     -> void {
   JsonObject json_device{parent[json::kDevice].to<JsonObject>()};
-  json_device[json::kDeviceId] = device_address.Format().c_str();
+  json_device[json::kChannel] = device.GetBusId();
+  json_device[json::kDeviceId] = device.GetAddress().Format().c_str();
   json_device[attribute_name] = attribute_value;
 }
 
-auto Ds2438CommandHandler::AddJsonDeviceWithAttribute(JsonArray& parent, one_wire::OneWireAddress const& device_address,
+auto Ds2438CommandHandler::AddJsonDeviceWithAttribute(JsonArray& parent, one_wire::OneWireDevice const& device,
                                                       char const* attribute_name, float const& attribute_value)
     -> void {
   JsonObject json_device{parent.add<JsonObject>()};
-  json_device[json::kDeviceId] = device_address.Format().c_str();
+  json_device[json::kChannel] = device.GetBusId();
+  json_device[json::kDeviceId] = device.GetAddress().Format().c_str();
   json_device[attribute_name] = attribute_value;
 }
 

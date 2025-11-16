@@ -44,11 +44,11 @@ class Ds2438CommandHandler final {
   auto ProcessFamilyVDD(Command& cmd, one_wire::OneWireAddress::FamilyCode family_code, DeviceMap const& ow_devices)
       -> void;
 
-  auto AddJsonDeviceWithAttribute(JsonDocument& parent, one_wire::OneWireAddress const& device_address,
+  auto AddJsonDeviceWithAttribute(JsonDocument& parent, one_wire::OneWireDevice const& device,
                                   char const* attribute_name, float const& attribute_value) -> void;
 
-  auto AddJsonDeviceWithAttribute(JsonArray& parent, one_wire::OneWireAddress const& device_address,
-                                  char const* attribute_name, float const& attribute_value) -> void;
+  auto AddJsonDeviceWithAttribute(JsonArray& parent, one_wire::OneWireDevice const& device, char const* attribute_name,
+                                  float const& attribute_value) -> void;
 
   logging::Logger logger_{logging::logger_g};
 
