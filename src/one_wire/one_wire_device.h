@@ -27,6 +27,7 @@ class OneWireDevice {
 
   auto GetAddress() const -> OneWireAddress;
   auto GetFamilyCode() const -> OneWireAddress::FamilyCode;
+  auto GetBusId() const -> OneWireBus::BusId;
 
  protected:
   auto CheckAddress() -> bool;

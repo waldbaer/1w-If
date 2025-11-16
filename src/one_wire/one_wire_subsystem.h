@@ -31,7 +31,7 @@ class OneWireSystem {
   auto Loop() -> void;
 
   auto Scan() -> bool;
-  auto Scan(OneWireAddress const& address, bool& is_present) -> bool;
+  auto Scan(OneWireAddress const& address, bool& is_present, OneWireBus::BusId& bus_id) -> bool;
   auto Scan(OneWireAddress::FamilyCode family_code) -> bool;
 
   auto GetAvailableDevice(OneWireAddress const& address) -> std::shared_ptr<OneWireDevice>;

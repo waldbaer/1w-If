@@ -25,12 +25,17 @@ auto Ds18b20CommandHandler::ProcessReadSingleDevice(Command& cmd) -> void {
     JsonDocument response_json{};
     response_json[json::kRootAction] = json::kActionRead;
     JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
-    json_device[json::kDeviceId] = device_addr.Format().c_str();
 
     bool is_present{false};
-    bool const scan_result{one_wire_system_->Scan(device_addr, is_present)};
+    one_wire::OneWireBus::BusId bus_id{0};
+    bool const scan_result{one_wire_system_->Scan(device_addr, is_present, bus_id)};
 
+    if (is_present) {
+      json_device[json::kChannel] = bus_id;
+    }
+    json_device[json::kDeviceId] = device_addr.Format().c_str();
     json_device[json::kAttributePresence] = is_present;
+
     command_handler_->SendCommandResponse(cmd, response_json);
   } else if (cmd.param3.param_value.device_attribute == DeviceAttributeType::Temperature) {
     logger_.Debug(F("[DS18B20 CmdHandler] Processing command 'read' [sub_action=%u][device_id=%s]"), cmd.sub_action,
@@ -59,7 +64,8 @@ auto Ds18b20CommandHandler::ProcessReadSingleDevice(Command& cmd) -> void {
             response_json[json::kRootAction] = json::kActionRead;
 
             JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
-            json_device[json::kDeviceId] = device_addr.Format().c_str();
+            json_device[json::kChannel] = ow_device->GetBusId();
+            json_device[json::kDeviceId] = ow_device->GetAddress().Format().c_str();
             json_device[json::kActionReadAttributeTemperature] = sampled_temperature;
             command_handler_->SendCommandResponse(cmd, response_json);
           } else {
@@ -118,6 +124,8 @@ auto Ds18b20CommandHandler::ProcessReadDeviceFamily(Command& cmd) -> void {
           bool const get_temp_result{ds18b20->GetTemperature(sampled_temperature)};
           if (get_temp_result) {
             JsonObject json_device{json_devices.add<JsonObject>()};
+
+            json_device[json::kChannel] = ds18b20->GetBusId();
             json_device[json::kDeviceId] = ds18b20->GetAddress().Format().c_str();
             json_device[json::kActionReadAttributeTemperature] = sampled_temperature;
           } else {

@@ -40,6 +40,7 @@ static constexpr char const* kActionUnsubscribe{"unsubscribe"};
 static constexpr char const* kDevice{"device"};
 static constexpr char const* kDevices{"devices"};
 static constexpr char const* kDeviceId{"device_id"};
+static constexpr char const* kChannel{"channel"};
 static constexpr char const* kFamilyCode{"family_code"};
 static constexpr char const* kAttribute{"attribute"};
 static constexpr char const* kAttributes{"attributes"};

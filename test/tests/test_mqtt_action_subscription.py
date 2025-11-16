@@ -50,14 +50,17 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
     # Verify subscribe ack and read responses
     assert subscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
+
     response_device = subscribe_ack_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
     for cyclic_read_msg in cyclic_read_msgs:
         assert cyclic_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
         response_device = cyclic_read_msg.get(p.ATTRIB_DEVICE)
         assert response_device is not None
+        assert response_device.get(p.ATTRIB_CHANNEL) == device.channel
         assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
         assert response_device.get(p.ATTRIB_PRESENCE) is True
 
@@ -80,6 +83,7 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = unsubscribe_ack_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
 
@@ -119,12 +123,14 @@ def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, devi
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = subscribe_ack_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
     for cyclic_read_msg in cyclic_read_msgs:
         assert cyclic_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
         response_device = cyclic_read_msg.get(p.ATTRIB_DEVICE)
         assert response_device is not None
+        assert response_device.get(p.ATTRIB_CHANNEL) == device.channel
         assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
         ow_dd.assert_temperature_range(response_device.get(p.ATTRIB_TEMPERATURE))
 
@@ -147,6 +153,7 @@ def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, devi
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = unsubscribe_ack_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
 
@@ -177,11 +184,13 @@ def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_captur
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = subscribe_ack_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
     assert immediate_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = immediate_read_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) == device.channel
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
     # Repeat subscription
@@ -214,6 +223,7 @@ def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_captur
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = unsubscribe_ack_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
+    assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
 
@@ -266,6 +276,7 @@ def test_mqtt_protocol_subscription_single_device_missing_interval(mqtt_capture,
     error_request = error.get(p.ATTRIB_REQUEST)
     assert error_request is not None
     assert error_request.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
+    assert error_request.get(p.ATTRIB_CHANNEL) is None
     assert error_request.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
     assert error_request.get(p.ATTRIB_ATTRIBUTE) == p.ATTRIB_PRESENCE
     assert error_request.get(p.ATTRIB_INTERVAL) is None
@@ -299,6 +310,7 @@ def test_mqtt_protocol_subscription_single_device_invalid_attribute(mqtt_capture
     error_request = error.get(p.ATTRIB_REQUEST)
     assert error_request is not None
     assert error_request.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
+    assert error_request.get(p.ATTRIB_CHANNEL) is None
     assert error_request.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
     assert error_request.get(p.ATTRIB_ATTRIBUTE) == unknown_attribute
     assert error_request.get(p.ATTRIB_INTERVAL) == interval
@@ -338,6 +350,7 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
 
     # Verify subscribe ack and read responses
     assert subscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
+    assert subscribe_ack_msg.get(p.ATTRIB_CHANNEL) is None
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     assert subscribe_ack_msg.get(p.ATTRIB_FAMILY_CODE) == family_code
 
@@ -352,6 +365,7 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
         for expected_device in expected_devices:
             match = next((d for d in response_devices if d[p.ATTRIB_DEVICE_ID] == str(expected_device.device_id)), None)
             assert match is not None
+            assert match.get(p.ATTRIB_CHANNEL) == expected_device.channel
             assert match.get(p.ATTRIB_PRESENCE) is True
 
     # Unsubscribe
@@ -370,6 +384,7 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
 
     # Verify unsubscribe ack response
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_UNSUBSCRIBE
+    assert unsubscribe_ack_msg.get(p.ATTRIB_CHANNEL) is None
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     assert unsubscribe_ack_msg.get(p.ATTRIB_FAMILY_CODE) == family_code
 
@@ -423,6 +438,7 @@ def test_mqtt_protocol_subscription_family_missing_interval(mqtt_capture, family
     assert error_request is not None
     assert error_request.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
     assert error_request.get(p.ATTRIB_ATTRIBUTE) == p.ATTRIB_PRESENCE
+    assert error_request.get(p.ATTRIB_CHANNEL) is None
     assert error_request.get(p.ATTRIB_FAMILY_CODE) == family_code
     assert error_request.get(p.ATTRIB_INTERVAL) is None
 
@@ -455,6 +471,7 @@ def test_mqtt_protocol_subscription_family_invalid_attribute(mqtt_capture, famil
     error_request = error.get(p.ATTRIB_REQUEST)
     assert error_request is not None
     assert error_request.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
+    assert error_request.get(p.ATTRIB_CHANNEL) is None
     assert error_request.get(p.ATTRIB_ATTRIBUTE) == unknown_attribute
     assert error_request.get(p.ATTRIB_FAMILY_CODE) == family_code
     assert error_request.get(p.ATTRIB_INTERVAL) == interval

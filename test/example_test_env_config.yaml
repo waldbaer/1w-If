@@ -6,6 +6,10 @@ cmd_topic: "1wIf/cmd"
 status_topic: "1wIf/stat"
 devices:
   - device_id: "01.E2C79A1A0000"
+    channel: 1
   - device_id: "01.FEF49A1A0000"
+    channel: 1
   - device_id: "26.863743020000"
+    channel: 2
   - device_id: "28.9F0945161301"
+    channel: 2

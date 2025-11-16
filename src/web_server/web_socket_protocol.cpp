@@ -31,6 +31,7 @@ auto WebSocketProtocol::SerializeOneWireDeviceMap(one_wire::OneWireSystem& one_w
   for (std::pair<one_wire::OneWireAddress, std::shared_ptr<one_wire::OneWireDevice>> const& device_entry :
        devices_map) {
     JsonObject device_json{devices_json.add<JsonObject>()};
+    device_json[cmd::json::kChannel] = device_entry.second->GetBusId();
     device_json[cmd::json::kDeviceId] = device_entry.first.Format();
     cmd::json::JsonBuilder::AddDeviceAttributes(&one_wire_system, device_json, device_entry.first);
   }

@@ -8,6 +8,7 @@ class MqttProtocol:
     ATTRIB_ACTION = "action"
     ATTRIB_DEVICE = "device"
     ATTRIB_DEVICE_ID = "device_id"
+    ATTRIB_CHANNEL = "channel"
     ATTRIB_FAMILY_CODE = "family_code"
     ATTRIB_ATTRIBUTE = "attribute"
     ATTRIB_ATTRIBUTES = "attributes"

@@ -12,9 +12,10 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 * Access 1-wire devices via ethernet / MQTT protocol
 * 1-Wire bus access via hardware IC
 * Over-the-air (OTA) updates (web interface and espota protocol)
+* Multiple independent 1-wire buses.
 * Responsive web interface
   <br/>
-  <img src="doc/screenshots/web-dashboard.png" title="Dashboard"  width="350"/> <img src="doc/screenshots/web-console.png" title="Dashboard" width="350"/>
+  <img src="doc/screenshots/web-dashboard-console.png" title="Dashboard"/>
 
 ## Supported 1-Wire devices
 
@@ -106,19 +107,22 @@ Example Response:
   "action": "scan",
   "devices": [
     {
+      "channel": 1,
       "device_id": "01.D2C79A1A0000",
       "presence": true,
       "attributes": ["presence"]
     },
     {
+      "channel": 1,
       "device_id": "28.8F0945161301",
       "presence": true,
       "attributes": ["presence", "temperature"]
     },
     {
+      "channel": 2,
       "device_id": "26.563743020000",
       "presence": true,
-      "attributes": ["presence", "VAD", "VDD"]
+      "attributes": ["presence", "temperature", "VAD", "VDD"]
     },
     ...
   ]
@@ -142,8 +146,9 @@ Example Response:
 {
   "action": "read",
   "device": {
-     "device_id": "28.8F0945161301",
-     "temperature": 24.75
+    "channel": 1,
+    "device_id": "28.8F0945161301",
+    "temperature": 24.75
   }
 }
 ```
@@ -165,6 +170,7 @@ Example Response:
   "family_code": 40,
   "devices": [
     {
+      "channel": 1,
       "device_id": "28.8F0945161301",
       "temperature": 24.75
     },
@@ -189,8 +195,9 @@ Example Response:
 {
   "action": "read",
   "device": {
-     "device_id": "28.8F0945161301",
-     "presence": true
+    "channel": 1,
+    "device_id": "28.8F0945161301",
+    "presence": true
   }
 }
 ```

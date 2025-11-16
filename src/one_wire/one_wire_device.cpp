@@ -18,6 +18,8 @@ auto OneWireDevice::GetAddress() const -> OneWireAddress { return address_; }
 
 auto OneWireDevice::GetFamilyCode() const -> OneWireAddress::FamilyCode { return address_.GetFamilyCode(); }
 
+auto OneWireDevice::GetBusId() const -> OneWireBus::BusId { return bus_.GetId(); }
+
 // ---- Protected APIS -------------------------------------------------------------------------------------------------
 
 auto OneWireDevice::CheckAddress() -> bool {

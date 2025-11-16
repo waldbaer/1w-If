@@ -26,13 +26,17 @@ auto PresenceCommandHandler::ProcessPresenceSingleDevice(Command& cmd, char cons
 
   logger_.Debug(F("[CmdHandler] Processing command 'Scan' [device_id=%s]"), searched_device.Format().c_str());
 
+  one_wire::OneWireBus::BusId bus_id{0};
   bool is_present{false};
-  bool const scan_result{one_wire_system_->Scan(searched_device, is_present)};
+  bool const scan_result{one_wire_system_->Scan(searched_device, is_present, bus_id)};
   if (scan_result) {
     // Add values in the document
     JsonDocument response_json{};
     response_json[json::kRootAction] = action;
     JsonObject json_device{response_json[json::kDevice].to<JsonObject>()};
+    if (is_present) {
+      json_device[json::kChannel] = bus_id;
+    }
     json_device[json::kDeviceId] = searched_device.Format().c_str();
     json_device[json::kAttributePresence] = is_present;
     if (add_device_attributes) {
@@ -62,7 +66,8 @@ auto PresenceCommandHandler::ProcessPresenceDeviceFamily(Command& cmd, char cons
     JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
     for (DeviceMap::value_type const& ow_device : ow_devices) {
       JsonObject json_device{json_devices.add<JsonObject>()};
-      json_device[json::kDeviceId] = ow_device.first.Format().c_str();
+      json_device[json::kChannel] = ow_device.second->GetBusId();
+      json_device[json::kDeviceId] = ow_device.second->GetAddress().Format().c_str();
       json_device[json::kAttributePresence] = true;
       if (add_device_attributes) {
         json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
@@ -88,7 +93,8 @@ auto PresenceCommandHandler::ProcessPresenceScanAll(Command& cmd) -> void {
     JsonArray json_devices{response_json[json::kDevices].to<JsonArray>()};
     for (DeviceMap::value_type const& ow_device : ow_devices) {
       JsonObject json_device{json_devices.add<JsonObject>()};
-      json_device[json::kDeviceId] = ow_device.first.Format().c_str();
+      json_device[json::kChannel] = ow_device.second->GetBusId();
+      json_device[json::kDeviceId] = ow_device.second->GetAddress().Format().c_str();
       json_device[json::kAttributePresence] = true;
       json::JsonBuilder::AddDeviceAttributes(one_wire_system_, json_device, ow_device.first);
     }

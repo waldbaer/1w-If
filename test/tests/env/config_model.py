@@ -21,6 +21,7 @@ class MqttConfig:
 @dataclass
 class DeviceConfig:
     device_id: OneWireAddress
+    channel: int
 
 
 @dataclass
@@ -53,7 +54,8 @@ class ConfigModel:
         devices_config = []
         for device_data in data.get("devices", []):
             device_id = OneWireAddress(device_data["device_id"])
-            devices_config.append(DeviceConfig(device_id))
+            channel = device_data["channel"]
+            devices_config.append(DeviceConfig(device_id, channel))
 
         return ConfigModel(mqtt=mqtt_config, devices=devices_config)
 
