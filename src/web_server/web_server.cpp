@@ -266,7 +266,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   logger_.Debug(F("[WebServer] Saving config..."));
 
   // ---- Store LoggingConfig ----
-  config::LoggingConfig logging_config{};
+  config::LoggingConfig logging_config{config::persistency_g.LoadLoggingConfig()};
 
   if (request->hasParam(kConfigSaveLogLevel, true)) {
     logging_config.SetLogLevel(
@@ -282,7 +282,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   config::persistency_g.StoreLoggingConfig(logging_config);
 
   // ---- Store EthernetConfig ----
-  config::EthernetConfig ethernet_config{};
+  config::EthernetConfig ethernet_config{config::persistency_g.LoadEthernetConfig()};
 
   if (request->hasParam(kConfigSaveEthHostname, true)) {
     ethernet_config.SetHostname(request->getParam(kConfigSaveEthHostname, true)->value());
@@ -292,7 +292,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   // ---- Store OTA Config ----
 
-  config::OtaConfig ota_config{};
+  config::OtaConfig ota_config{config::persistency_g.LoadOtaConfig()};
 
   if (request->hasParam(kConfigSaveOtaPort, true)) {
     ota_config.SetPort(request->getParam(kConfigSaveOtaPort, true)->value().toInt());
@@ -308,7 +308,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   // ---- Store WebServer Config ----
 
-  config::WebServerConfig webserver_config{};
+  config::WebServerConfig webserver_config{config::persistency_g.LoadWebServerConfig()};
 
   if (request->hasParam(kConfigSaveWebServerUser, true)) {
     webserver_config.SetUser(request->getParam(kConfigSaveWebServerUser, true)->value());
@@ -324,7 +324,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   // ---- Store Mqtt Config ----
 
-  config::MqttConfig mqtt_config{};
+  config::MqttConfig mqtt_config{config::persistency_g.LoadMqttConfig()};
 
   if (request->hasParam(kConfigSaveMqttServer, true)) {
     mqtt_config.SetServerAddr(request->getParam(kConfigSaveMqttServer, true)->value());
@@ -351,7 +351,7 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
-  // Send positive response
+  // ---- All parts updated: Send response ----
   request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Stored! Restart necessary...");
 }
 
