@@ -24,7 +24,7 @@ auto WebSocketLogger::write(std::uint8_t character) -> std::size_t {
     if (character != '\n') {
       line_buffer_ += (char)character;
     } else {
-      //  Store the raw line (without JSON wrapper) to keep history compact.
+      // Store the raw line (without JSON wrapper) to keep history compact.
       StoreHistory(line_buffer_);
 
       if (web_socket_->count() > 0) {

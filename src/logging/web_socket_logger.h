@@ -33,7 +33,7 @@ class WebSocketLogger : public Print {
   auto LogFullHistory(AsyncWebSocketClient* client) -> void;
 
  private:
-  static constexpr std::uint8_t kMaxHistorySize{WS_MAX_QUEUED_MESSAGES};
+  static constexpr std::uint8_t kMaxHistorySize{WS_MAX_QUEUED_MESSAGES - 1};
   // Maximum length of a single stored history entry (raw log line). Longer lines will be truncated.
   static constexpr std::size_t kMaxHistoryEntryLength{256};
 
