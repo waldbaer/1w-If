@@ -53,8 +53,8 @@ OneWireSystem::OneWireSystem()
 
       },
       ow_buses_{
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{0}, ow_bus_masters_.at(0)} ,
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{1}, ow_bus_masters_.at(1)}
+         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{1}, ow_bus_masters_.at(0)} ,
+         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{2}, ow_bus_masters_.at(1)}
       }
       {
   // ctor
@@ -88,7 +88,8 @@ auto OneWireSystem::Begin(bool run_initial_scan) -> bool {
     logger_.Info(F("[OneWireSystem] Initial 1-wire bus scan: found %u devices in %u ms"), ow_available_devices_.size(),
                  scan_time);
     for (DeviceMap::value_type const& ow_device : ow_available_devices_) {
-      logger_.Info(F("[OneWireSystem]   1-wire device: %s"), ow_device.first.Format().c_str());
+      logger_.Info(F("[OneWireSystem]   1-wire device: %s | channel: %d"), ow_device.first.Format().c_str(),
+                   ow_device.second->GetBusId());
     }
   }
 
