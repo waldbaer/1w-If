@@ -39,12 +39,22 @@ auto owif_setup() -> void {
   }
   setup_result &= logging::logger_g.Begin(logging::multi_logger_g, logging_config.GetLogLevel());
 
+  if (logging_config.GetWebLogEnabled()) {
+    setup_result &= logging::web_socket_logger_g.Begin(web_server::web_server_g.GetWebSocket());
+    setup_result &= logging::multi_logger_g.RegisterLogSink(logging::web_socket_logger_g);
+  }
+
   // Terminate Handler
   SetupTerminateHandler();
 
-  logging::logger_g.Info(F("-- 1-Wire Interface --------------------"));
-  logging::logger_g.Info(F("| Version: %s                        |"), kOwIfVersion);
-  logging::logger_g.Info(F("----------------------------------------"));
+  logging::logger_g.Info(F("[main] +- 1-Wire Interface ---------+"));
+  logging::logger_g.Info(F("[main] | Version:    %s          |"), kOwIfVersion);
+  logging::logger_g.Info(F("[main] |                            |"), kOwIfVersion);
+  logging::logger_g.Info(F("[main] | Serial Log: %s            |"),
+                         logging_config.GetSerialLogEnabled() ? "on " : "off");
+  logging::logger_g.Info(F("[main] | Web Log:    %s            |"), logging_config.GetWebLogEnabled() ? "on " : "off");
+  logging::logger_g.Info(F("[main] | Log-Level:  %s        |"), logging_config.GetLogLevelAsString());
+  logging::logger_g.Info(F("[main] +----------------------------+"));
 
   setup_result &= one_wire::one_wire_system_g.Begin(/* run_initial_scan= */ true);
 
@@ -57,11 +67,6 @@ auto owif_setup() -> void {
   setup_result &= mqtt::mqtt_msg_handler_g.Begin(&mqtt::mqtt_client_g, &cmd::command_handler_g);
 
   setup_result &= ethernet::ethernet_g.Begin();
-
-  if (logging_config.GetWebLogEnabled()) {
-    setup_result &= logging::web_socket_logger_g.Begin(web_server::web_server_g.GetWebSocket());
-    setup_result &= logging::multi_logger_g.RegisterLogSink(logging::web_socket_logger_g);
-  }
 
   if (setup_result) {
     logging::logger_g.Info(F("[main] Initialization finished. All sub-subsystems are initialized."));

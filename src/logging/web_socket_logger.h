@@ -4,6 +4,8 @@
 // ---- Includes ----
 #include <Arduino.h>
 
+#include <mutex>
+
 #include "AsyncWebSocket.h"
 
 namespace owif {
@@ -41,6 +43,9 @@ class WebSocketLogger : public Print {
 
   bool started_{false};
   AsyncWebSocket* web_socket_{nullptr};
+
+  // Mutex to protect line buffer and history from multi-threaded read/write access.
+  std::mutex mutex_{};
 
   String line_buffer_{};
 

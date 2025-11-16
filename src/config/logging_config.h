@@ -30,6 +30,7 @@ class LoggingConfig {
   // ---- Public APIs ----
 
   auto GetLogLevel() const -> LogLevel;
+  auto GetLogLevelAsString() const -> char const*;
   auto SetLogLevel(LogLevel log_level) -> void;
 
   auto GetSerialLogEnabled() const -> bool;

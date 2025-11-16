@@ -56,8 +56,8 @@ auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
   web_socket_.onEvent([this](AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type, void* arg,
                              uint8_t* data, size_t len) {
     if (type == WS_EVT_CONNECT) {
-      logger_.Debug(F("[WebServer] client %u connected to WebSocket"), client->id());
       owif::logging::web_socket_logger_g.LogFullHistory(client);
+      logger_.Debug(F("[WebServer] client %u connected to WebSocket"), client->id());
     } else if (type == WS_EVT_DISCONNECT) {
       logger_.Debug(F("[WebServer] client %u disconnected from WebSocket"), client->id());
     }
@@ -240,7 +240,6 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
     RedirectTo(request, "/login");
     return;
   }
-  logger_.Verbose(F("[WebServer] Handle dashboard request"));
 
   request->send(LittleFS, "/index.html", kContextTypeHtml, false, [this](String const& var) {
     if (var == "OW_DEVICES") {
@@ -361,7 +360,6 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
     RedirectTo(request, "/login");
     return;
   }
-  logger_.Verbose(F("[WebServer] Handle config request"));
 
   config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
   config::EthernetConfig const ethernet_config{config::persistency_g.LoadEthernetConfig()};
