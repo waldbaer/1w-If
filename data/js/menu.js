@@ -4,7 +4,7 @@ function LoadMenu(containerId) {
 
   container.innerHTML = `
     <div class="menubar">
-      <img class="logo" src="img/logo.png">
+      <img class="logo" src="img/logo-emblem.svg" height="50">
       <a href="/">Dashboard</a>
       <a href="/config">Configuration</a>
       <a href="/console">Console</a>

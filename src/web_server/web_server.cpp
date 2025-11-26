@@ -29,7 +29,7 @@ auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
   web_server_.serveStatic("/css/style.css", LittleFS, "/css/style.css");
   web_server_.serveStatic("/js/menu.js", LittleFS, "/js/menu.js");
   web_server_.serveStatic("/js/config-util.js", LittleFS, "/js/config-util.js");
-  web_server_.serveStatic("/img/logo.png", LittleFS, "/img/logo.png");
+  web_server_.serveStatic("/img/logo-emblem.svg", LittleFS, "/img/logo-emblem.svg");
 
   // Register path/page handlers
   web_server_.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) { HandleDashboard(request); });
