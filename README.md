@@ -1,5 +1,5 @@
 
-# <img src="doc/logo/logo-300dpi.png" title="1-Wire Interface Logo" width="400" />
+# <img src="doc/logo/logo.inkscape.svg" title="1-Wire Interface Logo" width="400" />
 
 An ESP32-based 1-Wire interface supporting access with physical ethernet and MQTT protocol.
 
