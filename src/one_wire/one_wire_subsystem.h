@@ -44,7 +44,7 @@ class OneWireSystem {
 
  private:
   // I2C constants
-  static constexpr std::uint8_t kI2cBus{1};      // Us second I2C bus. First is used for ethernet PHY.
+  static constexpr std::uint8_t kI2cBus{1};      // Use second I2C bus. First is used for ethernet PHY.
   static constexpr std::uint8_t kI2cSdaPin{4};   // SDA2, GPIO4
   static constexpr std::uint8_t kI2cSclPin{14};  // SCL2, GPIO14
   static constexpr std::uint32_t kI2cFrequency{400000};

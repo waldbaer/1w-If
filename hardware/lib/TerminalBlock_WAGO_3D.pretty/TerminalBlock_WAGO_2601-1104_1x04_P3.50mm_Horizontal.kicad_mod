@@ -1,0 +1,307 @@
+(footprint "TerminalBlock_WAGO_2601-1104_1x04_P3.50mm_Horizontal"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Terminal Block WAGO 2601-1104, 4 pins, pitch 3.5mm, size 15.5x14.5mm, drill diameter 1.2mm, pad diameter 2.3mm, https://www.wago.com/global/pcb-terminal-blocks-and-pluggable-connectors/pcb-terminal-block/p/2601-1104, script-generated using https://gitlab.com/kicad/libraries/kicad-footprint-generator/-/tree/master/scripts/TerminalBlock_WAGO")
+	(tags "THT Terminal Block WAGO 2601-1104 pitch 3.5mm size 15.5x14.5mm drill 1.2mm pad 2.3mm")
+	(property "Reference" "REF**"
+		(at 5.31 -10.27 0)
+		(layer "F.SilkS")
+		(uuid "d266eea3-9d14-4db6-b289-e76b27b9183b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TerminalBlock_WAGO_2601-1104_1x04_P3.50mm_Horizontal"
+		(at 5.31 6.47 0)
+		(layer "F.Fab")
+		(uuid "5dcf7e25-6972-4a3e-b484-d26bae3b2e20")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "19d1e30a-336d-404d-aed3-c7eaca979081")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f15d6d79-1221-4de8-a058-b2a0ec4381df")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -2.56 -9.27)
+		(end 13.18 -9.27)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "a98fcc6a-e54b-4efd-a610-ae417ce2388d")
+	)
+	(fp_line
+		(start -2.56 5.47)
+		(end -2.56 -9.27)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "3db80369-9a7a-44d5-b309-46f339f9dea0")
+	)
+	(fp_line
+		(start -0.3 5.47)
+		(end -2.56 5.47)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5f85c3fa-d6b1-4485-a0a5-601594bc20c3")
+	)
+	(fp_line
+		(start 13.18 -9.27)
+		(end 13.18 5.47)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "9651c382-967b-4c8a-989d-0cc884a1a387")
+	)
+	(fp_line
+		(start 13.18 5.47)
+		(end 0.3 5.47)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "41efeef6-c233-400c-a84f-66899d1816ae")
+	)
+	(fp_poly
+		(pts
+			(xy 0 5.47) (xy 0.44 6.08) (xy -0.44 6.08)
+		)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "3cd0cbc0-994c-4a97-9e4c-ad81359fee5d")
+	)
+	(fp_line
+		(start -2.94 -9.65)
+		(end -2.94 5.85)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "93be6379-4661-4752-89a9-3bdfcafb9267")
+	)
+	(fp_line
+		(start -2.94 5.85)
+		(end 13.56 5.85)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "2be9f650-3634-4a66-933f-b58120df8f7d")
+	)
+	(fp_line
+		(start 13.56 -9.65)
+		(end -2.94 -9.65)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "757e68ae-3f16-45bd-ab21-51c4339921c2")
+	)
+	(fp_line
+		(start 13.56 5.85)
+		(end 13.56 -9.65)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "1d9f2034-6a46-4a21-80c2-4fdb1a44e371")
+	)
+	(fp_line
+		(start -2.44 -9.15)
+		(end 13.06 -9.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "fa4f4537-5d69-4fc5-a5ba-1960cf841a33")
+	)
+	(fp_line
+		(start -2.44 3.35)
+		(end -2.44 -9.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "381be0a9-bf8c-42ae-9fc5-eb5f8a9648d1")
+	)
+	(fp_line
+		(start -0.44 5.35)
+		(end -2.44 3.35)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "09ff32a5-c047-4f32-9b93-e7727015517c")
+	)
+	(fp_line
+		(start 13.06 -9.15)
+		(end 13.06 5.35)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "d7c2fc95-3727-4131-bbb5-4f846836408a")
+	)
+	(fp_line
+		(start 13.06 5.35)
+		(end -0.44 5.35)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "548ebf0c-b519-4775-b190-cc0df6fa689b")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 5.31 -1.9 0)
+		(layer "F.Fab")
+		(uuid "f4e84b87-8c5f-46d2-8341-da1b43f3984c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 0 -5)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "9fc1d646-275a-4650-b38f-c370e6ed2ed2")
+	)
+	(pad "1" thru_hole roundrect
+		(at 0 0)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(roundrect_rratio 0.166667)
+		(uuid "d07c541d-39a4-4b2d-b983-222a542d8a8f")
+	)
+	(pad "2" thru_hole oval
+		(at 3.5 -5)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "188340ce-d0dc-45ad-96c7-6171a96cb7dc")
+	)
+	(pad "2" thru_hole oval
+		(at 3.5 0)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "d7aff93f-ff54-4162-b96c-ff61cffff973")
+	)
+	(pad "3" thru_hole oval
+		(at 7 -5)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "acbe65db-431b-4e12-87c3-b6fbe1fa4db2")
+	)
+	(pad "3" thru_hole oval
+		(at 7 0)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "6c2931ca-6c3e-4d49-91c3-2daecc6ca7b1")
+	)
+	(pad "4" thru_hole oval
+		(at 10.5 -5)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3d922a2e-2d7c-4107-9eb5-c2390202dd9d")
+	)
+	(pad "4" thru_hole oval
+		(at 10.5 0)
+		(size 1.8 2.3)
+		(drill 1.2)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "6f6060eb-c462-482b-991c-b224671ec5a4")
+	)
+	(embedded_fonts no)
+	(model "${KICAD9_3DMODEL_DIR}/TerminalBlock_WAGO.3dshapes/TerminalBlock_WAGO_2601-1104_1x04_P3.50mm_Horizontal.step"
+		(hide yes)
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(model "${KIPRJMOD}/lib/TerminalBlock_WAGO_3D.pretty/2601-1104.stp"
+		(offset
+			(xyz 11.6 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 90)
+		)
+	)
+)
