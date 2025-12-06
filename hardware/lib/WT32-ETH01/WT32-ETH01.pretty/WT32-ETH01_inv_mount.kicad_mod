@@ -540,9 +540,9 @@
 		(uuid "4e3d7c0d-12e3-42f2-b944-e4bcdbbcac2a")
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/lib/WT32-ETH01/WT32-ETH01.pretty/WT32_ETH01.step"
+	(model "${KIPRJMOD}/lib/WT32-ETH01/WT32-ETH01.pretty/WT32-ETH01_inv_mount.step"
 		(offset
-			(xyz 0.65 31.6 13.5)
+			(xyz 0.66 2.3 12.217)
 		)
 		(scale
 			(xyz 1 1 1)
