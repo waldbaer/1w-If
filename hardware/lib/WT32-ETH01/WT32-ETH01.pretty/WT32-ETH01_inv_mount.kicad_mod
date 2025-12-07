@@ -542,7 +542,7 @@
 	(embedded_fonts no)
 	(model "${KIPRJMOD}/lib/WT32-ETH01/WT32-ETH01.pretty/WT32-ETH01_inv_mount.step"
 		(offset
-			(xyz 0.66 2.3 12.217)
+			(xyz 0.66 2.3 12.1)
 		)
 		(scale
 			(xyz 1 1 1)
