@@ -4,10 +4,12 @@
 An ESP32-based 1-Wire interface supporting access with physical ethernet and MQTT protocol.
 
 **Overview**
-![Overview Diagram](doc/overview.excalidraw.png)
+
+![Overview Diagram](doc/1w-If_overview_export.svg)
 
 **Hardware**
-![PCB Rendeing](doc/hardware/1w-If_rendering_lowres.png)
+
+[![PCB Rendering](doc/hardware/1w-If_rendering_lowres.png)](doc/hardware/1w-If_rendering.png)
 
 
 
@@ -19,7 +21,7 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 * Multiple independent 1-wire buses.
 * Responsive web interface
   <br/>
-  <img src="doc/screenshots/web-dashboard-console.png" title="Dashboard"/>
+  ![Screenshot Dashboard / Console](doc/screenshots/web-dashboard-console.png)
 
 ## Supported 1-Wire devices
 
