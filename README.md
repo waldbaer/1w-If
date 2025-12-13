@@ -13,6 +13,10 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 
 [![PCB Real](doc/hardware/1w-If_real_lowres.jpg)](doc/hardware/1w-If_real.jpg)
 
+[![Housing1](doc/hardware/1w-If_housing1_lowres.jpg)](doc/hardware/1w-If_housing1.jpg)
+
+[![Housing2](doc/hardware/1w-If_housing2_lowres.jpg)](doc/hardware/1w-If_housing2.jpg)
+
 
 [Schematic](doc/hardware/1w-If_schematic.pdf)
 
@@ -21,10 +25,10 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 * Access 1-wire devices via ethernet / MQTT protocol
 * 4 independent 1-Wire channels with hardware bus masters
 * Over-the-air (OTA) updates (web interface and espota protocol)
-* Multiple independent 1-wire buses.
-* Responsive web interface
+* Responsive web interface for configuration
   <br/>
   ![Screenshot Dashboard / Console](doc/screenshots/web-dashboard-console.png)
+* 3D printed housing
 
 ## Supported 1-Wire devices
 
@@ -309,3 +313,21 @@ pdm run format
 
 - PCB designed with [KiCad](https://www.kicad.org/)
 - Production files created with KiCad plugin [KiCAD JLCPCB tools](https://github.com/Bouni/kicad-jlcpcb-tools)
+- Housing designed with [onshape.com](https://www.onshape.com/)
+
+#### 3D Printing Settings
+
+* Bottom / Top Parts:
+  * Material: PLA / HPA
+  * 0.4mm nozzle
+  * Perimeters: 2
+  * Infill:
+    * General: 15%
+    * Screw Domes: 100% concentric
+* DIN Rail Clip:
+  * Material: PETG
+  * 0.4mm nozzle
+  * Perimeters: 2
+  * Infill:
+    * General: 15%
+    * Screw Domes: 100% concentric
