@@ -8648,7 +8648,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100"
+		(property "Value" "1k"
 			(at 125.73 36.83 0)
 			(effects
 				(font
@@ -9982,7 +9982,7 @@
 				)
 			)
 		)
-		(property "Value" "22"
+		(property "Value" "1k"
 			(at 121.158 36.83 0)
 			(effects
 				(font
@@ -11007,7 +11007,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100"
+		(property "Value" "1k"
 			(at 110.744 36.576 0)
 			(effects
 				(font
@@ -13306,7 +13306,7 @@
 				)
 			)
 		)
-		(property "Value" "22"
+		(property "Value" "1k"
 			(at 105.918 36.322 0)
 			(effects
 				(font
