@@ -22,39 +22,72 @@ OneWireSystem::OneWireSystem()
     : i2c_muxed_buses_{
           i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel0},
           i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel1},
+          i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel2},
+          i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel3},
       },
       ow_bus_masters_{
-         i2c::Ds2484Device{
-      i2c_muxed_buses_.at(0),
-      // 1-wire bus timing parameters
-      /* active_pullup: */ true,
-      /* strong pullup: */ false,
+        // ---- Channel0 ----
+        i2c::Ds2484Device{
+          i2c_muxed_buses_.at(0),
+          // 1-wire bus timing parameters
+          /* active_pullup: */ true,
+          /* strong pullup: */ false,
 #if 0
-      /* tRSTL: */ 0x0F,
-      /* tMSP: */ 0x0F,
-      /* tW0L: */ 0x0F,
-      /* tREC0_: */ 0x0F,
-      /* RWPU: */ 0x0F
+          /* tRSTL: */ 0x0F,
+          /* tMSP: */ 0x0F,
+          /* tW0L: */ 0x0F,
+          /* tREC0_: */ 0x0F,
+          /* RWPU: */ 0x0F
 #endif
-  },
-          i2c::Ds2484Device{
-      i2c_muxed_buses_.at(1),
-      // 1-wire bus timing parameters
-      /* active_pullup: */ true,
-      /* strong pullup: */ false,
+        },
+        // ---- Channel1 ----
+        i2c::Ds2484Device{
+          i2c_muxed_buses_.at(1),
+          // 1-wire bus timing parameters
+          /* active_pullup: */ true,
+          /* strong pullup: */ false,
 #if 0
-      /* tRSTL: */ 0x0F,
-      /* tMSP: */ 0x0F,
-      /* tW0L: */ 0x0F,
-      /* tREC0_: */ 0x0F,
-      /* RWPU: */ 0x0F
+          /* tRSTL: */ 0x0F,
+          /* tMSP: */ 0x0F,
+          /* tW0L: */ 0x0F,
+          /* tREC0_: */ 0x0F,
+          /* RWPU: */ 0x0F
 #endif
-  },
-
+        },
+        // ---- Channel2 ----
+        i2c::Ds2484Device{
+          i2c_muxed_buses_.at(2),
+          // 1-wire bus timing parameters
+          /* active_pullup: */ true,
+          /* strong pullup: */ false,
+#if 0
+          /* tRSTL: */ 0x0F,
+          /* tMSP: */ 0x0F,
+          /* tW0L: */ 0x0F,
+          /* tREC0_: */ 0x0F,
+          /* RWPU: */ 0x0F
+#endif
+        },
+        // ---- Channel3 ----
+        i2c::Ds2484Device{
+          i2c_muxed_buses_.at(3),
+          // 1-wire bus timing parameters
+          /* active_pullup: */ true,
+          /* strong pullup: */ false,
+#if 0
+          /* tRSTL: */ 0x0F,
+          /* tMSP: */ 0x0F,
+          /* tW0L: */ 0x0F,
+          /* tREC0_: */ 0x0F,
+          /* RWPU: */ 0x0F
+#endif
+        },
       },
       ow_buses_{
          one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{1}, ow_bus_masters_.at(0)} ,
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{2}, ow_bus_masters_.at(1)}
+         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{2}, ow_bus_masters_.at(1)},
+         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{3}, ow_bus_masters_.at(2)},
+         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{4}, ow_bus_masters_.at(3)},
       }
       {
   // ctor
@@ -66,12 +99,6 @@ auto OneWireSystem::Begin(bool run_initial_scan) -> bool {
   bool result{true};
   logger_.Debug(F("[OneWireSystem] Setup I2C bus for 1-Wire..."));
   i2c_bus_.Begin();
-
-  logger_.Debug(F("[OneWireSystem] Resetting I2C multiplexer..."));
-  pinMode(kI2cMultiplexerResetPin, OUTPUT);
-  digitalWrite(kI2cMultiplexerResetPin, LOW);  // trigger TCA9548a active-low reset. (min. 6 ns)
-  delayMicroseconds(50);
-  digitalWrite(kI2cMultiplexerResetPin, HIGH);
 
   logger_.Debug(F("[OneWireSystem] Setup I2C multiplexer..."));
   i2c_multiplexer_.Begin();
