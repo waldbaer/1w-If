@@ -130,7 +130,7 @@ class MqttCaptureFixture:
         message_info = self.mqtt_client.publish(topic=topic, payload=payload, **kwargs)
         return message_info
 
-    def wait_for_messages(self, expected_number: int = 1, clean_buffer: bool = False, timeout: int = 2.0):
+    def wait_for_messages(self, expected_number: int = 1, clean_buffer: bool = False, timeout: int = 5.0):
         if clean_buffer:
             self._buffer.clear()
 

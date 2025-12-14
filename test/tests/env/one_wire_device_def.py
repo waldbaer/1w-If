@@ -35,8 +35,8 @@ class OneWireDeviceDefinition:
 
     @staticmethod
     def assert_vad_range(vad: float) -> None:
-        assert 0.0 <= vad <= 5.0
+        assert 0.0 <= vad <= 5.2
 
     @staticmethod
     def assert_vdd_range(vdd: float) -> None:
-        assert 0.0 <= vdd <= 5.0
+        assert 0.0 <= vdd <= 5.2

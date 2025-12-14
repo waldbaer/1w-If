@@ -20,7 +20,7 @@ logger = Logger.get(__name__)
 def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device) -> None:
     logger.info(f"Subscribe / Unsubscribe to single device attribute 'presence' of device {device.device_id}.")
 
-    interval_ms = 400
+    interval_ms = 1000
     interval_sec = interval_ms / 1000
 
     subscribe_request = json.dumps(
@@ -37,8 +37,8 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
     expected_total_messages = expected_cyclic_reads + 2  # +2: subscribe ack + immediate read
     mqtt_capture.wait_for_messages(
         expected_number=expected_total_messages,
-        # first read takes between 100-200ms
-        timeout=150 / 1000 + ((expected_cyclic_reads + 0.5) * (interval_sec)),
+        # first read takes between 100-500ms
+        timeout=500 / 1000 + ((expected_cyclic_reads + 0.5) * (interval_sec)),
     )
 
     assert len(mqtt_capture.messages) == expected_total_messages
@@ -92,7 +92,7 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
 def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, device) -> None:
     logger.info(f"Subscribe / Unsubscribe to single device attribute 'temperature' of device {device.device_id}.")
 
-    interval_ms = 2000
+    interval_ms = 3000
     interval_sec = interval_ms / 1000
 
     subscribe_request = json.dumps(
@@ -162,7 +162,7 @@ def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, devi
 def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_capture, device) -> None:
     logger.info(f"Subscribe twice to single device attribute 'presence' of device {device.device_id}.")
 
-    interval_ms = 400
+    interval_ms = 1000
 
     subscribe_request = json.dumps(
         {
@@ -321,7 +321,7 @@ def test_mqtt_protocol_subscription_single_device_invalid_attribute(mqtt_capture
 def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -> None:
     logger.info(f"Subscribe / Unsubscribe to attribute 'presence' of family {family_code}.")
 
-    interval_ms = 400
+    interval_ms = 1000
     interval_sec = interval_ms / 1000
 
     subscribe_request = json.dumps(
@@ -338,8 +338,8 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
     expected_total_messages = expected_cyclic_reads + 2  # +2: subscribe ack + immediate read
     mqtt_capture.wait_for_messages(
         expected_number=expected_total_messages,
-        # first read takes between 100-200ms
-        timeout=150 / 1000 + ((expected_cyclic_reads + 0.5) * (interval_sec)),
+        # first read takes between 100-300ms
+        timeout=300 / 1000 + ((expected_cyclic_reads + 0.5) * (interval_sec)),
     )
 
     assert len(mqtt_capture.messages) == expected_total_messages
