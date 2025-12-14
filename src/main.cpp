@@ -25,11 +25,22 @@ namespace owif {
 
 static char const kOwIfVersion[] PROGMEM = "0.1.0";
 static constexpr std::uint32_t kSerialBaudRate{SERIAL_BAUD};  // SERIAL_BAUD defined by build process
+static constexpr std::uint8_t kStatusLedPin{15};              // GPIO15. Active Low.
 
 std::size_t publish_counter{0};
 
 auto owif_setup() -> void {
   bool setup_result{true};
+
+  // Flash status LED 2 times
+  pinMode(kStatusLedPin, OUTPUT);
+  digitalWrite(kStatusLedPin, HIGH);  // turn off
+  for (std::uint8_t i{0}; i < 2; i++) {
+    delay(50);
+    digitalWrite(kStatusLedPin, LOW);  // turn on
+    delay(50);
+    digitalWrite(kStatusLedPin, HIGH);  // turn off
+  }
 
   // Setup Logging
   config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
@@ -70,8 +81,28 @@ auto owif_setup() -> void {
 
   if (setup_result) {
     logging::logger_g.Info(F("[main] Initialization finished. All sub-subsystems are initialized."));
+
+    // Flash status LED 2 times and finally turn it on.
+    for (std::uint8_t i{0}; i < 2; i++) {
+      delay(50);
+      digitalWrite(kStatusLedPin, LOW);  // turn on
+      delay(50);
+      digitalWrite(kStatusLedPin, HIGH);  // turn off
+    }
+    delay(50);
+    digitalWrite(kStatusLedPin, LOW);  // turn on
   } else {
     logging::logger_g.Abort(F("[main] Initialization failed. Please check previous outputs."));
+
+    // Flash status LED 5 times and finally turn it off.
+    for (std::uint8_t i{0}; i < 5; i++) {
+      delay(200);
+      digitalWrite(kStatusLedPin, LOW);  // turn on
+      delay(200);
+      digitalWrite(kStatusLedPin, HIGH);  // turn off
+    }
+
+    digitalWrite(kStatusLedPin, HIGH);  // turn off
   }
 }
 

@@ -49,9 +49,8 @@ class OneWireSystem {
   static constexpr std::uint8_t kI2cSclPin{14};  // SCL2, GPIO14
   static constexpr std::uint32_t kI2cFrequency{400000};
   static constexpr std::uint32_t kI2cTimeout{0};
-  static constexpr std::uint8_t kI2cMultiplexerResetPin{15};  // GPIO15 -> TCA TCA9548A 'RESET pin.
 
-  static constexpr std::uint8_t kMuxedI2cBuses{2};  // Number of muxed I2C buses.
+  static constexpr std::uint8_t kMuxedI2cBuses{4};  // Number of muxed I2C buses.
 
   static constexpr char const* kAttributePresence{"presence"};
   static constexpr char const* kAttributeTemperature{"temperature"};
