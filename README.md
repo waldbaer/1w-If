@@ -11,6 +11,7 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 
 [![PCB Rendering](doc/hardware/1w-If_rendering_lowres.png)](doc/hardware/1w-If_rendering.png)
 
+[![PCB Real](doc/hardware/1w-If_real_lowres.jpg)](doc/hardware/1w-If_real.jpg)
 
 
 ## Key Features
