@@ -2,7 +2,7 @@
 #
 # Flash filesystem
 # ----------------------------------------------------------------------------------------------------------------------
-echo "---- Flash Firmware & Filesystem (ota) ----"
-pio run --target upload
-pio run --target uploadfs
+echo "---- Flash Firmware & Filesystem (serial) ----"
+pio run --target upload -e wt32-eth01_esptool
+pio run --target uploadfs -e wt32-eth01_esptool
 echo "---- Flash DONE ----"

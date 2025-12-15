@@ -1,4 +1,4 @@
 #!/bin/bash
-echo "---- Build ----"
+echo "---- Flash Firmware (ota) ----"
 pio run --target upload
-echo "---- Build DONE ----"
+echo "---- Flash DONE ----"

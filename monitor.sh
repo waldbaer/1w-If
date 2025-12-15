@@ -1,4 +1,4 @@
 #!/bin/bash
-echo "---- Build ----"
-pio device monitor
-echo "---- Build DONE ----"
+echo "---- Monitor (websocket) ----"
+curl --no-buffer -N -v ws://owif
+echo "---- Monitoring DONE ----"
