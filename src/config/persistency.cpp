@@ -6,6 +6,7 @@
 #include "config/ethernet_config.h"
 #include "config/logging_config.h"
 #include "config/mqtt_config.h"
+#include "config/onewire_config.h"
 #include "config/ota_config.h"
 #include "config/webserver_config.h"
 
@@ -34,6 +35,41 @@ auto Persistency::StoreLoggingConfig(LoggingConfig const& logging_config) -> voi
   preferences_.putChar(kLoggingKeyLogLevel, static_cast<char>(logging_config.GetLogLevel()));
   preferences_.putBool(kLoggingKeySerialLog, logging_config.GetSerialLogEnabled());
   preferences_.putBool(kLoggingKeyWebLog, logging_config.GetWebLogEnabled());
+
+  preferences_.end();
+}
+
+// ---- OneWire ----
+auto Persistency::LoadOneWireConfig() -> OneWireConfig {
+  OneWireConfig config{};
+
+  preferences_.begin(kOneWireKey, false);
+
+  config.GetChannelConfig(OneWireConfig::kOneWireChannel1)
+      .SetEnabled(preferences_.getBool(kOneWireKeyCh1Enabled, OneWireChannelConfig::kDefaultEnabled));
+  config.GetChannelConfig(OneWireConfig::kOneWireChannel2)
+      .SetEnabled(preferences_.getBool(kOneWireKeyCh2Enabled, OneWireChannelConfig::kDefaultEnabled));
+  config.GetChannelConfig(OneWireConfig::kOneWireChannel3)
+      .SetEnabled(preferences_.getBool(kOneWireKeyCh3Enabled, OneWireChannelConfig::kDefaultEnabled));
+  config.GetChannelConfig(OneWireConfig::kOneWireChannel4)
+      .SetEnabled(preferences_.getBool(kOneWireKeyCh4Enabled, OneWireChannelConfig::kDefaultEnabled));
+
+  preferences_.end();
+
+  return config;
+}
+
+auto Persistency::StoreOneWireConfig(OneWireConfig const& onewire_config) -> void {
+  preferences_.begin(kOneWireKey, false);
+
+  preferences_.putBool(kOneWireKeyCh1Enabled,
+                       onewire_config.GetChannelConfig(OneWireConfig::kOneWireChannel1).GetEnabled());
+  preferences_.putBool(kOneWireKeyCh2Enabled,
+                       onewire_config.GetChannelConfig(OneWireConfig::kOneWireChannel2).GetEnabled());
+  preferences_.putBool(kOneWireKeyCh3Enabled,
+                       onewire_config.GetChannelConfig(OneWireConfig::kOneWireChannel3).GetEnabled());
+  preferences_.putBool(kOneWireKeyCh4Enabled,
+                       onewire_config.GetChannelConfig(OneWireConfig::kOneWireChannel4).GetEnabled());
 
   preferences_.end();
 }

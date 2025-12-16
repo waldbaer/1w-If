@@ -14,101 +14,63 @@
 #include "one_wire/ds2438.h"
 #include "one_wire/ds2484_one_wire_bus.h"
 #include "one_wire/one_wire_device.h"
+#include "util/language.h"
 
 namespace owif {
 namespace one_wire {
 
-OneWireSystem::OneWireSystem()
-    : i2c_muxed_buses_{
-          i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel0},
-          i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel1},
-          i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel2},
-          i2c::Tca9548aI2CBus{i2c_multiplexer_, i2c::Tca9548aI2CBus::Id::Channel3},
-      },
-      ow_bus_masters_{
-        // ---- Channel0 ----
-        i2c::Ds2484Device{
-          i2c_muxed_buses_.at(0),
-          // 1-wire bus timing parameters
-          /* active_pullup: */ true,
-          /* strong pullup: */ false,
-#if 0
-          /* tRSTL: */ 0x0F,
-          /* tMSP: */ 0x0F,
-          /* tW0L: */ 0x0F,
-          /* tREC0_: */ 0x0F,
-          /* RWPU: */ 0x0F
-#endif
-        },
-        // ---- Channel1 ----
-        i2c::Ds2484Device{
-          i2c_muxed_buses_.at(1),
-          // 1-wire bus timing parameters
-          /* active_pullup: */ true,
-          /* strong pullup: */ false,
-#if 0
-          /* tRSTL: */ 0x0F,
-          /* tMSP: */ 0x0F,
-          /* tW0L: */ 0x0F,
-          /* tREC0_: */ 0x0F,
-          /* RWPU: */ 0x0F
-#endif
-        },
-        // ---- Channel2 ----
-        i2c::Ds2484Device{
-          i2c_muxed_buses_.at(2),
-          // 1-wire bus timing parameters
-          /* active_pullup: */ true,
-          /* strong pullup: */ false,
-#if 0
-          /* tRSTL: */ 0x0F,
-          /* tMSP: */ 0x0F,
-          /* tW0L: */ 0x0F,
-          /* tREC0_: */ 0x0F,
-          /* RWPU: */ 0x0F
-#endif
-        },
-        // ---- Channel3 ----
-        i2c::Ds2484Device{
-          i2c_muxed_buses_.at(3),
-          // 1-wire bus timing parameters
-          /* active_pullup: */ true,
-          /* strong pullup: */ false,
-#if 0
-          /* tRSTL: */ 0x0F,
-          /* tMSP: */ 0x0F,
-          /* tW0L: */ 0x0F,
-          /* tREC0_: */ 0x0F,
-          /* RWPU: */ 0x0F
-#endif
-        },
-      },
-      ow_buses_{
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{1}, ow_bus_masters_.at(0)} ,
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{2}, ow_bus_masters_.at(1)},
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{3}, ow_bus_masters_.at(2)},
-         one_wire::Ds2484OneWireBus{one_wire::OneWireBus::BusId{4}, ow_bus_masters_.at(3)},
-      }
-      {
-  // ctor
+OneWireSystem::OneWireSystem() {
+  i2c_muxed_buses_.reserve(kOneWireChannels);
+  ow_bus_masters_.reserve(kOneWireChannels);
+  ow_buses_.reserve(kOneWireChannels);
 }
 
 // ---- Public APIs ----------------------------------------------------------------------------------------------------
 
-auto OneWireSystem::Begin(bool run_initial_scan) -> bool {
+auto OneWireSystem::Begin(config::OneWireConfig const& config) -> bool {
   bool result{true};
-  logger_.Debug(F("[OneWireSystem] Setup I2C bus for 1-Wire..."));
-  i2c_bus_.Begin();
 
-  logger_.Debug(F("[OneWireSystem] Setup I2C multiplexer..."));
+  config_ = config;
+
+  logger_.Debug(F("[OneWireSystem] Setup I2C bus & multiplexer..."));
+  i2c_bus_.Begin();
   i2c_multiplexer_.Begin();
 
-  logger_.Debug("[OneWireSystem] Setup DS2484 1-wire bus-master on I2C muxed buses...");
-  for (i2c::Ds2484Device& ow_bus_master : ow_bus_masters_) {
-    ow_bus_master.Begin();
+  logger_.Debug(F("[OneWireSystem] Setup 1-wire bus channels..."));
+
+  for (std::uint8_t channel_id_zero_based{0}; channel_id_zero_based < kOneWireChannels; channel_id_zero_based++) {
+    config::OneWireChannelConfig const& ow_channel_config{config.GetChannelConfig(channel_id_zero_based)};
+
+    // zero-based bus IDs are equal for I2C and One-Wire
+    i2c::Tca9548aI2CBus::Id const i2c_muxed_bus_id{static_cast<i2c::Tca9548aI2CBus::Id>(channel_id_zero_based)};
+
+    // BusId is the final user-friendly channel number (one based)
+    OneWireBus::BusId const channel_id{static_cast<OneWireBus::BusId>(channel_id_zero_based + 1)};
+
+    // ---- Enable 1-Wire bus master DS2484 via SLPZ pin (active-low low power sleep) ----
+    std::uint8_t const ds2484_slpz_pin{kDs2484SlpzPins[channel_id_zero_based]};
+    pinMode(ds2484_slpz_pin, OUTPUT);
+    digitalWrite(ds2484_slpz_pin, ow_channel_config.GetEnabled() ? HIGH : LOW);  // active-low sleep
+
+    if (ow_channel_config.GetEnabled()) {
+      // ---- Initialize muxed I2C bus (via TCA9548A) ----
+      i2c_muxed_buses_.emplace_back(i2c_multiplexer_, i2c_muxed_bus_id);
+
+      // ---- Initialize 1-Wire bus master DS2484 (accessed via muxed I2C bus) ----
+      ow_bus_masters_.emplace_back(/* i2c_bus: */ i2c_muxed_buses_.back(),
+                                   // 1-wire bus timing parameters
+                                   /* active_pullup: */ true,
+                                   /* strong pullup: */ false);
+
+      ow_buses_.emplace_back(channel_id, /*bus_master=*/ow_bus_masters_.back());
+
+      // ---- Setup DS2484 bus-masters ----
+      ow_bus_masters_.back().Begin();
+    }
   }
 
-  if (run_initial_scan) {
+  // ---- Initial bus scan ----
+  if (config_.GetRunInitialScan()) {
     std::uint32_t const start_time{millis()};
     Scan();
     std::uint32_t const scan_time{millis() - start_time};
@@ -340,6 +302,11 @@ auto OneWireSystem::CreateDevice(OneWireBus& bus, OneWireAddress const& address)
 
   return result;
 }
+
+/*!
+ * \brief Declaration of kDs2484SlpzPins constexpr
+ */
+constexpr std::array<std::uint8_t, OneWireSystem::kOneWireChannels> OneWireSystem::kDs2484SlpzPins;
 
 // ---- Global WebServer Instance ----
 

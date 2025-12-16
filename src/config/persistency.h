@@ -6,6 +6,7 @@
 #include "config/ethernet_config.h"
 #include "config/logging_config.h"
 #include "config/mqtt_config.h"
+#include "config/onewire_config.h"
 #include "config/ota_config.h"
 #include "config/webserver_config.h"
 
@@ -27,6 +28,9 @@ class Persistency {
   auto LoadLoggingConfig() -> LoggingConfig;
   auto StoreLoggingConfig(LoggingConfig const& logging_config) -> void;
 
+  auto LoadOneWireConfig() -> OneWireConfig;
+  auto StoreOneWireConfig(OneWireConfig const& onewire_config) -> void;
+
   auto LoadEthernetConfig() -> EthernetConfig;
   auto StoreEthernetConfig(EthernetConfig const& ethernet_config) -> void;
 
@@ -44,6 +48,12 @@ class Persistency {
   static constexpr char const* kLoggingKeyLogLevel{"loglevel"};
   static constexpr char const* kLoggingKeySerialLog{"serial"};
   static constexpr char const* kLoggingKeyWebLog{"web"};
+
+  static constexpr char const* kOneWireKey{"ow"};
+  static constexpr char const* kOneWireKeyCh1Enabled{"ch1_enabled"};
+  static constexpr char const* kOneWireKeyCh2Enabled{"ch2_enabled"};
+  static constexpr char const* kOneWireKeyCh3Enabled{"ch3_enabled"};
+  static constexpr char const* kOneWireKeyCh4Enabled{"ch4_enabled"};
 
   static constexpr char const* kEthKey{"eth"};
   static constexpr char const* kEthKeyHostname{"hostname"};

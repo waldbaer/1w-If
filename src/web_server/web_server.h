@@ -58,6 +58,10 @@ class WebServer {
   static constexpr char const* kConfigSaveLogLevel{"log_level"};
   static constexpr char const* kConfigSaveSerialLog{"serial_log"};
   static constexpr char const* kConfigSaveWebLog{"web_log"};
+  static constexpr char const* kConfigSaveOwCh1Enabled{"ow_ch1_enabled"};
+  static constexpr char const* kConfigSaveOwCh2Enabled{"ow_ch2_enabled"};
+  static constexpr char const* kConfigSaveOwCh3Enabled{"ow_ch3_enabled"};
+  static constexpr char const* kConfigSaveOwCh4Enabled{"ow_ch4_enabled"};
   static constexpr char const* kConfigSaveEthHostname{"eth_hostname"};
   static constexpr char const* kConfigSaveOtaPort{"ota_port"};
   static constexpr char const* kConfigSaveOtaPass{"ota_pass"};
@@ -93,6 +97,8 @@ class WebServer {
                        std::size_t len, bool final) -> void;
 
   auto HandleConsole(AsyncWebServerRequest* request) -> void;
+
+  auto ToTemplateCheckOption(bool check_option) -> String;
 
   logging::Logger& logger_{logging::logger_g};
   one_wire::OneWireSystem* one_wire_system_{nullptr};

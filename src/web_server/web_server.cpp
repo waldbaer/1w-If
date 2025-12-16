@@ -272,14 +272,26 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
     logging_config.SetLogLevel(
         static_cast<logging::LogLevel>(request->getParam(kConfigSaveLogLevel, true)->value().toInt()));
   }
-  if (request->hasParam(kConfigSaveSerialLog, true)) {
-    logging_config.SetSerialLogEnabled(request->getParam(kConfigSaveSerialLog, true)->value() == "on");
-  }
-  if (request->hasParam(kConfigSaveWebLog, true)) {
-    logging_config.SetWebLogEnabled(request->getParam(kConfigSaveWebLog, true)->value() == "on");
-  }
+  // checkboxes: value 'on' only sent in form data if checkbox is set (HTML standard)
+  logging_config.SetSerialLogEnabled(request->hasParam(kConfigSaveSerialLog, true));
+  logging_config.SetWebLogEnabled(request->hasParam(kConfigSaveWebLog, true));
 
   config::persistency_g.StoreLoggingConfig(logging_config);
+
+  // ---- Store OneWireConfig ----
+  config::OneWireConfig onewire_config{config::persistency_g.LoadOneWireConfig()};
+
+  // checkboxes: value 'on' only sent in form data if checkbox is set (HTML standard)
+  onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel1)
+      .SetEnabled(request->hasParam(kConfigSaveOwCh1Enabled, true));
+  onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel2)
+      .SetEnabled(request->hasParam(kConfigSaveOwCh2Enabled, true));
+  onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel3)
+      .SetEnabled(request->hasParam(kConfigSaveOwCh3Enabled, true));
+  onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel4)
+      .SetEnabled(request->hasParam(kConfigSaveOwCh4Enabled, true));
+
+  config::persistency_g.StoreOneWireConfig(onewire_config);
 
   // ---- Store EthernetConfig ----
   config::EthernetConfig ethernet_config{config::persistency_g.LoadEthernetConfig()};
@@ -362,23 +374,39 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
   }
 
   config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
+  config::OneWireConfig const onewire_config{config::persistency_g.LoadOneWireConfig()};
   config::EthernetConfig const ethernet_config{config::persistency_g.LoadEthernetConfig()};
   config::OtaConfig const ota_config{config::persistency_g.LoadOtaConfig()};
   config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
   config::MqttConfig const mqtt_config{config::persistency_g.LoadMqttConfig()};
 
   request->send(LittleFS, "/config.html", kContextTypeHtml, false,
-                [this, logging_config, ethernet_config, ota_config, webserver_config, mqtt_config](String const& var) {
+                [this, logging_config, onewire_config, ethernet_config, ota_config, webserver_config,
+                 mqtt_config](String const& var) {
                   // LoggingConfig
                   if (var == "LOG_LEVEL") {
                     return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
                   } else if (var == "LOG_SERIAL") {
-                    return logging_config.GetSerialLogEnabled() ? String{"checked"} : String{""};
+                    return ToTemplateCheckOption(logging_config.GetSerialLogEnabled());
                   } else if (var == "LOG_WEB") {
-                    return logging_config.GetWebLogEnabled() ? String{"checked"} : String{""};
+                    return ToTemplateCheckOption(logging_config.GetWebLogEnabled());
+                  }
+                  // OneWireConfig
+                  else if (var == "OW_CH1_ENABLED") {
+                    return ToTemplateCheckOption(
+                        onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel1).GetEnabled());
+                  } else if (var == "OW_CH2_ENABLED") {
+                    return ToTemplateCheckOption(
+                        onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel2).GetEnabled());
+                  } else if (var == "OW_CH3_ENABLED") {
+                    return ToTemplateCheckOption(
+                        onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel3).GetEnabled());
+                  } else if (var == "OW_CH4_ENABLED") {
+                    return ToTemplateCheckOption(
+                        onewire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel4).GetEnabled());
                   }
                   // EthernetConfig
-                  if (var == "ETH_HOSTNAME") {
+                  else if (var == "ETH_HOSTNAME") {
                     return ethernet_config.GetHostname();
                   }
                   // OtaConfig
@@ -460,6 +488,10 @@ auto WebServer::HandleConsole(AsyncWebServerRequest* request) -> void {
     return;
   }
   request->send(LittleFS, "/console.html", kContextTypeHtml);
+}
+
+auto WebServer::ToTemplateCheckOption(bool check_option) -> String {
+  return check_option ? String{"checked"} : String{""};
 }
 
 /*!
