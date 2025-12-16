@@ -25,9 +25,15 @@ auto StatusLed::Off() -> void {
   digitalWrite(pin_, HIGH);  // active low
 }
 
+auto StatusLed::Get() -> bool {
+  return digitalRead(pin_) == LOW;  // active low
+}
+
 auto StatusLed::Set(bool on_off) -> void {
   digitalWrite(pin_, static_cast<std::uint8_t>(not on_off));  // active low
 }
+
+auto StatusLed::Toggle() -> void { Set(not Get()); }
 
 auto StatusLed::Flash(std::uint32_t iterations, std::uint32_t duration_on, std::uint32_t duration_off) -> void {
   Off();
