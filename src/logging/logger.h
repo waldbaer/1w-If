@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "logging/log_level.h"
+#include "logging/status_led.h"
 
 namespace owif {
 namespace logging {
@@ -29,13 +30,23 @@ class Logger {
 
   template <class T, typename... Args>
   [[noreturn]] inline auto Abort(T msg, Args... args) -> void {
+    std::uint8_t const led_flash_iterations{100};
+    std::uint8_t const led_flash_on_duration{50};   // ms
+    std::uint8_t const led_flash_off_duration{50};  // ms
+
+    std::uint32_t const total_flash_duration{led_flash_iterations * (led_flash_on_duration + led_flash_off_duration) /
+                                             1000};
+
     Fatal("%s", F("----------------------------------------------------------------------"));
-    Fatal(F("Aborting further execution. Restarting in 5sec..."));
+    Fatal(F("Aborting further execution. Restarting in %usec..."), total_flash_duration);
     Fatal(F("Reason:"));
     Fatal(std::forward<T>(msg), std::forward<Args>(args)...);
     Fatal("%s", F("----------------------------------------------------------------------"));
 
-    delay(5000);
+    status_led_g.Flash(led_flash_iterations, led_flash_on_duration, led_flash_off_duration);
+    status_led_g.Off();
+
+    //  delay(5000);
     ESP.restart();
     while (true);
   }

@@ -12,6 +12,7 @@
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
 #include "logging/multi_logger.h"
+#include "logging/status_led.h"
 #include "logging/web_socket_logger.h"
 #include "mqtt/mqtt_client.h"
 #include "mqtt/mqtt_message_handler.h"
@@ -30,17 +31,10 @@ static constexpr std::uint8_t kStatusLedPin{15};              // GPIO15. Active 
 std::size_t publish_counter{0};
 
 auto owif_setup() -> void {
-  bool setup_result{true};
+  // Setup Status LED & flash it initially
+  bool setup_result{logging::status_led_g.Begin(kStatusLedPin)};
 
-  // Flash status LED 2 times
-  pinMode(kStatusLedPin, OUTPUT);
-  digitalWrite(kStatusLedPin, HIGH);  // turn off
-  for (std::uint8_t i{0}; i < 2; i++) {
-    delay(50);
-    digitalWrite(kStatusLedPin, LOW);  // turn on
-    delay(50);
-    digitalWrite(kStatusLedPin, HIGH);  // turn off
-  }
+  logging::status_led_g.Flash(2);
 
   // Setup Logging
   config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
@@ -83,26 +77,14 @@ auto owif_setup() -> void {
     logging::logger_g.Info(F("[main] Initialization finished. All sub-subsystems are initialized."));
 
     // Flash status LED 2 times and finally turn it on.
-    for (std::uint8_t i{0}; i < 2; i++) {
-      delay(50);
-      digitalWrite(kStatusLedPin, LOW);  // turn on
-      delay(50);
-      digitalWrite(kStatusLedPin, HIGH);  // turn off
-    }
-    delay(50);
-    digitalWrite(kStatusLedPin, LOW);  // turn on
+    logging::status_led_g.Flash(2);
+    logging::status_led_g.On();
   } else {
     logging::logger_g.Abort(F("[main] Initialization failed. Please check previous outputs."));
 
-    // Flash status LED 5 times and finally turn it off.
-    for (std::uint8_t i{0}; i < 5; i++) {
-      delay(200);
-      digitalWrite(kStatusLedPin, LOW);  // turn on
-      delay(200);
-      digitalWrite(kStatusLedPin, HIGH);  // turn off
-    }
-
-    digitalWrite(kStatusLedPin, HIGH);  // turn off
+    // Flash status LED 10 times and finally turn it off.
+    logging::status_led_g.Flash(10);
+    logging::status_led_g.Off();
   }
 }
 
