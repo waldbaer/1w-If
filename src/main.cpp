@@ -52,17 +52,12 @@ auto owif_setup() -> void {
   // Terminate Handler
   SetupTerminateHandler();
 
-  logging::logger_g.Info(F("[main] +- 1-Wire Interface ---------+"));
-  logging::logger_g.Info(F("[main] | Version:    %s          |"), kOwIfVersion);
-  logging::logger_g.Info(F("[main] |                            |"), kOwIfVersion);
-  logging::logger_g.Info(F("[main] | Serial Log: %s            |"),
-                         logging_config.GetSerialLogEnabled() ? "on " : "off");
-  logging::logger_g.Info(F("[main] | Web Log:    %s            |"), logging_config.GetWebLogEnabled() ? "on " : "off");
-  logging::logger_g.Info(F("[main] | Log-Level:  %s        |"), logging_config.GetLogLevelAsString());
-  logging::logger_g.Info(F("[main] +----------------------------+"));
+  // Print Version and Configuration
+  logging::logger_g.Info(F("[main] +-- 1-Wire Interface -----------------------------"));
+  logging::logger_g.Info(F("[main] | Version: %s"), kOwIfVersion);
+  config::persistency_g.PrettyPrint(logging::logger_g);
 
   setup_result &= one_wire::one_wire_system_g.Begin(config::persistency_g.LoadOneWireConfig());
-
   setup_result &= cmd::command_handler_g.Begin(&one_wire::one_wire_system_g);
 
   // Setup OTA / WebServer / MqttClient before Ethernet to allow registration of ConnectionStateChangeHandlers

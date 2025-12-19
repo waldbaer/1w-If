@@ -10,7 +10,7 @@ namespace owif {
 namespace ethernet {
 
 auto Ethernet::Begin() -> bool {
-  logger_.Debug(F("[Ethernet] Setup...."));
+  logger_.Debug(F("[Ethernet] Setup..."));
 
   ethernet_config_ = config::persistency_g.LoadEthernetConfig();
 
