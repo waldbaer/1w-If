@@ -9,6 +9,7 @@
 #include "config/onewire_config.h"
 #include "config/ota_config.h"
 #include "config/webserver_config.h"
+#include "logging/logger.h"
 
 namespace owif {
 namespace config {
@@ -25,6 +26,8 @@ class Persistency {
   ~Persistency() = default;
 
   // ---- Public APIs ----
+  auto PrettyPrint(logging::Logger& logger) -> void;
+
   auto LoadLoggingConfig() -> LoggingConfig;
   auto StoreLoggingConfig(LoggingConfig const& logging_config) -> void;
 
@@ -73,6 +76,8 @@ class Persistency {
   static constexpr char const* kMqttKeyPassword{"password"};
   static constexpr char const* kMqttKeyReconnectTime{"reconnect_t"};
   static constexpr char const* kMqttKeyTopic{"topic"};
+
+  static auto FormatOnOff(bool enabled) -> char const*;
 
   Preferences preferences_;
 };

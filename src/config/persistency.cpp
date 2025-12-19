@@ -13,7 +13,40 @@
 namespace owif {
 namespace config {
 
-// ---- Logging ----
+// ---- Public APIs ----------------------------------------------------------------------------------------------------
+
+auto Persistency::PrettyPrint(logging::Logger& logger) -> void {
+  LoggingConfig const& logging_config{LoadLoggingConfig()};
+  OneWireConfig const& one_wire_config{LoadOneWireConfig()};
+  EthernetConfig const& ethernet_config{LoadEthernetConfig()};
+  OtaConfig const& ota_config{LoadOtaConfig()};
+  MqttConfig const& mqtt_config{LoadMqttConfig()};
+
+  logger.Info(F("[main] +- Configuration ---------------------------------"));
+  logger.Info(F("[main] | Logging:"));
+  logger.Info(F("[main] |   Log-Level: %s"), logging_config.GetLogLevelAsString());
+  logger.Info(F("[main] |   Serial:    %s | Web: %s"), FormatOnOff(logging_config.GetSerialLogEnabled()),
+              FormatOnOff(logging_config.GetWebLogEnabled()));
+  logger.Info(F("[main] | 1-Wire:"));
+  logger.Info(F("[main] |   Channels:  %s %s %s %s"),
+              one_wire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel1).GetEnabled() ? "[1]" : "[ ]",
+              one_wire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel2).GetEnabled() ? "[2]" : "[ ]",
+              one_wire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel3).GetEnabled() ? "[3]" : "[ ]",
+              one_wire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel4).GetEnabled() ? "[4]" : "[ ]");
+  logger.Info(F("[main] | Ethernet"));
+  logger.Info(F("[main] |   Hostname:  %s"), ethernet_config.GetHostname());
+  logger.Info(F("[main] | OTA"));
+  logger.Info(F("[main] |   Port:      %u"), ota_config.GetPort());
+  logger.Info(F("[main] | MQTT:"));
+  logger.Info(F("[main] |   Server:    %s:%u"), mqtt_config.GetServerAddr(), mqtt_config.GetServerPort());
+  logger.Info(F("[main] |   User:      %s"), mqtt_config.GetUser());
+  logger.Info(F("[main] |   Reconnect: %u ms"), mqtt_config.GetReconnectTimeout());
+  logger.Info(F("[main] |   Topic:     %s"), mqtt_config.GetTopic());
+  logger.Info(F("[main] +-------------------------------------------------"));
+}
+
+// ---- Domain Configs -------------------------------------------------------------------------------------------------
+
 auto Persistency::LoadLoggingConfig() -> LoggingConfig {
   LoggingConfig config{};
 
@@ -173,6 +206,10 @@ auto Persistency::StoreMqttConfig(MqttConfig const& mqtt_config) -> void {
 
   preferences_.end();
 }
+
+// ---- Private APIS ---------------------------------------------------------------------------------------------------
+
+auto Persistency::FormatOnOff(bool enabled) -> char const* { return enabled ? "on " : "off"; }
 
 // ---- Global Persistency Instance ----
 Persistency persistency_g{};

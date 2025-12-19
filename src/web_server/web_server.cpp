@@ -364,6 +364,9 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
   // ---- All parts updated: Send response ----
+  logging::logger_g.Info(F("[WebServer] Updated configuration:"));
+  config::persistency_g.PrettyPrint(logging::logger_g);
+
   request->send(ToUnderlying(ResponseCode::OK), kContextTypeHtml, "Stored! Restart necessary...");
 }
 
