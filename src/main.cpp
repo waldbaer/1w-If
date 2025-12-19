@@ -55,6 +55,8 @@ auto owif_setup() -> void {
   // Print Version and Configuration
   logging::logger_g.Info(F("[main] +-- 1-Wire Interface -----------------------------"));
   logging::logger_g.Info(F("[main] | Version: %s"), kOwIfVersion);
+  logging::logger_g.Info(F("[main] +-------------------------------------------------"));
+
   config::persistency_g.PrettyPrint(logging::logger_g);
 
   setup_result &= one_wire::one_wire_system_g.Begin(config::persistency_g.LoadOneWireConfig());

@@ -14,8 +14,8 @@ class LoggingConfig {
  public:
   using LogLevel = logging::LogLevel;
 
-  static constexpr LogLevel kDefaultLogLevel{LogLevel::Info};
-  static constexpr bool kDefaultSerialLogEnabled{false};
+  static constexpr LogLevel kDefaultLogLevel{LogLevel::Verbose};
+  static constexpr bool kDefaultSerialLogEnabled{true};
   static constexpr bool kDefaultWebLogEnabled{false};
 
   LoggingConfig() = default;

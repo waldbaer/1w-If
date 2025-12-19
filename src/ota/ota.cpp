@@ -24,7 +24,7 @@ auto OtaSystem::SetupOta(ethernet::ConnectionState connection_state) -> void {
   if (connection_state == ethernet::ConnectionState::kConnected) {
     config::OtaConfig const& ota_config{config::persistency_g.LoadOtaConfig()};
 
-    logger_.Info(F("[OTA] Ethernet connected. Setup OTA... | Port: %u"), ota_config.GetPort());
+    logger_.Debug(F("[OTA] Ethernet connected. Setup OTA... | Port: %u"), ota_config.GetPort());
 
     // OTA Configuration
     ArduinoOTA.setHostname(kHostname);
