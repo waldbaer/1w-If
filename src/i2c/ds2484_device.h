@@ -20,7 +20,8 @@ class Ds2484Device : public I2CDevice {
   static constexpr std::uint8_t kDefaultOneWirePortConfigValueCode{0x06};
 
   // Inherit I2CDevice constructor
-  Ds2484Device(I2CBus &bus, bool active_pullup = false, bool strong_pullup = false,
+  Ds2484Device(I2CBus& i2c_bus, bool active_pullup = false, bool strong_pullup = false,
+               // Timing Config
                std::uint8_t tRSTL = kDefaultOneWirePortConfigValueCode,
                std::uint8_t tMSP = kDefaultOneWirePortConfigValueCode,
                std::uint8_t tW0L = kDefaultOneWirePortConfigValueCode,
@@ -29,14 +30,14 @@ class Ds2484Device : public I2CDevice {
 
   auto Begin() -> bool;
 
-  auto Read8(std::uint8_t &value) -> bool;
-  auto Read64(std::uint64_t &value) -> bool;
+  auto Read8(std::uint8_t& value) -> bool;
+  auto Read64(std::uint64_t& value) -> bool;
   auto Write8(std::uint8_t value) -> bool;
   auto Write64(std::uint64_t value) -> bool;
 
   auto ResetOneWire() -> bool;
   auto ResetSearch() -> void;
-  auto OneWireTriple(bool *branch, bool *id_bit, bool *cmp_id_bit) -> bool;
+  auto OneWireTriple(bool* branch, bool* id_bit, bool* cmp_id_bit) -> bool;
 
  private:
   // I2C address of the DS2484 cannot be modified.
@@ -108,17 +109,20 @@ class Ds2484Device : public I2CDevice {
   auto ResetDevice() -> bool;
 
   auto WaitForCompletion() -> bool;
-  auto ReadStatus(std::uint8_t *status) -> bool;
+  auto ReadStatus(std::uint8_t* status) -> bool;
 
-  auto ReadOneWirePortConfig(std::uint8_t *port_config_array) -> bool;
+  auto ReadOneWirePortConfig(std::uint8_t* port_config_array) -> bool;
   auto WriteOneWirePortConfig(ControlByteParamSelection parameter_selection, std::uint8_t parameter_value,
                               bool over_drive = false) -> bool;
 
-  logging::Logger &logger_{logging::logger_g};
+  logging::Logger& logger_{logging::logger_g};
 
   bool is_initialized_{false};
+  // PullUp Config
   bool active_pullup_;
   bool strong_pullup_;
+
+  // Timing Config
 
   std::uint8_t tRSTL_;
   std::uint8_t tMSP_;

@@ -2,11 +2,11 @@
 #define OWIF_ONE_WIRE_ONE_WIRE_SUBSYSTEM_H
 
 // ---- Includes ----
-#include <array>
 #include <map>
 #include <memory>
 #include <vector>
 
+#include "config/onewire_config.h"
 #include "i2c/arduino_i2c_bus.h"
 #include "i2c/ds2484_device.h"
 #include "i2c/tca9548a_i2c_bus.h"
@@ -27,7 +27,7 @@ class OneWireSystem {
 
   // ---- Public APIs --------------------------------------------------------------------------------------------------
 
-  auto Begin(bool run_initial_bus_scan = false) -> bool;
+  auto Begin(config::OneWireConfig const& config) -> bool;
   auto Loop() -> void;
 
   auto Scan() -> bool;
@@ -50,7 +50,16 @@ class OneWireSystem {
   static constexpr std::uint32_t kI2cFrequency{400000};
   static constexpr std::uint32_t kI2cTimeout{0};
 
-  static constexpr std::uint8_t kMuxedI2cBuses{4};  // Number of muxed I2C buses.
+  static constexpr std::uint8_t kOneWireChannels{
+      config::OneWireConfig::kOneWireChannels};  // Number of muxed I2C buses.
+
+  // GPIO pins to control DS2484 SLPZ: active-low to enable low-power sleep mode
+  static constexpr std::array<std::uint8_t, kOneWireChannels> kDs2484SlpzPins{
+      32,  // Channe1: GPIO32
+      33,  // Channe2: GPIO33
+      5,   // Channe3: GPIO5
+      17   // Channe4: GPIO17
+  };
 
   static constexpr char const* kAttributePresence{"presence"};
   static constexpr char const* kAttributeTemperature{"temperature"};
@@ -66,13 +75,15 @@ class OneWireSystem {
 
   logging::Logger& logger_{logging::logger_g};
 
+  config::OneWireConfig config_{};
+
   TwoWire i2c_twowire_{kI2cBus};
   i2c::ArduinoI2CBus i2c_bus_{i2c_twowire_, kI2cSdaPin, kI2cSclPin, kI2cFrequency, kI2cTimeout};
   i2c::Tca9548aDevice i2c_multiplexer_{i2c_bus_, i2c::Tca9548aDevice::kDefaultI2CAddress};
 
-  std::array<i2c::Tca9548aI2CBus, kMuxedI2cBuses> i2c_muxed_buses_;
-  std::array<i2c::Ds2484Device, kMuxedI2cBuses> ow_bus_masters_;
-  std::array<one_wire::Ds2484OneWireBus, kMuxedI2cBuses> ow_buses_;
+  std::vector<i2c::Tca9548aI2CBus> i2c_muxed_buses_{};
+  std::vector<i2c::Ds2484Device> ow_bus_masters_;
+  std::vector<one_wire::Ds2484OneWireBus> ow_buses_;
 
   DeviceMap ow_available_devices_{};
 };

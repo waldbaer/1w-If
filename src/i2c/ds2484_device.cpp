@@ -8,9 +8,13 @@ namespace owif {
 namespace i2c {
 
 // ---- Public APIs ----------------------------------------------------------------------------------------------------
-Ds2484Device::Ds2484Device(I2CBus &bus, bool active_pullup, bool strong_pullup, std::uint8_t tRSTL, std::uint8_t tMSP,
-                           std::uint8_t tW0L, std::uint8_t tREC0, std::uint8_t RWPU)
-    : I2CDevice{bus, kI2CAddress},
+Ds2484Device::Ds2484Device(I2CBus& i2c_bus,
+                           // PullUp Config
+                           bool active_pullup, bool strong_pullup,
+                           // Timing Config
+                           std::uint8_t tRSTL, std::uint8_t tMSP, std::uint8_t tW0L, std::uint8_t tREC0,
+                           std::uint8_t RWPU)
+    : I2CDevice{i2c_bus, kI2CAddress},
       active_pullup_{active_pullup},
       strong_pullup_{strong_pullup},
       tRSTL_{tRSTL},
@@ -20,13 +24,15 @@ Ds2484Device::Ds2484Device(I2CBus &bus, bool active_pullup, bool strong_pullup, 
       RWPU_{RWPU} {}
 
 auto Ds2484Device::Begin() -> bool {
-  bool result{ResetDevice()};
+  bool result{true};
+
+  result &= ResetDevice();
   result &= ResetOneWire();
 
   return result;
 }
 
-auto Ds2484Device::Read8(std::uint8_t &value) -> bool {
+auto Ds2484Device::Read8(std::uint8_t& value) -> bool {
   std::uint8_t read8_cmd{ToUnderlying(Command::OneWireReadByte)};
 
   bool result{write(&read8_cmd, 1) == i2c::ERROR_OK};
@@ -55,7 +61,7 @@ auto Ds2484Device::Read8(std::uint8_t &value) -> bool {
   return result;
 }
 
-auto Ds2484Device::Read64(std::uint64_t &value) -> bool {
+auto Ds2484Device::Read64(std::uint64_t& value) -> bool {
   bool result{true};
 
   value = 0;
@@ -96,7 +102,7 @@ auto Ds2484Device::ResetOneWire() -> bool {
   return true;
 }
 
-auto Ds2484Device::OneWireTriple(bool *branch, bool *id_bit, bool *cmp_id_bit) -> bool {
+auto Ds2484Device::OneWireTriple(bool* branch, bool* id_bit, bool* cmp_id_bit) -> bool {
   std::uint8_t status;
   if (!ReadStatus(&status)) {
     logger_.Error(F("[DS2484] OneWireTriple: read status error"));
@@ -211,7 +217,7 @@ auto Ds2484Device::WaitForCompletion() -> bool {
   return ReadStatus(&status);
 }
 
-auto Ds2484Device::ReadStatus(std::uint8_t *status) -> bool {
+auto Ds2484Device::ReadStatus(std::uint8_t* status) -> bool {
   for (std::uint8_t retry_nr{0}; retry_nr < 10; retry_nr++) {
     if (read(status, 1) != i2c::ERROR_OK) {
       logger_.Error(F("[DS2484] Unexpected status != OK: %X"), status);
@@ -226,7 +232,7 @@ auto Ds2484Device::ReadStatus(std::uint8_t *status) -> bool {
   return false;
 }
 
-auto Ds2484Device::ReadOneWirePortConfig(std::uint8_t *port_config_register) -> bool {
+auto Ds2484Device::ReadOneWirePortConfig(std::uint8_t* port_config_register) -> bool {
   // Set read pointer to the PortConfig register
   std::uint8_t set_read_reg_cmd[2]{ToUnderlying(Command::SetReadPointer),
                                    // param: Set the read pointer to the specified register

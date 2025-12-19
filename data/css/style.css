@@ -142,9 +142,18 @@ form.form-grid {
   margin-bottom: 2rem;
 }
 
-form.form-grid label {
+.form-sub-grid {
   display: flex;
   align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.form-sub-grid label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 form.form-grid select,

@@ -5,6 +5,7 @@
 
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
+#include "logging/status_led.h"
 
 namespace owif {
 namespace ota {
@@ -21,6 +22,7 @@ class OtaSystem {
 
   auto SetupOta(ethernet::ConnectionState connection_state) -> void;
 
+  logging::StatusLed& status_led_{logging::status_led_g};
   logging::Logger& logger_{logging::logger_g};
 };
 

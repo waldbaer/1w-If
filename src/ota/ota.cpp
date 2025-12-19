@@ -43,9 +43,12 @@ auto OtaSystem::SetupOta(ethernet::ConnectionState connection_state) -> void {
     ArduinoOTA.onProgress([this](unsigned int progress, unsigned int total) {
       static std::uint8_t progress_percent{0};  // static status for compare
 
+      status_led_.Toggle();
+
       std::uint8_t const new_progress_percent{static_cast<std::uint8_t>((progress * 100 + total / 2) / total)};
       if (new_progress_percent != progress_percent) {
         progress_percent = new_progress_percent;
+
         logger_.InfoNoLn(F("[OTA] Update in progress: %u%%\n"), progress_percent);
       }
     });

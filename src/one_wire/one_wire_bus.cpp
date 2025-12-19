@@ -30,7 +30,7 @@ auto OneWireBus::Search() -> bool {
         if (address == 0) {
           break;
         }
-        std::uint8_t *address8{reinterpret_cast<std::uint8_t *>(&address)};
+        std::uint8_t* address8{reinterpret_cast<std::uint8_t*>(&address)};
         if (util::crc8(address8, 7) != address8[7]) {
           logger_.Warn(F("[OneWireBus] Bus device has invalid CRC"));
         } else {
@@ -70,7 +70,7 @@ auto OneWireBus::Search(OneWireAddress::FamilyCode family_code) -> bool {
         }
 
         // Check CRC
-        std::uint8_t *address8{reinterpret_cast<std::uint8_t *>(&address)};
+        std::uint8_t* address8{reinterpret_cast<std::uint8_t*>(&address)};
         if (util::crc8(address8, 7) != address8[7]) {
           logger_.Warn(F("[OneWireBus] Bus device has invalid CRC"));
         } else {
@@ -83,7 +83,7 @@ auto OneWireBus::Search(OneWireAddress::FamilyCode family_code) -> bool {
   return result;
 }
 
-auto OneWireBus::Search(OneWireAddress const address, bool &is_present) -> bool {
+auto OneWireBus::Search(OneWireAddress const address, bool& is_present) -> bool {
   is_present = false;
 
   ResetSearch(/* address */ address.GetFullAddress(), /* last discrepancy */ 64);
@@ -107,7 +107,7 @@ auto OneWireBus::Search(OneWireAddress const address, bool &is_present) -> bool 
   return result;
 }
 
-auto OneWireBus::GetDevices() -> std::vector<OneWireAddress> const & { return devices_; }
+auto OneWireBus::GetDevices() -> std::vector<OneWireAddress> const& { return devices_; }
 
 auto IRAM_ATTR OneWireBus::Select(OneWireAddress address) -> bool {
   bool result{ResetBus()};

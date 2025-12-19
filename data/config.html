@@ -16,7 +16,7 @@
   <form class="form-grid" id="configForm">
     <label></label>
     <h1>Logging</h1>
-    <label for="user">Log-Level</label>
+    <label>Log Level</label>
     <select id="log_level-select" name="log_level">
       <option value="0">OFF</option>
       <option value="1">Fatal</option>
@@ -27,11 +27,22 @@
       <option value="6">Verbose</option>
     </select>
 
-    <label for="user">Serial Log</label>
-    <input type="checkbox" name="serial_log" %LOG_SERIAL%>
+    <label>Log Sinks</label>
+    <div class="form-sub-grid">
+      <label>Serial</label><input type="checkbox" name="serial_log" %LOG_SERIAL%>
+      <label>Web</label><input type="checkbox" name="web_log" %LOG_WEB%>
+    </div>
 
-    <label for="user">Web Log</label>
-    <input type="checkbox" name="web_log" %LOG_WEB%>
+    <label></label>
+
+    <h1>1-Wire</h1>
+    <label>Channels</label>
+    <div class="form-sub-grid">
+      <label>Ch1</label><input type="checkbox" name="ow_ch1_enabled" %OW_CH1_ENABLED%>
+      <label>Ch2</label><input type="checkbox" name="ow_ch2_enabled" %OW_CH2_ENABLED%>
+      <label>Ch3</label><input type="checkbox" name="ow_ch3_enabled" %OW_CH3_ENABLED%>
+      <label>Ch4</label><input type="checkbox" name="ow_ch4_enabled" %OW_CH4_ENABLED%>
+    </div>
 
     <label></label>
     <h1>Ethernet</h1>

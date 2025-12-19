@@ -25,6 +25,9 @@ class StatusLed {
   auto On() -> void;
   auto Off() -> void;
   auto Set(bool on_off) -> void;
+  auto Get() -> bool;
+
+  auto Toggle() -> void;
   auto Flash(std::uint32_t iterations, std::uint32_t duration_on = 70, std::uint32_t duration_off = 70) -> void;
 
  private:
