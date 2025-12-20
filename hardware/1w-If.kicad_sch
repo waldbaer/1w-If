@@ -10,6 +10,633 @@
 		(company "https://github.com/waldbaer/1w-If")
 	)
 	(lib_symbols
+		(symbol "Connector:Conn_01x13_Socket"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x13_Socket"
+				(at 0 -17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x13, script generated"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x13_Socket_1_1"
+				(polyline
+					(pts
+						(xy -1.27 15.24) (xy -0.508 15.24)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 12.7) (xy -0.508 12.7)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 10.16) (xy -0.508 10.16)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 7.62) (xy -0.508 7.62)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 5.08) (xy -0.508 5.08)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 2.54) (xy -0.508 2.54)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 0) (xy -0.508 0)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -2.54) (xy -0.508 -2.54)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -5.08) (xy -0.508 -5.08)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -7.62) (xy -0.508 -7.62)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -10.16) (xy -0.508 -10.16)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -12.7) (xy -0.508 -12.7)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -15.24) (xy -0.508 -15.24)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 14.732)
+					(mid -0.5058 15.24)
+					(end 0 15.748)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 12.192)
+					(mid -0.5058 12.7)
+					(end 0 13.208)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 9.652)
+					(mid -0.5058 10.16)
+					(end 0 10.668)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 7.112)
+					(mid -0.5058 7.62)
+					(end 0 8.128)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 4.572)
+					(mid -0.5058 5.08)
+					(end 0 5.588)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 2.032)
+					(mid -0.5058 2.54)
+					(end 0 3.048)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -0.508)
+					(mid -0.5058 0)
+					(end 0 0.508)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -3.048)
+					(mid -0.5058 -2.54)
+					(end 0 -2.032)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -5.588)
+					(mid -0.5058 -5.08)
+					(end 0 -4.572)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -8.128)
+					(mid -0.5058 -7.62)
+					(end 0 -7.112)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -10.668)
+					(mid -0.5058 -10.16)
+					(end 0 -9.652)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -13.208)
+					(mid -0.5058 -12.7)
+					(end 0 -12.192)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -15.748)
+					(mid -0.5058 -15.24)
+					(end 0 -14.732)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 15.24 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 12.7 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 10.16 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 7.62 0)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 5.08 0)
+					(length 3.81)
+					(name "Pin_5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -5.08 0)
+					(length 3.81)
+					(name "Pin_9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -7.62 0)
+					(length 3.81)
+					(name "Pin_10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -10.16 0)
+					(length 3.81)
+					(name "Pin_11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -12.7 0)
+					(length 3.81)
+					(name "Pin_12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -15.24 0)
+					(length 3.81)
+					(name "Pin_13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector:Screw_Terminal_01x03"
 			(pin_names
 				(offset 1.016)
@@ -3356,7 +3983,7 @@
 	)
 	(rectangle
 		(start 19.05 99.06)
-		(end 96.52 195.58)
+		(end 99.06 195.58)
 		(stroke
 			(width 0)
 			(type solid)
@@ -3379,7 +4006,7 @@
 		(uuid c112ef92-b8c0-4981-b7f8-140747324b81)
 	)
 	(rectangle
-		(start 99.06 99.06)
+		(start 101.6 99.06)
 		(end 175.26 195.58)
 		(stroke
 			(width 0)
@@ -3434,6 +4061,17 @@
 		)
 		(uuid "05f9a646-ebb0-4b5c-b870-69a8156207a3")
 	)
+	(text "Pin Headers for\nWT32-ETH01 addon-board"
+		(exclude_from_sim no)
+		(at 70.866 150.876 0)
+		(effects
+			(font
+				(size 0.8 0.8)
+			)
+			(justify left top)
+		)
+		(uuid "34dcab11-7aaf-4fd3-80f0-d00566718608")
+	)
 	(text "1-Wire Terminals"
 		(exclude_from_sim no)
 		(at 141.732 19.812 0)
@@ -3446,7 +4084,7 @@
 	)
 	(text "I2C Multiplexer"
 		(exclude_from_sim no)
-		(at 106.172 97.536 0)
+		(at 108.712 97.536 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3486,7 +4124,7 @@
 	)
 	(text "Workaround for power-on-reset issue:\nhttps://github.com/egnor/wt32-eth01\nchapter \"power-on-reset\"\n\n1uF or 10uF capacity between GND and EN\nto delay CPU startup. Avoid issues with\ntoo slop power-supply startup."
 		(exclude_from_sim no)
-		(at 38.354 178.054 0)
+		(at 20.574 163.322 0)
 		(effects
 			(font
 				(size 0.8 0.8)
@@ -4223,7 +4861,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 187.96) (xy 29.21 185.42)
+			(xy 26.67 187.96) (xy 26.67 186.69)
 		)
 		(stroke
 			(width 0)
@@ -4233,7 +4871,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 187.96) (xy 76.2 185.42)
+			(xy 46.99 187.96) (xy 46.99 186.69)
 		)
 		(stroke
 			(width 0)
@@ -4343,7 +4981,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 175.26) (xy 76.2 177.8)
+			(xy 46.99 177.8) (xy 46.99 179.07)
 		)
 		(stroke
 			(width 0)
@@ -5873,7 +6511,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 172.72) (xy 29.21 177.8)
+			(xy 26.67 175.26) (xy 26.67 179.07)
 		)
 		(stroke
 			(width 0)
@@ -7676,7 +8314,7 @@
 		(uuid "63e3b3a0-6b94-4d76-981a-7c7c5982e489")
 	)
 	(label "WT32_ETH01_EN"
-		(at 29.21 172.72 0)
+		(at 26.67 175.26 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8071,7 +8709,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 198.12 69.85 0)
 			(effects
 				(font
@@ -8115,7 +8753,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 29.21 187.96 0)
+		(at 26.67 187.96 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8123,7 +8761,7 @@
 		(dnp no)
 		(uuid "1213e822-81fc-4c1b-826b-8281a06dcd76")
 		(property "Reference" "#PWR01"
-			(at 29.21 194.31 0)
+			(at 26.67 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8132,7 +8770,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 29.21 193.04 0)
+			(at 26.67 193.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8140,7 +8778,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 29.21 187.96 0)
+			(at 26.67 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8149,7 +8787,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 29.21 187.96 0)
+			(at 26.67 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8158,7 +8796,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 29.21 187.96 0)
+			(at 26.67 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8400,7 +9038,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 76.2 181.61 0)
+		(at 46.99 182.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8408,7 +9046,7 @@
 		(dnp no)
 		(uuid "16791b84-f15a-4b5d-8e08-bf4bcc1bde55")
 		(property "Reference" "C4"
-			(at 71.882 181.61 0)
+			(at 42.672 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8416,7 +9054,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 81.28 181.61 0)
+			(at 52.07 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8424,7 +9062,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-3216-18_Kemet-A_HandSolder"
-			(at 77.1652 185.42 0)
+			(at 47.9552 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8432,8 +9070,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 76.2 181.61 0)
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
+			(at 46.99 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8442,7 +9080,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 76.2 181.61 0)
+			(at 46.99 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8451,7 +9089,7 @@
 			)
 		)
 		(property "LCSC" "C7171"
-			(at 76.2 181.61 0)
+			(at 46.99 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8510,7 +9148,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 248.92 44.45 0)
 			(effects
 				(font
@@ -8588,7 +9226,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 210.82 69.85 0)
 			(effects
 				(font
@@ -8666,7 +9304,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 124.46 35.56 0)
 			(effects
 				(font
@@ -8775,7 +9413,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 76.2 175.26 0)
+		(at 46.99 177.8 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8783,7 +9421,7 @@
 		(dnp no)
 		(uuid "22ea8e65-9c3f-439e-9797-b3458997e9b8")
 		(property "Reference" "#PWR011"
-			(at 76.2 179.07 0)
+			(at 46.99 181.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8792,7 +9430,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 76.2 171.45 0)
+			(at 46.99 173.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8800,7 +9438,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 76.2 175.26 0)
+			(at 46.99 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8809,7 +9447,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 76.2 175.26 0)
+			(at 46.99 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8818,7 +9456,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 76.2 175.26 0)
+			(at 46.99 177.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8898,6 +9536,108 @@
 			(project "1w-If"
 				(path "/92fcd867-27bf-4070-a7bc-995445b65eee"
 					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x13_Socket")
+		(at 76.2 177.8 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(uuid "259c23ae-f9e5-45c6-8d30-ab91002a0c98")
+		(property "Reference" "X10"
+			(at 70.866 155.448 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Conn_01x13_Socket"
+			(at 70.866 157.734 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 76.2 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/buchsenleiste_2_54mm_1x16_trennbar_verzinnt-283793"
+			(at 76.2 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x13, script generated"
+			(at 76.2 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "7"
+			(uuid "cd9facf7-136f-4cfd-ac5c-402c8430e48c")
+		)
+		(pin "13"
+			(uuid "e685a329-f3c4-44cb-a67d-3d545b78b29f")
+		)
+		(pin "4"
+			(uuid "ead498e2-a934-4a43-bc6d-5cc83fca6d12")
+		)
+		(pin "11"
+			(uuid "2b3e26df-1f44-4321-b12c-85467f1589e0")
+		)
+		(pin "1"
+			(uuid "0bd4ec45-b3a5-4a42-804a-8567b5c0e1cd")
+		)
+		(pin "2"
+			(uuid "bd0db3f7-1978-4270-809b-fddd6d6bf96f")
+		)
+		(pin "9"
+			(uuid "6989b3a3-4e26-4d1b-9331-6affda82c325")
+		)
+		(pin "10"
+			(uuid "7670d90d-e1a0-4d50-ad27-b0a88ff4fcfd")
+		)
+		(pin "3"
+			(uuid "2be898ee-971e-4691-9b45-fbb5675ba4e1")
+		)
+		(pin "8"
+			(uuid "020917d0-7693-4fd8-8af3-121e47606707")
+		)
+		(pin "12"
+			(uuid "5194e2e5-176e-4aea-9ad1-76afbbf4f1b9")
+		)
+		(pin "5"
+			(uuid "2ba039ea-7695-418f-bf84-7a97ef729ba6")
+		)
+		(pin "6"
+			(uuid "291e37d7-a8cb-438e-9e3f-09c884500c23")
+		)
+		(instances
+			(project ""
+				(path "/92fcd867-27bf-4070-a7bc-995445b65eee"
+					(reference "X10")
 					(unit 1)
 				)
 			)
@@ -9264,7 +10004,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 248.92 149.86 0)
 			(effects
 				(font
@@ -9436,6 +10176,108 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x13_Socket")
+		(at 86.36 177.8 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom yes)
+		(on_board no)
+		(dnp no)
+		(uuid "34329672-daed-4f53-b5ba-625827bee6c7")
+		(property "Reference" "X11"
+			(at 81.026 155.448 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Conn_01x13_Socket"
+			(at 81.026 160.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 86.36 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/buchsenleiste_2_54mm_1x16_trennbar_verzinnt-283793"
+			(at 86.36 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x13, script generated"
+			(at 86.36 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "7"
+			(uuid "9b90a76b-4cd2-4d27-8fb7-221ecb22f43e")
+		)
+		(pin "13"
+			(uuid "093a3ca5-6459-4a31-973b-b8a42f61d7b9")
+		)
+		(pin "4"
+			(uuid "414cd29e-e4b7-4c36-bfed-4c0687ab54da")
+		)
+		(pin "11"
+			(uuid "3cb062a0-36b6-4690-b4ac-7e87784f34b8")
+		)
+		(pin "1"
+			(uuid "726af170-a524-4972-80a2-9ebf3ea61724")
+		)
+		(pin "2"
+			(uuid "9e18876e-8120-4813-ba04-fdf18c4e1dd6")
+		)
+		(pin "9"
+			(uuid "696949ef-cb49-4d5d-bc98-e23795822b10")
+		)
+		(pin "10"
+			(uuid "c23ee30f-9ed7-48a6-8f31-e170540ae3bd")
+		)
+		(pin "3"
+			(uuid "6d35827b-2995-4037-b874-965cfdb479b4")
+		)
+		(pin "8"
+			(uuid "f9fbfe8c-35a2-4627-8583-3ca84b2ba1d8")
+		)
+		(pin "12"
+			(uuid "924993e5-d30b-4b42-9324-5dafcf68e86f")
+		)
+		(pin "5"
+			(uuid "45f09ecc-40cc-4fb0-9cf3-a9fa1aa5a639")
+		)
+		(pin "6"
+			(uuid "86dbc6ac-88c1-4586-8207-45b05852f3a4")
+		)
+		(instances
+			(project "1w-If"
+				(path "/92fcd867-27bf-4070-a7bc-995445b65eee"
+					(reference "X11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3.3V")
 		(at 210.82 29.21 0)
 		(unit 1)
@@ -9537,7 +10379,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 149.86 49.53 0)
 			(effects
 				(font
@@ -9751,7 +10593,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/suche/3034W2D-EHD-A?GROUPINDEX=0&search=3034W2D-EHD-A"
 			(at 76.2 53.34 0)
 			(effects
 				(font
@@ -9838,7 +10680,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 248.92 114.3 0)
 			(effects
 				(font
@@ -9917,7 +10759,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/anschlussklemme_4-pol_1_5_mm_rm_3_81-72035"
 			(at 91.44 55.88 0)
 			(effects
 				(font
@@ -9999,7 +10841,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 118.11 35.56 0)
 			(effects
 				(font
@@ -10141,7 +10983,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 198.12 34.29 0)
 			(effects
 				(font
@@ -10632,7 +11474,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 210.82 139.7 0)
 			(effects
 				(font
@@ -10775,7 +11617,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C2297.html?href=jlc-SMT%2F%3Fhref"
 			(at 109.22 44.45 0)
 			(effects
 				(font
@@ -10863,7 +11705,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 149.86 38.1 0)
 			(effects
 				(font
@@ -10947,7 +11789,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 116.84 157.48 0)
 			(effects
 				(font
@@ -11025,7 +11867,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 109.22 35.56 0)
 			(effects
 				(font
@@ -11166,7 +12008,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
 			(at 45.72 35.56 0)
 			(effects
 				(font
@@ -11528,7 +12370,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C2297.html?href=jlc-SMT%2F%3Fhref"
 			(at 124.46 44.45 0)
 			(effects
 				(font
@@ -11616,7 +12458,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 149.86 60.96 0)
 			(effects
 				(font
@@ -11666,7 +12508,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 76.2 187.96 0)
+		(at 46.99 187.96 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11674,7 +12516,7 @@
 		(dnp no)
 		(uuid "69cafca3-64e6-4e0e-beee-46504ba1975b")
 		(property "Reference" "#PWR012"
-			(at 76.2 194.31 0)
+			(at 46.99 194.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11683,7 +12525,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 76.2 193.04 0)
+			(at 46.99 193.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11691,7 +12533,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 76.2 187.96 0)
+			(at 46.99 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11700,7 +12542,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 76.2 187.96 0)
+			(at 46.99 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11709,7 +12551,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 76.2 187.96 0)
+			(at 46.99 187.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11765,7 +12607,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 204.47 139.7 0)
 			(effects
 				(font
@@ -11973,7 +12815,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 204.47 104.14 0)
 			(effects
 				(font
@@ -12052,7 +12894,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_5-polig-387513"
 			(at 29.21 76.2 0)
 			(effects
 				(font
@@ -12139,7 +12981,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 198.12 139.7 0)
 			(effects
 				(font
@@ -12412,7 +13254,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 119.38 116.84 0)
 			(effects
 				(font
@@ -12490,7 +13332,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 210.82 104.14 0)
 			(effects
 				(font
@@ -12633,7 +13475,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 125.73 116.84 0)
 			(effects
 				(font
@@ -12776,7 +13618,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 204.47 69.85 0)
 			(effects
 				(font
@@ -12982,7 +13824,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
 			(at 57.15 35.56 0)
 			(effects
 				(font
@@ -13116,7 +13958,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 132.08 116.84 0)
 			(effects
 				(font
@@ -13323,7 +14165,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 102.87 35.56 0)
 			(effects
 				(font
@@ -13531,7 +14373,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_3-polig-372627"
 			(at 25.4 35.56 0)
 			(effects
 				(font
@@ -13677,7 +14519,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 204.47 34.29 0)
 			(effects
 				(font
@@ -14029,7 +14871,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 210.82 34.29 0)
 			(effects
 				(font
@@ -14237,7 +15079,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 248.92 80.01 0)
 			(effects
 				(font
@@ -14315,7 +15157,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/suche/3034W2D-EHD-A?GROUPINDEX=0&search=3034W2D-EHD-A"
 			(at 76.2 58.42 0)
 			(effects
 				(font
@@ -14468,7 +15310,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 149.86 72.39 0)
 			(effects
 				(font
@@ -14777,7 +15619,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 29.21 181.61 0)
+		(at 26.67 182.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14785,7 +15627,7 @@
 		(dnp no)
 		(uuid "e79f3e0a-9d7f-4550-bd39-480d2215401c")
 		(property "Reference" "C3"
-			(at 24.638 181.61 0)
+			(at 22.098 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14793,7 +15635,7 @@
 			)
 		)
 		(property "Value" "10uF"
-			(at 34.544 181.61 0)
+			(at 32.004 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14801,7 +15643,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-3216-18_Kemet-A_HandSolder"
-			(at 30.1752 185.42 0)
+			(at 27.6352 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14809,8 +15651,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 29.21 181.61 0)
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
+			(at 26.67 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14819,7 +15661,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 29.21 181.61 0)
+			(at 26.67 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14828,7 +15670,7 @@
 			)
 		)
 		(property "LCSC" "C7171"
-			(at 29.21 181.61 0)
+			(at 26.67 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15094,7 +15936,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 198.12 104.14 0)
 			(effects
 				(font
@@ -15326,7 +16168,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 132.08 156.21 0)
 			(effects
 				(font

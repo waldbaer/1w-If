@@ -89,10 +89,10 @@
 		(allow_soldermask_bridges_in_footprints no)
 		(tenting front back)
 		(aux_axis_origin 131 42.5)
-		(grid_origin 124 126)
+		(grid_origin 74 176)
 		(pcbplotparams
 			(layerselection 0x00000000_00000000_55555555_5755f5ff)
-			(plot_on_all_layers_selection 0x00000000_00000000_00000000_00000000)
+			(plot_on_all_layers_selection 0x00000000_00000000_00000000_0200a0af)
 			(disableapertmacros no)
 			(usegerberextensions no)
 			(usegerberattributes yes)
@@ -101,7 +101,7 @@
 			(dashed_line_dash_ratio 12.000000)
 			(dashed_line_gap_ratio 3.000000)
 			(svgprecision 4)
-			(plotframeref no)
+			(plotframeref yes)
 			(mode 1)
 			(useauxorigin no)
 			(hpglpennumber 1)
@@ -206,7 +206,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -774,7 +774,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -985,7 +985,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -1196,7 +1196,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -1407,7 +1407,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -1618,7 +1618,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -2326,7 +2326,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -2537,7 +2537,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
@@ -2748,7 +2748,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/anschlussklemme_4-pol_1_5_mm_rm_3_81-72035"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -3553,7 +3553,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -3764,7 +3764,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C2297.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -4010,7 +4010,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_5-polig-387513"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -4478,7 +4478,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -4891,7 +4891,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -5338,7 +5338,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -5684,7 +5684,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -5996,7 +5996,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17408.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -6207,7 +6207,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -6910,7 +6910,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_3-polig-372627"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -7233,7 +7233,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -7444,7 +7444,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.reichelt.de/de/de/shop/produkt/leiterplattenklemme_mit_hebel_1_5_mm_rm_3_5_mm_4-polig-387512"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -7790,7 +7790,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -8001,7 +8001,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -8212,7 +8212,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -9057,7 +9057,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -9633,7 +9633,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -9864,7 +9864,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -10075,7 +10075,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -10286,7 +10286,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -10874,7 +10874,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11085,7 +11085,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17520.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -11296,7 +11296,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C2297.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -11542,7 +11542,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -11753,7 +11753,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11964,7 +11964,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C49678.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -12175,7 +12175,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C7171.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12407,7 +12407,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -12618,7 +12618,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C17414.html?href=jlc-SMT%2F%3Fhref"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -16113,7 +16113,7 @@
 		)
 	)
 	(gr_text "Wi-Fi Zone"
-		(at 122.5 116 0)
+		(at 122.5 117.75 0)
 		(layer "User.1")
 		(uuid "0df5ea96-1fe7-4634-aecc-8e8eb92606df")
 		(effects
@@ -20335,7 +20335,7 @@
 				(xy 87.514686 163.099764) (xy 87.514655 163.099735) (xy 79.436819 155.021899) (xy 79.403334 154.960576)
 				(xy 79.4005 154.934218) (xy 79.4005 144.663124) (xy 84.625 144.663124) (xy 84.625 144.879565) (xy 84.658857 145.093326)
 				(xy 84.725735 145.299159) (xy 84.725736 145.299162) (xy 84.823996 145.492005) (xy 84.866829 145.55096)
-				(xy 84.86683 145.550961) (xy 85.476212 144.941579) (xy 85.487482 144.983637) (xy 85.55989 145.109053)
+				(xy 84.86683 145.550961) (xy 85.476212 144.941578) (xy 85.487482 144.983637) (xy 85.55989 145.109053)
 				(xy 85.662292 145.211455) (xy 85.787708 145.283863) (xy 85.829765 145.295132) (xy 85.220382 145.904513)
 				(xy 85.279342 145.94735) (xy 85.472182 146.045608) (xy 85.472185 146.045609) (xy 85.678018 146.112487)
 				(xy 85.89178 146.146345) (xy 86.10822 146.146345) (xy 86.321981 146.112487) (xy 86.527814 146.045609)
