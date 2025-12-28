@@ -59,7 +59,8 @@ auto MqttClient::OnConnectionStateChange(ConnectionStateChangeHandler handler) -
 }
 
 auto MqttClient::Publish(char const* topic, char const* payload, MqttQoS qos, MqttRetain retain) -> MqttMsgId {
-  logger_.Verbose("[MQTTClient] Publishing to MQTT (qos: %u retain: %u) payload: %s", qos, retain, payload);
+  logger_.Verbose("[MQTTClient] Publishing to MQTT (topic: %s qos: %u retain: %u) payload: %s", topic, qos, retain,
+                  payload);
 
   return MqttMsgId{mqtt_client_.publish(topic, static_cast<std::underlying_type_t<MqttQoS>>(qos),
                                         retain == MqttRetain::kRetain, payload)};
