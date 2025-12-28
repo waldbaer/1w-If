@@ -74,7 +74,7 @@ table {
 
 th,
 td {
-  padding: 0.5rem;
+  padding: 0.3rem;
   text-align: left;
 }
 
@@ -135,6 +135,7 @@ input {
 form.form-grid {
   display: grid;
   grid-template-columns: 100px 1fr;
+  align-items: center;
   max-width: 500px;
   gap: .7rem 0rem;
   padding: 1rem;
