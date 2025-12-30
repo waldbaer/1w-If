@@ -10,6 +10,7 @@
 
 #include "logging/logger.h"
 #include "logging/logutil.h"
+#include "util/bit_operations.h"
 #include "util/crc.h"
 #include "util/language.h"
 
@@ -89,7 +90,9 @@ auto OneWireAddress::operator!=(OneWireAddress const& other) const -> bool { ret
 
 auto OneWireAddress::operator!=(std::uint64_t const& other) const -> bool { return address_ != other; }
 
-auto OneWireAddress::operator<(OneWireAddress const& other) const -> bool { return address_ < other.address_; }
+auto OneWireAddress::operator<(OneWireAddress const& other) const -> bool {
+  return util::bswap64(address_) < util::bswap64(other.address_);
+}
 
 }  // namespace one_wire
 }  // namespace owif

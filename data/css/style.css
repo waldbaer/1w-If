@@ -106,13 +106,23 @@ th {
   width: 1px;
 }
 
-/* Buttons */
+/* ---- Summary / Details ---- */
+summary {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.5rem;
+}
+
+details {
+  margin-bottom: 1rem;
+}
+
+/* ---- Buttons ---- */
 button,
 input[type="submit"],
 input[type="button"] {
   background-color: #079DD9;
   color: #F2F2F2;
-  ;
   font-weight: bold;
   border: none;
   border-radius: 0.25rem;
@@ -127,7 +137,7 @@ input[type="button"]:hover {
   color: #30323e;
 }
 
-/* Form */
+/* ---- Form ---- */
 input {
   background-color: #0c84bc;
 }
@@ -181,7 +191,7 @@ form.form-grid h1 {
   padding-top: 0.5rem
 }
 
-/* Console */
+/* ---- Console ---- */
 #log {
   background-color: #222;
   color: #BBB;
