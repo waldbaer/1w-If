@@ -76,6 +76,7 @@ class Persistency {
   static constexpr char const* kMqttKeyPassword{"password"};
   static constexpr char const* kMqttKeyReconnectTime{"reconnect_t"};
   static constexpr char const* kMqttKeyTopic{"topic"};
+  static constexpr char const* kMqttKeyClientId{"client_id"};
 
   static auto FormatOnOff(bool enabled) -> char const*;
 

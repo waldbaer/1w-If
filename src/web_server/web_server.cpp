@@ -360,6 +360,9 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
   if (request->hasParam(kConfigSaveMqttTopic, true)) {
     mqtt_config.SetTopic(request->getParam(kConfigSaveMqttTopic, true)->value());
   }
+  if (request->hasParam(kConfigSaveMqttClientId, true)) {
+    mqtt_config.SetClientId(request->getParam(kConfigSaveMqttClientId, true)->value());
+  }
 
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
@@ -427,10 +430,12 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
                     return String{mqtt_config.GetServerPort()};
                   } else if (var == "MQTT_USER") {
                     return mqtt_config.GetUser();
-                  } else if (var == "MQTT_RECON_TIMEOUT") {
-                    return String{mqtt_config.GetReconnectTimeout()};
                   } else if (var == "MQTT_TOPIC") {
                     return mqtt_config.GetTopic();
+                  } else if (var == "MQTT_CLIENT_ID") {
+                    return mqtt_config.GetClientId();
+                  } else if (var == "MQTT_RECON_TIMEOUT") {
+                    return String{mqtt_config.GetReconnectTimeout()};
                   }
                   // Unknown
                   else {
