@@ -186,8 +186,9 @@ auto Persistency::LoadMqttConfig() -> MqttConfig {
   config.SetServerPort(preferences_.getUInt(kMqttKeyServerPort, MqttConfig::kDefaultServerPort));
   config.SetUser(preferences_.getString(kMqttKeyUser, MqttConfig::kDefaultUser));
   config.SetPassword(preferences_.getString(kMqttKeyPassword, MqttConfig::kDefaultPassword));
-  config.SetReconnectTimeout(preferences_.getUInt(kMqttKeyReconnectTime, MqttConfig::kDefaultReconnectTimeout));
   config.SetTopic(preferences_.getString(kMqttKeyTopic, MqttConfig::kDefaultTopic));
+  config.SetClientId(preferences_.getString(kMqttKeyClientId, MqttConfig::kDefaultClientId));
+  config.SetReconnectTimeout(preferences_.getUInt(kMqttKeyReconnectTime, MqttConfig::kDefaultReconnectTimeout));
 
   preferences_.end();
 
@@ -201,8 +202,9 @@ auto Persistency::StoreMqttConfig(MqttConfig const& mqtt_config) -> void {
   preferences_.putUInt(kMqttKeyServerPort, mqtt_config.GetServerPort());
   preferences_.putString(kMqttKeyUser, mqtt_config.GetUser());
   preferences_.putString(kMqttKeyPassword, mqtt_config.GetPassword());
-  preferences_.putUInt(kMqttKeyReconnectTime, mqtt_config.GetReconnectTimeout());
   preferences_.putString(kMqttKeyTopic, mqtt_config.GetTopic());
+  preferences_.putString(kMqttKeyClientId, mqtt_config.GetClientId());
+  preferences_.putUInt(kMqttKeyReconnectTime, mqtt_config.GetReconnectTimeout());
 
   preferences_.end();
 }

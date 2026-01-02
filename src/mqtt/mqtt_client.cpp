@@ -29,8 +29,9 @@ auto MqttClient::Begin() -> bool {
                                 size_t len, size_t index,
                                 size_t total) { OnMqttMessage(topic, payload, properties, len, index, total); });
 
-  mqtt_client_.setCredentials(config_.GetUser().c_str(), config_.GetPassword().c_str());
   mqtt_client_.setServer(config_.GetServerAddr().c_str(), config_.GetServerPort());
+  mqtt_client_.setCredentials(config_.GetUser().c_str(), config_.GetPassword().c_str());
+  mqtt_client_.setClientId(config_.GetClientId().c_str());
 
   // Register Ethernet connection state change handler starting / stopping the WebServer
   ethernet::ethernet_g.OnConnectionStateChange(
