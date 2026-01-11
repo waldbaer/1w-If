@@ -2,15 +2,10 @@
 #
 # Flash filesystem
 # ----------------------------------------------------------------------------------------------------------------------
-echo "---- Flash Firmware & Filesystem (ota) ----"
+echo "---- Flash Filesystem (ota) ----"
 
-pio run --target upload
+pio run --target uploadfs
 result=$?
-
-if [[ ${result} -eq 0 ]]; then
-  pio run --target uploadfs
-  result_fs=$?
-fi
 
 if [[ ${result} -eq 0 && ${result_fs} -eq 0 ]]; then
   echo "---- Flash SUCCESS ----"
