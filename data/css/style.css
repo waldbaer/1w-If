@@ -110,8 +110,6 @@ th {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 2px 6px;
-  font-size: 12px;
-  line-height: 1.2;
 }
 
 /* ---- Summary / Details ---- */
