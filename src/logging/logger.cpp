@@ -30,8 +30,9 @@ auto Logger::PrintPrefix(Print* log_output, int log_level) -> void {
 }
 
 auto Logger::PrintTimestamp(Print* log_output) -> void {
+  std::uint64_t const millis_since_startup{static_cast<std::uint64_t>(esp_timer_get_time() / 1000)};
   char formatted_time[20];
-  util::TimeUtil::Format(millis(), formatted_time);
+  util::TimeUtil::Format(millis_since_startup, formatted_time);
 
   log_output->print(formatted_time);
 }

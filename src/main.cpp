@@ -20,11 +20,11 @@
 #include "one_wire/one_wire_subsystem.h"
 #include "ota/ota.h"
 #include "util/abort_handler.h"
+#include "version_info.h"
 #include "web_server/web_server.h"
 
 namespace owif {
 
-static char const kOwIfVersion[] PROGMEM = "0.1.0";
 static constexpr std::uint32_t kSerialBaudRate{SERIAL_BAUD};  // SERIAL_BAUD defined by build process
 static constexpr std::uint8_t kStatusLedPin{15};              // GPIO15. Active Low.
 

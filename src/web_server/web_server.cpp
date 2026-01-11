@@ -10,6 +10,7 @@
 #include "logging/web_socket_logger.h"
 #include "util/language.h"
 #include "util/time_util.h"
+#include "version_info.h"
 #include "web_server/web_socket_protocol.h"
 
 namespace owif {
@@ -244,6 +245,22 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
   request->send(LittleFS, "/index.html", kContextTypeHtml, false, [this](String const& var) {
     if (var == "OW_DEVICES") {
       return web_socket::WebSocketProtocol::SerializeOneWireDeviceMap(*one_wire_system_);
+    } else if (var == "VERSION_INFO") {
+      return String{kOwIfVersion};
+    } else if (var == "UPTIME") {
+      std::uint64_t const millis_since_startup{static_cast<std::uint64_t>(esp_timer_get_time() / 1000)};
+      char formatted_time[20];
+      util::TimeUtil::Format(millis_since_startup, formatted_time);
+      return String{formatted_time};
+    } else if (var == "ETH_INFO") {
+      std::uint8_t constexpr formatted_eth_info_size{100};
+      char formatted_eth_info[formatted_eth_info_size];
+      // snprintf(formatted_eth_info, formatted_eth_info_size, "IP: %s MAC: %s Speed: %u Mbit/s (%s) Hostname: %s");
+      snprintf(formatted_eth_info, formatted_eth_info_size, "IP: %s MAC: %s Speed: %u Mbit/s (%s) Hostname: %s",
+               ETH.localIP().toString().c_str(), ETH.macAddress().c_str(), ETH.linkSpeed(),
+               ETH.fullDuplex() ? F("FULL_DUPLEX") : F("HALF_DUPLEX"), ETH.getHostname());
+
+      return String{formatted_eth_info};
     } else {
       logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
       return String{};
