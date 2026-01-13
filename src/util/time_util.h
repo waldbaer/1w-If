@@ -10,8 +10,10 @@
 
 namespace owif {
 namespace util {
+namespace time {
 
-using TimeStampMs = std::uint32_t;  // Time stamp in milliseconds (millis())
+using TimeStampMs = std::uint64_t;  // Time stamp in milliseconds (millis())
+using FormattedTimeString = char[25];
 
 class TimeUtil final {
  public:
@@ -22,19 +24,22 @@ class TimeUtil final {
 
   ~TimeUtil() = delete;
 
+  static auto TimeSinceStartup() -> TimeStampMs;
+
   static auto Format(TimeStampMs time_stamp_ms) -> String;
-  static auto Format(TimeStampMs time_stamp_ms, char (&formatted_string)[20]) -> void;
+  static auto Format(TimeStampMs time_stamp_ms, FormattedTimeString& formatted_string) -> void;
 
  private:
   // Division constants
-  static constexpr std::uint32_t MSECS_PER_SEC{1000};
-  static constexpr std::uint32_t SECS_PER_MIN{60};
-  static constexpr std::uint32_t SECS_PER_HOUR{3600};
-  static constexpr std::uint32_t SECS_PER_DAY{86400};
+  static constexpr std::uint64_t MSECS_PER_SEC{1000};
+  static constexpr std::uint64_t SECS_PER_MIN{60};
+  static constexpr std::uint64_t SECS_PER_HOUR{3600};
+  static constexpr std::uint64_t SECS_PER_DAY{86400};
 
   TimeUtil() = delete;
 };
 
+}  // namespace time
 }  // namespace util
 }  // namespace owif
 

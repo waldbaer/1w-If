@@ -27,9 +27,9 @@
         const log_line = json.LOG;
         let formatted_log_line = "";
 
-        const match = log_line.match(/(\d{2}:\d{2}:\d{2}\.\d{3}) \[(\w)\] (\[([\w\-_ ]*)\] )?(.*)/);
+        const match = log_line.match(/((\d{0,4}d )?\d{2}:\d{2}:\d{2}\.\d{3}) \[(\w)\] (\[([\w\-_ ]*)\] )?(.*)/);
         if (match) {
-          [, timestamp, loglevel, has_app, app, message] = match;
+          [, timestamp, days, loglevel, has_app, app, message] = match;
           if (app === undefined) {
             app = "unknown";
           }

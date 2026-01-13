@@ -110,8 +110,8 @@ class WebServer {
   ::AsyncWebSocket web_socket_{kWebSocketUrl};
 
   struct SessionInfo {
-    util::TimeStampMs last_activity_ms;
-    util::TimeStampMs expires_at_ms;  // millis() + TTL
+    util::time::TimeStampMs last_activity_ms;
+    util::time::TimeStampMs expires_at_ms;  // millis() + TTL
   };
   using SessionsMap = std::map<String, SessionInfo>;
   SessionsMap sessions_;  // token -> timestamp

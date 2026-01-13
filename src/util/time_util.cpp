@@ -3,25 +3,39 @@
 
 namespace owif {
 namespace util {
+namespace time {
+
+auto TimeUtil::TimeSinceStartup() -> TimeStampMs {
+  TimeStampMs const now_ms{static_cast<TimeStampMs>(esp_timer_get_time() / 1000)};
+  return now_ms;
+}
 
 auto TimeUtil::Format(TimeStampMs const time_stamp_ms) -> String {
-  char formatted_string[20];
+  FormattedTimeString formatted_string;
   Format(time_stamp_ms, formatted_string);
   return formatted_string;
 }
 
-auto TimeUtil::Format(TimeStampMs time_stamp_ms, char (&formatted_string)[20]) -> void {
+auto TimeUtil::Format(TimeStampMs time_stamp_ms, FormattedTimeString& formatted_string) -> void {
   // Total time
-  std::uint32_t const time_stamp_secs{time_stamp_ms / MSECS_PER_SEC};
+  std::uint64_t const time_stamp_secs{time_stamp_ms / MSECS_PER_SEC};
 
   // Time in components
-  std::uint32_t const milliseconds{time_stamp_ms % MSECS_PER_SEC};
-  std::uint32_t const seconds{time_stamp_secs % SECS_PER_MIN};
-  std::uint32_t const minutes{(time_stamp_secs / SECS_PER_MIN) % SECS_PER_MIN};
-  std::uint32_t const hours{(time_stamp_secs % SECS_PER_DAY) / SECS_PER_HOUR};
+  std::uint16_t const milliseconds{static_cast<std::uint16_t>(time_stamp_ms % MSECS_PER_SEC)};
+  std::uint8_t const seconds{static_cast<std::uint8_t>(time_stamp_secs % SECS_PER_MIN)};
+  std::uint8_t const minutes{static_cast<std::uint8_t>((time_stamp_secs / SECS_PER_MIN) % SECS_PER_MIN)};
+  std::uint8_t const hours{static_cast<std::uint8_t>((time_stamp_secs % SECS_PER_DAY) / SECS_PER_HOUR)};
+  std::uint16_t const days{static_cast<std::uint16_t>(time_stamp_secs / SECS_PER_DAY)};
 
-  sprintf(formatted_string, "%02d:%02d:%02d.%03d ", hours, minutes, seconds, milliseconds);
+  if (days > 0) {
+    // Format with days
+    sprintf(formatted_string, "%ud %02u:%02u:%02u.%03u", days, hours, minutes, seconds, milliseconds);
+  } else {
+    // Format without days
+    sprintf(formatted_string, "%02u:%02u:%02u.%03u", hours, minutes, seconds, milliseconds);
+  }
 }
 
+}  // namespace time
 }  // namespace util
 }  // namespace owif
