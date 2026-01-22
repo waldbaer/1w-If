@@ -19,6 +19,7 @@
 #include "one_wire/ds18b20.h"
 #include "one_wire/one_wire_subsystem.h"
 #include "ota/ota.h"
+#include "time/ntp_client.h"
 #include "util/abort_handler.h"
 #include "version_info.h"
 #include "web_server/web_server.h"
@@ -35,6 +36,9 @@ auto owif_setup() -> void {
   bool setup_result{logging::status_led_g.Begin(kStatusLedPin)};
 
   logging::status_led_g.Flash(2);
+
+  // Setup Time (NTP client)
+  setup_result &= time::ntp_client_g.Begin();
 
   // Setup Logging
   config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
@@ -86,6 +90,7 @@ auto owif_setup() -> void {
 }
 
 auto owif_loop() -> void {
+  time::ntp_client_g.Loop();
   ota::ota_system_g.Loop();
   one_wire::one_wire_system_g.Loop();
   web_server::web_server_g.Loop();

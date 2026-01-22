@@ -34,14 +34,15 @@ auto Persistency::PrettyPrint(logging::Logger& logger) -> void {
               one_wire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel3).GetEnabled() ? "[3]" : "[ ]",
               one_wire_config.GetChannelConfig(config::OneWireConfig::kOneWireChannel4).GetEnabled() ? "[4]" : "[ ]");
   logger.Info(F("[Persistency] | Ethernet"));
-  logger.Info(F("[Persistency] |   Hostname:  %s"), ethernet_config.GetHostname());
+  logger.Info(F("[Persistency] |   Hostname:  %s"), ethernet_config.GetHostname().c_str());
   logger.Info(F("[Persistency] | OTA"));
   logger.Info(F("[Persistency] |   Port:      %u"), ota_config.GetPort());
   logger.Info(F("[Persistency] | MQTT:"));
-  logger.Info(F("[Persistency] |   Server:    %s:%u"), mqtt_config.GetServerAddr(), mqtt_config.GetServerPort());
-  logger.Info(F("[Persistency] |   User:      %s"), mqtt_config.GetUser());
+  logger.Info(F("[Persistency] |   Server:    %s:%u"), mqtt_config.GetServerAddr().c_str(),
+              mqtt_config.GetServerPort());
+  logger.Info(F("[Persistency] |   User:      %s"), mqtt_config.GetUser().c_str());
   logger.Info(F("[Persistency] |   Reconnect: %u ms"), mqtt_config.GetReconnectTimeout());
-  logger.Info(F("[Persistency] |   Topic:     %s"), mqtt_config.GetTopic());
+  logger.Info(F("[Persistency] |   Topic:     %s"), mqtt_config.GetTopic().c_str());
   logger.Info(F("[Persistency] +-------------------------------------------------"));
 }
 

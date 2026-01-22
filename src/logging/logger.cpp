@@ -31,7 +31,7 @@ auto Logger::PrintPrefix(Print* log_output, int log_level) -> void {
 
 auto Logger::PrintTimestamp(Print* log_output) -> void {
   time::FormattedTimeString formatted_time{};
-  time::TimeUtil::Format(time::TimeUtil::TimeSinceStartup(), formatted_time);
+  time::TimeUtil::Format(time::TimeUtil::Now(), formatted_time);
 
   log_output->print(formatted_time);
   log_output->print(' ');

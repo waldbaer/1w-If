@@ -1,6 +1,8 @@
 
 #include "time/time_util.h"
 
+#include <time.h>
+
 namespace owif {
 namespace time {
 
@@ -9,13 +11,31 @@ auto TimeUtil::TimeSinceStartup() -> TimeStampMs {
   return now_ms;
 }
 
-auto TimeUtil::Format(TimeStampMs const time_stamp_ms) -> String {
+auto TimeUtil::Now() -> DateTime {
+  struct timeval tv;
+  struct tm t;
+
+  gettimeofday(&tv, nullptr);
+  localtime_r(&tv.tv_sec, &t);
+
+  return DateTime{
+      static_cast<std::uint16_t>(t.tm_year + 1900),  // year
+      static_cast<std::uint8_t>(t.tm_mon + 1),       // month
+      static_cast<std::uint8_t>(t.tm_mday),          // day of month
+      static_cast<std::uint8_t>(t.tm_hour),          // hour
+      static_cast<std::uint8_t>(t.tm_min),           // minute
+      static_cast<std::uint8_t>(t.tm_sec),           // second of minute
+      static_cast<std::uint16_t>(tv.tv_usec / 1000)  // milliseconds
+  };
+}
+
+auto TimeUtil::Format(TimeStampMs const& time_stamp_ms) -> String {
   FormattedTimeString formatted_string;
   Format(time_stamp_ms, formatted_string);
   return formatted_string;
 }
 
-auto TimeUtil::Format(TimeStampMs time_stamp_ms, FormattedTimeString& formatted_string) -> void {
+auto TimeUtil::Format(TimeStampMs const& time_stamp_ms, FormattedTimeString& formatted_string) -> void {
   // Total time
   std::uint64_t const time_stamp_secs{time_stamp_ms / MSECS_PER_SEC};
 
@@ -33,6 +53,11 @@ auto TimeUtil::Format(TimeStampMs time_stamp_ms, FormattedTimeString& formatted_
     // Format without days
     sprintf(formatted_string, "%02u:%02u:%02u.%03u", hours, minutes, seconds, milliseconds);
   }
+}
+
+auto TimeUtil::Format(DateTime const& date_time, FormattedTimeString& formatted_string) -> void {
+  sprintf(formatted_string, "%04u-%02u-%02u %02u:%02u:%02u.%03u", date_time.year, date_time.month, date_time.day,
+          date_time.hour, date_time.minute, date_time.second, date_time.millisecond);
 }
 
 }  // namespace time

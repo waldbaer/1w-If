@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include "time/date_time.h"
+
 namespace owif {
 namespace time {
 
@@ -22,9 +24,11 @@ class TimeUtil final {
   ~TimeUtil() = delete;
 
   static auto TimeSinceStartup() -> TimeStampMs;
+  static auto Now() -> DateTime;
 
-  static auto Format(TimeStampMs time_stamp_ms) -> String;
-  static auto Format(TimeStampMs time_stamp_ms, FormattedTimeString& formatted_string) -> void;
+  static auto Format(TimeStampMs const& time_stamp_ms) -> String;
+  static auto Format(TimeStampMs const& time_stamp_ms, FormattedTimeString& formatted_string) -> void;
+  static auto Format(DateTime const& date_time, FormattedTimeString& formatted_string) -> void;
 
  private:
   // Division constants
