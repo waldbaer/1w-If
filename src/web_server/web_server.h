@@ -9,7 +9,7 @@
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
 #include "one_wire/one_wire_subsystem.h"
-#include "util/time_util.h"
+#include "time/time_util.h"
 
 namespace owif {
 namespace web_server {
@@ -110,8 +110,8 @@ class WebServer {
   ::AsyncWebSocket web_socket_{kWebSocketUrl};
 
   struct SessionInfo {
-    util::time::TimeStampMs last_activity_ms;
-    util::time::TimeStampMs expires_at_ms;  // millis() + TTL
+    time::TimeStampMs last_activity_ms;
+    time::TimeStampMs expires_at_ms;  // millis() + TTL
   };
   using SessionsMap = std::map<String, SessionInfo>;
   SessionsMap sessions_;  // token -> timestamp

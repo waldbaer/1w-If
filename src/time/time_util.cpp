@@ -1,8 +1,7 @@
 
-#include "util/time_util.h"
+#include "time/time_util.h"
 
 namespace owif {
-namespace util {
 namespace time {
 
 auto TimeUtil::TimeSinceStartup() -> TimeStampMs {
@@ -37,5 +36,4 @@ auto TimeUtil::Format(TimeStampMs time_stamp_ms, FormattedTimeString& formatted_
 }
 
 }  // namespace time
-}  // namespace util
 }  // namespace owif

@@ -8,8 +8,8 @@
 #include "config/persistency.h"
 #include "ethernet/ethernet.h"
 #include "logging/web_socket_logger.h"
+#include "time/time_util.h"
 #include "util/language.h"
-#include "util/time_util.h"
 #include "version_info.h"
 #include "web_server/web_socket_protocol.h"
 
@@ -74,12 +74,12 @@ auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
 
 auto WebServer::Loop() -> void {
   // Update sessions
-  util::time::TimeStampMs const now{millis()};
+  time::TimeStampMs const now{millis()};
 
   for (SessionsMap::iterator session = sessions_.begin(); session != sessions_.end();) {
     if (session->second.expires_at_ms <= now) {
       logger_.Verbose(F("[WebServer] session expired. Last activity: %s"),
-                      util::time::TimeUtil::Format(session->second.last_activity_ms));
+                      time::TimeUtil::Format(session->second.last_activity_ms));
       session = sessions_.erase(session);
     } else {
       ++session;
@@ -130,7 +130,7 @@ auto WebServer::GenerateAuthenticationToken() -> String {
 
 auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
   bool result{false};
-  util::time::TimeStampMs const now{millis()};
+  time::TimeStampMs const now{millis()};
 
   if (request->hasHeader("Cookie")) {
     String cookie = request->header("Cookie");
@@ -148,7 +148,7 @@ auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
           result = true;
         } else {
           logger_.Verbose(F("[WebServer] session expired. Last activity: %s"),
-                          util::time::TimeUtil::Format(found_session->second.last_activity_ms));
+                          time::TimeUtil::Format(found_session->second.last_activity_ms));
           sessions_.erase(found_session);  // Session expired
         }
       }
@@ -203,7 +203,7 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
 
   config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
   if (ConstTimeEquals(user, webserver_config.GetUser()) && ConstTimeEquals(pass, webserver_config.GetPassword())) {
-    util::time::TimeStampMs const now{millis()};
+    time::TimeStampMs const now{millis()};
 
     String const token{GenerateAuthenticationToken()};
     sessions_[token] = SessionInfo{/*last_activity_ms=*/now, /*expires_at_ms=*/now + kSessionTimeoutMs};
@@ -248,8 +248,8 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
     } else if (var == "VERSION_INFO") {
       return String{kOwIfVersion};
     } else if (var == "UPTIME") {
-      util::time::FormattedTimeString formatted_time{};
-      util::time::TimeUtil::Format(util::time::TimeUtil::TimeSinceStartup(), formatted_time);
+      time::FormattedTimeString formatted_time{};
+      time::TimeUtil::Format(time::TimeUtil::TimeSinceStartup(), formatted_time);
       return String{formatted_time};
     } else if (var == "ETH_INFO") {
       std::uint8_t constexpr formatted_eth_info_size{100};
