@@ -382,6 +382,19 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
+  // ---- Store Ntp Config ----
+
+  config::NtpConfig ntp_config{config::persistency_g.LoadNtpConfig()};
+
+  if (request->hasParam(kConfigSaveNtpServer, true)) {
+    ntp_config.SetServerAddr(request->getParam(kConfigSaveNtpServer, true)->value());
+  }
+  if (request->hasParam(kConfigSaveNtpTimezone, true)) {
+    ntp_config.SetTimezone(request->getParam(kConfigSaveNtpTimezone, true)->value());
+  }
+
+  config::persistency_g.StoreNtpConfig(ntp_config);
+
   // ---- All parts updated: Send response ----
   logging::logger_g.Info(F("[WebServer] Updated configuration:"));
   config::persistency_g.PrettyPrint(logging::logger_g);
@@ -401,10 +414,11 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
   config::OtaConfig const ota_config{config::persistency_g.LoadOtaConfig()};
   config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
   config::MqttConfig const mqtt_config{config::persistency_g.LoadMqttConfig()};
+  config::NtpConfig const ntp_config{config::persistency_g.LoadNtpConfig()};
 
   request->send(LittleFS, "/config.html", kContextTypeHtml, false,
-                [this, logging_config, onewire_config, ethernet_config, ota_config, webserver_config,
-                 mqtt_config](String const& var) {
+                [this, logging_config, onewire_config, ethernet_config, ota_config, webserver_config, mqtt_config,
+                 ntp_config](String const& var) {
                   // LoggingConfig
                   if (var == "LOG_LEVEL") {
                     return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
@@ -452,6 +466,12 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
                     return mqtt_config.GetClientId();
                   } else if (var == "MQTT_RECON_TIMEOUT") {
                     return String{mqtt_config.GetReconnectTimeout()};
+                  }
+                  // NtpConfig
+                  else if (var == "NTP_SERVER") {
+                    return ntp_config.GetServerAddr();
+                  } else if (var == "NTP_TIMEZONE") {
+                    return ntp_config.GetTimezone();
                   }
                   // Unknown
                   else {

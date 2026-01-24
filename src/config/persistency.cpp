@@ -16,11 +16,12 @@ namespace config {
 // ---- Public APIs ----------------------------------------------------------------------------------------------------
 
 auto Persistency::PrettyPrint(logging::Logger& logger) -> void {
-  LoggingConfig const& logging_config{LoadLoggingConfig()};
-  OneWireConfig const& one_wire_config{LoadOneWireConfig()};
-  EthernetConfig const& ethernet_config{LoadEthernetConfig()};
-  OtaConfig const& ota_config{LoadOtaConfig()};
-  MqttConfig const& mqtt_config{LoadMqttConfig()};
+  LoggingConfig const logging_config{LoadLoggingConfig()};
+  OneWireConfig const one_wire_config{LoadOneWireConfig()};
+  EthernetConfig const ethernet_config{LoadEthernetConfig()};
+  OtaConfig const ota_config{LoadOtaConfig()};
+  MqttConfig const mqtt_config{LoadMqttConfig()};
+  NtpConfig const ntp_config{LoadNtpConfig()};
 
   logger.Info(F("[Persistency] +- Configuration ---------------------------------"));
   logger.Info(F("[Persistency] | Logging:"));
@@ -43,6 +44,9 @@ auto Persistency::PrettyPrint(logging::Logger& logger) -> void {
   logger.Info(F("[Persistency] |   User:      %s"), mqtt_config.GetUser().c_str());
   logger.Info(F("[Persistency] |   Reconnect: %u ms"), mqtt_config.GetReconnectTimeout());
   logger.Info(F("[Persistency] |   Topic:     %s"), mqtt_config.GetTopic().c_str());
+  logger.Info(F("[Persistency] | NTP:"));
+  logger.Info(F("[Persistency] |   Server:    %s"), ntp_config.GetServerAddr().c_str());
+  logger.Info(F("[Persistency] |   Timezone:  %s"), ntp_config.GetTimezone().c_str());
   logger.Info(F("[Persistency] +-------------------------------------------------"));
 }
 
@@ -206,6 +210,28 @@ auto Persistency::StoreMqttConfig(MqttConfig const& mqtt_config) -> void {
   preferences_.putString(kMqttKeyTopic, mqtt_config.GetTopic());
   preferences_.putString(kMqttKeyClientId, mqtt_config.GetClientId());
   preferences_.putUInt(kMqttKeyReconnectTime, mqtt_config.GetReconnectTimeout());
+
+  preferences_.end();
+}
+
+auto Persistency::LoadNtpConfig() -> NtpConfig {
+  NtpConfig config{};
+
+  preferences_.begin(kNtpKey, false);
+
+  config.SetServerAddr(preferences_.getString(kNtpKeyServerAddr, NtpConfig::kDefaultNtpServerAddr));
+  config.SetTimezone(preferences_.getString(kNtpKeyTimezone, NtpConfig::kDefaultTimezone));
+
+  preferences_.end();
+
+  return config;
+}
+
+auto Persistency::StoreNtpConfig(NtpConfig const& ntp_config) -> void {
+  preferences_.begin(kNtpKey, false);
+
+  preferences_.putString(kNtpKeyServerAddr, ntp_config.GetServerAddr());
+  preferences_.putString(kNtpKeyTimezone, ntp_config.GetTimezone());
 
   preferences_.end();
 }

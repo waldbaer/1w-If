@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+#include "config/ntp_config.h"
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
 
@@ -26,17 +27,12 @@ class NtpClient {
 
   // ---- Public APIs --------------------------------------------------------------------------------------------------
 
-  auto Begin() -> bool;
+  auto Begin(config::NtpConfig const& ntp_config) -> bool;
   auto Loop() -> void;
 
  private:
-  static constexpr char const* kNtpServer{"pool.ntp.org"};
-  static constexpr long kGmtOffsetSec{3600};
-  static constexpr int kDaylightOffset{3600};
-
-  static constexpr char const* kTimezone{"CET-1CEST,M3.5.0/2,M10.5.0/3"};
-
   logging::Logger& logger_{logging::logger_g};
+  config::NtpConfig config_{};
 };
 
 /*!

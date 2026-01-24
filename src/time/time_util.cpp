@@ -13,19 +13,19 @@ auto TimeUtil::TimeSinceStartup() -> TimeStampMs {
 
 auto TimeUtil::Now() -> DateTime {
   struct timeval tv;
-  struct tm t;
-
   gettimeofday(&tv, nullptr);
-  localtime_r(&tv.tv_sec, &t);
+
+  struct tm local_time;
+  localtime_r(&tv.tv_sec, &local_time);
 
   return DateTime{
-      static_cast<std::uint16_t>(t.tm_year + 1900),  // year
-      static_cast<std::uint8_t>(t.tm_mon + 1),       // month
-      static_cast<std::uint8_t>(t.tm_mday),          // day of month
-      static_cast<std::uint8_t>(t.tm_hour),          // hour
-      static_cast<std::uint8_t>(t.tm_min),           // minute
-      static_cast<std::uint8_t>(t.tm_sec),           // second of minute
-      static_cast<std::uint16_t>(tv.tv_usec / 1000)  // milliseconds
+      static_cast<std::uint16_t>(local_time.tm_year + 1900),  // year
+      static_cast<std::uint8_t>(local_time.tm_mon + 1),       // month
+      static_cast<std::uint8_t>(local_time.tm_mday),          // day of month
+      static_cast<std::uint8_t>(local_time.tm_hour),          // hour
+      static_cast<std::uint8_t>(local_time.tm_min),           // minute
+      static_cast<std::uint8_t>(local_time.tm_sec),           // second of minute
+      static_cast<std::uint16_t>(tv.tv_usec / 1000)           // milliseconds
   };
 }
 

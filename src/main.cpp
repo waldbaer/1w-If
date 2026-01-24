@@ -37,9 +37,6 @@ auto owif_setup() -> void {
 
   logging::status_led_g.Flash(2);
 
-  // Setup Time (NTP client)
-  setup_result &= time::ntp_client_g.Begin();
-
   // Setup Logging
   config::LoggingConfig const logging_config{config::persistency_g.LoadLoggingConfig()};
   if (logging_config.GetSerialLogEnabled()) {
@@ -67,6 +64,7 @@ auto owif_setup() -> void {
   setup_result &= cmd::command_handler_g.Begin(&one_wire::one_wire_system_g);
 
   // Setup OTA / WebServer / MqttClient before Ethernet to allow registration of ConnectionStateChangeHandlers
+  setup_result &= time::ntp_client_g.Begin(config::persistency_g.LoadNtpConfig());
   setup_result &= ota::ota_system_g.Begin();
   setup_result &= web_server::web_server_g.Begin(one_wire::one_wire_system_g);
   setup_result &= mqtt::mqtt_client_g.Begin();

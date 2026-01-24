@@ -74,6 +74,8 @@ class WebServer {
   static constexpr char const* kConfigSaveMqttTopic{"mqtt_topic"};
   static constexpr char const* kConfigSaveMqttClientId{"mqtt_client_id"};
   static constexpr char const* kConfigSaveMqttReconTimeout{"mqtt_recon_timeout"};
+  static constexpr char const* kConfigSaveNtpServer{"ntp_server"};
+  static constexpr char const* kConfigSaveNtpTimezone{"ntp_timezone"};
 
   auto OnConnectionStateChange(ethernet::ConnectionState connection_state) -> void;
 
