@@ -3,8 +3,8 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
+#include "time/time_util.h"
 #include "util/language.h"
-#include "util/time_util.h"
 
 namespace owif {
 namespace logging {
@@ -30,8 +30,8 @@ auto Logger::PrintPrefix(Print* log_output, int log_level) -> void {
 }
 
 auto Logger::PrintTimestamp(Print* log_output) -> void {
-  util::time::FormattedTimeString formatted_time{};
-  util::time::TimeUtil::Format(util::time::TimeUtil::TimeSinceStartup(), formatted_time);
+  time::FormattedTimeString formatted_time{};
+  time::TimeUtil::Format(time::TimeUtil::Now(), formatted_time);
 
   log_output->print(formatted_time);
   log_output->print(' ');

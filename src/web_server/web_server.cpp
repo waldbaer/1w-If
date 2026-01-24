@@ -8,8 +8,8 @@
 #include "config/persistency.h"
 #include "ethernet/ethernet.h"
 #include "logging/web_socket_logger.h"
+#include "time/time_util.h"
 #include "util/language.h"
-#include "util/time_util.h"
 #include "version_info.h"
 #include "web_server/web_socket_protocol.h"
 
@@ -74,12 +74,12 @@ auto WebServer::Begin(one_wire::OneWireSystem& one_wire_system) -> bool {
 
 auto WebServer::Loop() -> void {
   // Update sessions
-  util::time::TimeStampMs const now{millis()};
+  time::TimeStampMs const now{millis()};
 
   for (SessionsMap::iterator session = sessions_.begin(); session != sessions_.end();) {
     if (session->second.expires_at_ms <= now) {
       logger_.Verbose(F("[WebServer] session expired. Last activity: %s"),
-                      util::time::TimeUtil::Format(session->second.last_activity_ms));
+                      time::TimeUtil::Format(session->second.last_activity_ms));
       session = sessions_.erase(session);
     } else {
       ++session;
@@ -130,7 +130,7 @@ auto WebServer::GenerateAuthenticationToken() -> String {
 
 auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
   bool result{false};
-  util::time::TimeStampMs const now{millis()};
+  time::TimeStampMs const now{millis()};
 
   if (request->hasHeader("Cookie")) {
     String cookie = request->header("Cookie");
@@ -148,7 +148,7 @@ auto WebServer::CheckAuthentication(AsyncWebServerRequest* request) -> bool {
           result = true;
         } else {
           logger_.Verbose(F("[WebServer] session expired. Last activity: %s"),
-                          util::time::TimeUtil::Format(found_session->second.last_activity_ms));
+                          time::TimeUtil::Format(found_session->second.last_activity_ms));
           sessions_.erase(found_session);  // Session expired
         }
       }
@@ -203,7 +203,7 @@ auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
 
   config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
   if (ConstTimeEquals(user, webserver_config.GetUser()) && ConstTimeEquals(pass, webserver_config.GetPassword())) {
-    util::time::TimeStampMs const now{millis()};
+    time::TimeStampMs const now{millis()};
 
     String const token{GenerateAuthenticationToken()};
     sessions_[token] = SessionInfo{/*last_activity_ms=*/now, /*expires_at_ms=*/now + kSessionTimeoutMs};
@@ -248,8 +248,8 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
     } else if (var == "VERSION_INFO") {
       return String{kOwIfVersion};
     } else if (var == "UPTIME") {
-      util::time::FormattedTimeString formatted_time{};
-      util::time::TimeUtil::Format(util::time::TimeUtil::TimeSinceStartup(), formatted_time);
+      time::FormattedTimeString formatted_time{};
+      time::TimeUtil::Format(time::TimeUtil::TimeSinceStartup(), formatted_time);
       return String{formatted_time};
     } else if (var == "ETH_INFO") {
       std::uint8_t constexpr formatted_eth_info_size{100};
@@ -382,6 +382,19 @@ auto WebServer::HandleSave(AsyncWebServerRequest* request) -> void {
 
   config::persistency_g.StoreMqttConfig(mqtt_config);
 
+  // ---- Store Ntp Config ----
+
+  config::NtpConfig ntp_config{config::persistency_g.LoadNtpConfig()};
+
+  if (request->hasParam(kConfigSaveNtpServer, true)) {
+    ntp_config.SetServerAddr(request->getParam(kConfigSaveNtpServer, true)->value());
+  }
+  if (request->hasParam(kConfigSaveNtpTimezone, true)) {
+    ntp_config.SetTimezone(request->getParam(kConfigSaveNtpTimezone, true)->value());
+  }
+
+  config::persistency_g.StoreNtpConfig(ntp_config);
+
   // ---- All parts updated: Send response ----
   logging::logger_g.Info(F("[WebServer] Updated configuration:"));
   config::persistency_g.PrettyPrint(logging::logger_g);
@@ -401,10 +414,11 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
   config::OtaConfig const ota_config{config::persistency_g.LoadOtaConfig()};
   config::WebServerConfig const webserver_config{config::persistency_g.LoadWebServerConfig()};
   config::MqttConfig const mqtt_config{config::persistency_g.LoadMqttConfig()};
+  config::NtpConfig const ntp_config{config::persistency_g.LoadNtpConfig()};
 
   request->send(LittleFS, "/config.html", kContextTypeHtml, false,
-                [this, logging_config, onewire_config, ethernet_config, ota_config, webserver_config,
-                 mqtt_config](String const& var) {
+                [this, logging_config, onewire_config, ethernet_config, ota_config, webserver_config, mqtt_config,
+                 ntp_config](String const& var) {
                   // LoggingConfig
                   if (var == "LOG_LEVEL") {
                     return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
@@ -452,6 +466,12 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
                     return mqtt_config.GetClientId();
                   } else if (var == "MQTT_RECON_TIMEOUT") {
                     return String{mqtt_config.GetReconnectTimeout()};
+                  }
+                  // NtpConfig
+                  else if (var == "NTP_SERVER") {
+                    return ntp_config.GetServerAddr();
+                  } else if (var == "NTP_TIMEZONE") {
+                    return ntp_config.GetTimezone();
                   }
                   // Unknown
                   else {

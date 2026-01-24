@@ -6,6 +6,7 @@
 #include "config/ethernet_config.h"
 #include "config/logging_config.h"
 #include "config/mqtt_config.h"
+#include "config/ntp_config.h"
 #include "config/onewire_config.h"
 #include "config/ota_config.h"
 #include "config/webserver_config.h"
@@ -46,6 +47,9 @@ class Persistency {
   auto LoadMqttConfig() -> MqttConfig;
   auto StoreMqttConfig(MqttConfig const& mqtt_config) -> void;
 
+  auto LoadNtpConfig() -> NtpConfig;
+  auto StoreNtpConfig(NtpConfig const& ntp_config) -> void;
+
  private:
   static constexpr char const* kLoggingKey{"log"};
   static constexpr char const* kLoggingKeyLogLevel{"loglevel"};
@@ -77,6 +81,10 @@ class Persistency {
   static constexpr char const* kMqttKeyReconnectTime{"reconnect_t"};
   static constexpr char const* kMqttKeyTopic{"topic"};
   static constexpr char const* kMqttKeyClientId{"client_id"};
+
+  static constexpr char const* kNtpKey{"ntp"};
+  static constexpr char const* kNtpKeyServerAddr{"server_addr"};
+  static constexpr char const* kNtpKeyTimezone{"timezone"};
 
   static auto FormatOnOff(bool enabled) -> char const*;
 

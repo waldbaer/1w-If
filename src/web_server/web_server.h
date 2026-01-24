@@ -9,7 +9,7 @@
 #include "ethernet/ethernet.h"
 #include "logging/logger.h"
 #include "one_wire/one_wire_subsystem.h"
-#include "util/time_util.h"
+#include "time/time_util.h"
 
 namespace owif {
 namespace web_server {
@@ -74,6 +74,8 @@ class WebServer {
   static constexpr char const* kConfigSaveMqttTopic{"mqtt_topic"};
   static constexpr char const* kConfigSaveMqttClientId{"mqtt_client_id"};
   static constexpr char const* kConfigSaveMqttReconTimeout{"mqtt_recon_timeout"};
+  static constexpr char const* kConfigSaveNtpServer{"ntp_server"};
+  static constexpr char const* kConfigSaveNtpTimezone{"ntp_timezone"};
 
   auto OnConnectionStateChange(ethernet::ConnectionState connection_state) -> void;
 
@@ -110,8 +112,8 @@ class WebServer {
   ::AsyncWebSocket web_socket_{kWebSocketUrl};
 
   struct SessionInfo {
-    util::time::TimeStampMs last_activity_ms;
-    util::time::TimeStampMs expires_at_ms;  // millis() + TTL
+    time::TimeStampMs last_activity_ms;
+    time::TimeStampMs expires_at_ms;  // millis() + TTL
   };
   using SessionsMap = std::map<String, SessionInfo>;
   SessionsMap sessions_;  // token -> timestamp
