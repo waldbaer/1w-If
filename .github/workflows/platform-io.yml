@@ -26,5 +26,7 @@ jobs:
           python-version: "3.11"
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
-      - name: Build PlatformIO Project
+      - name: Build PlatformIO default environment (espota)
         run: pio run
+      - name: Build PlatformIO esptool environment
+        run: pio run wt32-eth01_esptool
