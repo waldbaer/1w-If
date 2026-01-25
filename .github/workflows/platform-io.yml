@@ -29,4 +29,4 @@ jobs:
       - name: Build PlatformIO default environment (espota)
         run: pio run
       - name: Build PlatformIO esptool environment
-        run: pio run wt32-eth01_esptool
+        run: pio run -e wt32-eth01_esptool
