@@ -13,3 +13,7 @@
 
 # Datasheets
 doc/datasheets/
+
+# 3D-Print
+*.3mf
+*.gcode
