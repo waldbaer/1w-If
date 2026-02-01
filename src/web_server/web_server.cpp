@@ -260,6 +260,12 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
                ETH.fullDuplex() ? F("FULL_DUPLEX") : F("HALF_DUPLEX"), ETH.getHostname());
 
       return String{formatted_eth_info};
+    } else if (var == "BOARD_TEMP") {
+      float const board_temperature{temperatureRead()};
+      char formatted_board_temperate[9];  // "100.9 °C" > 8+1 = 9
+      sprintf(formatted_board_temperate, "%.1f °C", board_temperature);
+
+      return String{formatted_board_temperate};
     } else {
       logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
       return String{};
