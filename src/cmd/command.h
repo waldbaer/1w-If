@@ -51,7 +51,7 @@ struct CommandParam {
 };
 
 struct CommandResultCallback {
-  void (*func)(void* ctx, JsonDocument const& command_result);
+  void (*func)(void* ctx, JsonDocument& command_result);
   void* ctx;
 };
 struct ErrorResultCallback {

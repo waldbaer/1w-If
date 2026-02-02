@@ -34,7 +34,7 @@ class CommandHandler {
 
   auto EnqueueCommand(Command const& cmd) -> bool;
 
-  auto SendCommandResponse(Command const& cmd, JsonDocument const& json) -> void;
+  auto SendCommandResponse(Command const& cmd, JsonDocument& json) -> void;
   auto SendErrorResponse(Command const& cmd, char const* error_message, char const* request_json = "") -> void;
 
  private:
@@ -55,8 +55,8 @@ class CommandHandler {
   QueueHandle_t command_queue_{};
 
   PresenceCommandHandler presence_command_handler_{nullptr, nullptr};  // valid init in Begin()
-  Ds18b20CommandHandler ds18b20_command_handler_{nullptr, nullptr};   // valid init in Begin()
-  Ds2438CommandHandler ds2438_command_handler_{nullptr, nullptr};     // valid init in Begin()
+  Ds18b20CommandHandler ds18b20_command_handler_{nullptr, nullptr};    // valid init in Begin()
+  Ds2438CommandHandler ds2438_command_handler_{nullptr, nullptr};      // valid init in Begin()
   SubscriptionsManager subscriptions_manager_{nullptr};
 };
 

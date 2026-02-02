@@ -5,6 +5,7 @@ class MqttProtocol:
     """
 
     # --- Common field names ---
+    ATTRIB_TIME = "time"
     ATTRIB_ACTION = "action"
     ATTRIB_DEVICE = "device"
     ATTRIB_DEVICE_ID = "device_id"
@@ -29,11 +30,3 @@ class MqttProtocol:
     ACTION_READ = "read"
     ACTION_SUBSCRIBE = "subscribe"
     ACTION_UNSUBSCRIBE = "unsubscribe"
-
-    @classmethod
-    def is_valid_action(cls, action: str) -> bool:
-        return action in cls.VALID_ACTIONS
-
-    @classmethod
-    def is_valid_attribute(cls, attribute: str) -> bool:
-        return attribute in cls.VALID_ATTRIBUTES

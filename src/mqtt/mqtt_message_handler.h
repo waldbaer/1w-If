@@ -26,7 +26,7 @@ class MqttMessageHandler {
   auto Begin(MqttClient* mqtt_client, cmd::CommandHandler* command_handler) -> bool;
   auto Loop() -> void;
 
-  static auto HandleCommandResponse(void* ctx, JsonDocument const& command_result) -> void;
+  static auto HandleCommandResponse(void* ctx, JsonDocument& command_result) -> void;
   static auto HandleErrorResponse(void* ctx, char const* error_message, char const* request_json) -> void;
 
  private:
@@ -38,11 +38,12 @@ class MqttMessageHandler {
   auto ProcessActionSubscribe(JsonDocument json) -> void;
   auto ProcessActionUnsubscribe(JsonDocument json) -> void;
 
-  auto SendCommandResponse(JsonDocument const& command_result) -> void;
+  auto SendCommandResponse(JsonDocument& command_result) -> void;
   auto SendErrorResponse(char const* error_message, char const* request_json = "") -> void;
   auto SendErrorResponse(char const* error_message, JsonDocument* request_json) -> void;
 
   auto InitEmptyCommand(cmd::Action action) -> cmd::Command;
+  auto AddTimestamp(JsonDocument& json) -> void;
 
   logging::Logger& logger_{logging::logger_g};
 

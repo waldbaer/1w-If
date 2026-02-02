@@ -10,6 +10,7 @@
 #include "config/mqtt_config.h"
 #include "config/persistency.h"
 #include "mqtt/mqtt_client.h"
+#include "time/time_util.h"
 
 namespace owif {
 namespace mqtt {
@@ -196,7 +197,7 @@ auto MqttMessageHandler::ProcessActionUnsubscribe(JsonDocument json) -> void {
 
 // ---- Response Handling ----
 
-auto MqttMessageHandler::HandleCommandResponse(void* ctx, JsonDocument const& command_result) -> void {
+auto MqttMessageHandler::HandleCommandResponse(void* ctx, JsonDocument& command_result) -> void {
   static_cast<MqttMessageHandler*>(ctx)->SendCommandResponse(command_result);
 }
 
@@ -204,7 +205,9 @@ auto MqttMessageHandler::HandleErrorResponse(void* ctx, char const* error_messag
   static_cast<MqttMessageHandler*>(ctx)->SendErrorResponse(error_message, request_json);
 }
 
-auto MqttMessageHandler::SendCommandResponse(JsonDocument const& command_result) -> void {
+auto MqttMessageHandler::SendCommandResponse(JsonDocument& command_result) -> void {
+  AddTimestamp(command_result);
+
   String command_result_serialized{};
   serializeJson(command_result, command_result_serialized);
 
@@ -237,6 +240,8 @@ auto MqttMessageHandler::SendErrorResponse(char const* error_message, JsonDocume
     json_error[cmd::json::kErrorRequest] = nullptr;
   }
 
+  AddTimestamp(json);
+
   String error_result_serialized{};
   serializeJson(json, error_result_serialized);
   mqtt_client_->Publish(mqtt_topic_stat_.c_str(), error_result_serialized.c_str());
@@ -256,6 +261,14 @@ auto MqttMessageHandler::InitEmptyCommand(cmd::Action const action) -> cmd::Comm
                       cmd::CommandResultCallback{&MqttMessageHandler::HandleCommandResponse, this},
                       // Error Result Callback
                       cmd::ErrorResultCallback{&MqttMessageHandler::HandleErrorResponse, this}};
+}
+
+auto MqttMessageHandler::AddTimestamp(JsonDocument& json) -> void {
+  time::DateTime const now{time::TimeUtil::Now()};
+  time::FormattedTimeString formatted_timestamp{};
+  time::TimeUtil::Format(now, formatted_timestamp);
+
+  json[cmd::json::kTime] = formatted_timestamp;
 }
 
 // ---- Global Instance ----

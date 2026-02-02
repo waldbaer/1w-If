@@ -37,6 +37,7 @@ static constexpr char const* kActionSubscribeAcknowledge{"acknowledge"};
 static constexpr char const* kActionUnsubscribe{"unsubscribe"};
 
 // General attributes
+static constexpr char const* kTime{"time"};
 static constexpr char const* kDevice{"device"};
 static constexpr char const* kDevices{"devices"};
 static constexpr char const* kDeviceId{"device_id"};

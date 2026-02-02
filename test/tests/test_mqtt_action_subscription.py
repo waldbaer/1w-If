@@ -7,6 +7,7 @@ from tests.env.logger import Logger
 from tests.env.mqtt_fixture import mqtt_capture  # noqa: F401
 from tests.env.mqtt_protocol import MqttProtocol as p
 from tests.env.one_wire_device_def import OneWireDeviceDefinition as ow_dd
+from tests.env.time_util import TimeUtil
 
 # ---- Setup Test Environment ------------------------------------------------------------------------------------------
 config = ConfigModel.load_from_yaml()
@@ -48,6 +49,7 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
     assert len(cyclic_read_msgs) == expected_cyclic_reads
 
     # Verify subscribe ack and read responses
+    TimeUtil.assert_timestamp(subscribe_ack_msg.get(p.ATTRIB_TIME))
     assert subscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
 
@@ -57,6 +59,7 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
     for cyclic_read_msg in cyclic_read_msgs:
+        TimeUtil.assert_timestamp(cyclic_read_msg.get(p.ATTRIB_TIME))
         assert cyclic_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
         response_device = cyclic_read_msg.get(p.ATTRIB_DEVICE)
         assert response_device is not None
@@ -79,6 +82,7 @@ def test_mqtt_protocol_subscription_single_device_presence(mqtt_capture, device)
     unsubscribe_ack_msg = mqtt_capture.messages[0].as_json()
 
     # Verify unsubscribe ack response
+    TimeUtil.assert_timestamp(unsubscribe_ack_msg.get(p.ATTRIB_TIME))
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_UNSUBSCRIBE
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = unsubscribe_ack_msg.get(p.ATTRIB_DEVICE)
@@ -119,6 +123,7 @@ def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, devi
     assert len(cyclic_read_msgs) == expected_cyclic_reads
 
     # Verify subscribe ack and read responses
+    TimeUtil.assert_timestamp(subscribe_ack_msg.get(p.ATTRIB_TIME))
     assert subscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = subscribe_ack_msg.get(p.ATTRIB_DEVICE)
@@ -127,6 +132,7 @@ def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, devi
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
     for cyclic_read_msg in cyclic_read_msgs:
+        TimeUtil.assert_timestamp(cyclic_read_msg.get(p.ATTRIB_TIME))
         assert cyclic_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
         response_device = cyclic_read_msg.get(p.ATTRIB_DEVICE)
         assert response_device is not None
@@ -149,6 +155,7 @@ def test_mqtt_protocol_subscription_single_device_temperature(mqtt_capture, devi
     unsubscribe_ack_msg = mqtt_capture.messages[0].as_json()
 
     # Verify unsubscribe ack response
+    TimeUtil.assert_timestamp(unsubscribe_ack_msg.get(p.ATTRIB_TIME))
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_UNSUBSCRIBE
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = unsubscribe_ack_msg.get(p.ATTRIB_DEVICE)
@@ -180,6 +187,7 @@ def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_captur
     immediate_read_msg = mqtt_capture.messages[1].as_json()
 
     # Verify subscribe ack and immediate read response
+    TimeUtil.assert_timestamp(subscribe_ack_msg.get(p.ATTRIB_TIME))
     assert subscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = subscribe_ack_msg.get(p.ATTRIB_DEVICE)
@@ -187,6 +195,7 @@ def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_captur
     assert response_device.get(p.ATTRIB_CHANNEL) is None
     assert response_device.get(p.ATTRIB_DEVICE_ID) == str(device.device_id)
 
+    TimeUtil.assert_timestamp(immediate_read_msg.get(p.ATTRIB_TIME))
     assert immediate_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = immediate_read_msg.get(p.ATTRIB_DEVICE)
     assert response_device is not None
@@ -199,6 +208,8 @@ def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_captur
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "WARN: Already subscribed to device / attribute. Updating subscription."
@@ -219,6 +230,7 @@ def test_mqtt_protocol_subscription_single_device_already_subscribed(mqtt_captur
     unsubscribe_ack_msg = mqtt_capture.messages[0].as_json()
 
     # Verify unsubscribe ack response
+    TimeUtil.assert_timestamp(unsubscribe_ack_msg.get(p.ATTRIB_TIME))
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_UNSUBSCRIBE
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
     response_device = unsubscribe_ack_msg.get(p.ATTRIB_DEVICE)
@@ -246,6 +258,8 @@ def test_mqtt_protocol_subscription_single_device_not_subscribed(mqtt_capture, d
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "WARN: No subscription for requested device / attribute found."
@@ -270,6 +284,8 @@ def test_mqtt_protocol_subscription_single_device_missing_interval(mqtt_capture,
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attributes 'attribute' or 'interval'."
@@ -304,6 +320,8 @@ def test_mqtt_protocol_subscription_single_device_invalid_attribute(mqtt_capture
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attributes 'attribute' or 'interval'."
@@ -349,6 +367,7 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
     assert len(cyclic_read_msgs) == expected_cyclic_reads
 
     # Verify subscribe ack and read responses
+    TimeUtil.assert_timestamp(subscribe_ack_msg.get(p.ATTRIB_TIME))
     assert subscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_SUBSCRIBE
     assert subscribe_ack_msg.get(p.ATTRIB_CHANNEL) is None
     assert subscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
@@ -357,6 +376,7 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
     expected_devices = config.get_by_family_code(family_code)
 
     for cyclic_read_msg in cyclic_read_msgs:
+        TimeUtil.assert_timestamp(cyclic_read_msg.get(p.ATTRIB_TIME))
         assert cyclic_read_msg.get(p.ATTRIB_ACTION) == p.ACTION_READ
         response_devices = cyclic_read_msg.get(p.ATTRIB_DEVICES)
         assert response_devices is not None
@@ -383,6 +403,7 @@ def test_mqtt_protocol_subscription_family_presence(mqtt_capture, family_code) -
     unsubscribe_ack_msg = mqtt_capture.messages[0].as_json()
 
     # Verify unsubscribe ack response
+    TimeUtil.assert_timestamp(unsubscribe_ack_msg.get(p.ATTRIB_TIME))
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACTION) == p.ACTION_UNSUBSCRIBE
     assert unsubscribe_ack_msg.get(p.ATTRIB_CHANNEL) is None
     assert unsubscribe_ack_msg.get(p.ATTRIB_ACKNOWLEDGE) is True
@@ -407,6 +428,8 @@ def test_mqtt_protocol_subscription_family_not_subscribed(mqtt_capture, family_c
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "WARN: No subscription for requested device family found."
@@ -431,6 +454,8 @@ def test_mqtt_protocol_subscription_family_missing_interval(mqtt_capture, family
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attributes 'attribute' or 'interval'."
@@ -465,6 +490,8 @@ def test_mqtt_protocol_subscription_family_invalid_attribute(mqtt_capture, famil
 
     # Verify error response
     error_response_msg = mqtt_capture.messages[0].as_json()
+
+    TimeUtil.assert_timestamp(error_response_msg.get(p.ATTRIB_TIME))
     error = error_response_msg.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attributes 'attribute' or 'interval'."

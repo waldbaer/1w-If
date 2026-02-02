@@ -80,7 +80,7 @@ auto CommandHandler::ProcessCommandQueue() -> void {
   }
 }
 
-auto CommandHandler::SendCommandResponse(Command const& cmd, JsonDocument const& json) -> void {
+auto CommandHandler::SendCommandResponse(Command const& cmd, JsonDocument& json) -> void {
   if (cmd.result_callback.func != nullptr && cmd.result_callback.ctx != nullptr) {
     cmd.result_callback.func(cmd.result_callback.ctx, json);
   } else {
