@@ -28,6 +28,7 @@ An ESP32-based 1-Wire interface supporting access with physical ethernet and MQT
 * Responsive web interface for configuration
   <br/>
   ![Screenshot Dashboard / Console](doc/screenshots/web-dashboard-console.png)
+* NTP for clock synchronization
 * 3D printed housing
 
 ## Supported 1-Wire devices
@@ -79,7 +80,8 @@ Response:
 ```
 {
   "action": "restart",
-  "acknowledge": true
+  "acknowledge": true,
+  "time": "2026-02-03 20:20:07.955"
 }
 ```
 
@@ -138,7 +140,8 @@ Example Response:
       "attributes": ["presence", "temperature", "VAD", "VDD"]
     },
     ...
-  ]
+  ],
+  "time": "2026-02-03 20:16:46.010"
 }
 ```
 
@@ -162,7 +165,8 @@ Example Response:
     "channel": 1,
     "device_id": "28.8F0945161301",
     "temperature": 24.75
-  }
+  },
+  "time": "2025-02-03 19:10:07.955"
 }
 ```
 
@@ -188,7 +192,8 @@ Example Response:
       "temperature": 24.75
     },
     ...
-  ]
+  ],
+  "time": "2025-02-03 18:10:02.844"
 }
 ```
 
@@ -208,10 +213,11 @@ Example Response:
 {
   "action": "read",
   "device": {
-    "channel": 1,
+    "channel": 2,
     "device_id": "28.8F0945161301",
     "presence": true
-  }
+  },
+  "time": "2026-01-17 05:19:02.170"
 }
 ```
 
@@ -239,7 +245,8 @@ Example response acknowledging the successful subscription:
   "acknowledge": true,
   "device": {
     "device_id": "28.8F0945161301"
-  }
+  },
+  "time": "2025-08-05 13:10:22.970"
 }
 ```
 
@@ -269,9 +276,11 @@ Example of the `Read` command for attribute `presence` cyclically triggered by t
 {
   "action": "read",
   "device": {
+     "channel": 3,
      "device_id": "01.D2C79A1A0000",
      "presence": false
-  }
+  },
+  "time": "2026-01-20 14:55:36.781"
 }
 ```
 

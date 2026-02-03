@@ -8,6 +8,7 @@ from tests.env.mqtt_fixture import mqtt_capture  # noqa: F401
 from tests.env.mqtt_protocol import MqttProtocol as p
 from tests.env.one_wire_address import OneWireAddress
 from tests.env.one_wire_device_def import OneWireDeviceDefinition as ow_dd
+from tests.env.time_util import TimeUtil
 
 # ---- Setup Test Environment ------------------------------------------------------------------------------------------
 config = ConfigModel.load_from_yaml()
@@ -34,6 +35,7 @@ def test_mqtt_protocol_read_single_device_presence(mqtt_capture, device) -> None
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
@@ -59,6 +61,7 @@ def test_mqtt_protocol_read_single_device_temperature(mqtt_capture, device) -> N
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
@@ -84,6 +87,7 @@ def test_mqtt_protocol_read_single_device_vad(mqtt_capture, device) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
@@ -109,6 +113,7 @@ def test_mqtt_protocol_read_single_device_vdd(mqtt_capture, device) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
@@ -134,6 +139,7 @@ def test_mqtt_protocol_read_single_device_not_available(mqtt_capture) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_device = response.get(p.ATTRIB_DEVICE)
     assert response_device is not None
@@ -157,6 +163,7 @@ def test_mqtt_protocol_read_single_device_device_id_missing(mqtt_capture) -> Non
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     error = response.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attributes 'device_id' or 'family_code'."
@@ -183,6 +190,7 @@ def test_mqtt_protocol_read_single_device_attribute_missing(mqtt_capture, device
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     error = response.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attribute 'attribute'."
@@ -210,6 +218,7 @@ def test_mqtt_protocol_read_family_presence(mqtt_capture, family_code) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_devices = response.get(p.ATTRIB_DEVICES)
     assert response_devices is not None
@@ -241,6 +250,7 @@ def test_mqtt_protocol_read_family_temperature(mqtt_capture, family_code) -> Non
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_devices = response.get(p.ATTRIB_DEVICES)
     assert response_devices is not None
@@ -272,6 +282,7 @@ def test_mqtt_protocol_read_family_vad(mqtt_capture, family_code) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_devices = response.get(p.ATTRIB_DEVICES)
     assert response_devices is not None
@@ -303,6 +314,7 @@ def test_mqtt_protocol_read_family_vdd(mqtt_capture, family_code) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_devices = response.get(p.ATTRIB_DEVICES)
     assert response_devices is not None
@@ -334,6 +346,7 @@ def test_mqtt_protocol_read_family_not_available(mqtt_capture) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     assert response.get(p.ATTRIB_ACTION) == p.ACTION_READ
     response_devices = response.get(p.ATTRIB_DEVICES)
     assert response_devices is not None
@@ -356,6 +369,7 @@ def test_mqtt_protocol_read_family_family_code_missing(mqtt_capture) -> None:
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     error = response.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attributes 'device_id' or 'family_code'."
@@ -382,6 +396,7 @@ def test_mqtt_protocol_read_family_attribute_missing(mqtt_capture, family_code) 
     response = mqtt_capture.messages[0].as_json()
 
     # Verify response
+    TimeUtil.assert_timestamp(response.get(p.ATTRIB_TIME))
     error = response.get(p.ATTRIB_ERROR)
     assert error is not None
     assert error.get(p.ATTRIB_MESSAGE) == "Missing or invalid JSON attribute 'attribute'."
