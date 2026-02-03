@@ -286,15 +286,18 @@ Example of the `Read` command for attribute `presence` cyclically triggered by t
 
 ## Development
 
-### Software
+### Firmware
 ```
+cd firmware
+
 # Build firmware
 ./build.sh
 
 # Flash firmware + LittleFS filesystem
+./flash.sh
 ./flash-fs.sh
 
-# Optional: Monitor via serial outputs
+# Optional: Monitor via websocket
 ./monitor.sh
 ```
 
