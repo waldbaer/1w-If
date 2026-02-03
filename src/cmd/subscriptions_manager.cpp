@@ -26,7 +26,7 @@ auto SubscriptionsManager::Loop() -> void {
     }
   }
 
-  for (SubsciptionsMapFamily::value_type& family_subscription : subscriptions_family_) {
+  for (SubscriptionsMapFamily::value_type& family_subscription : subscriptions_family_) {
     if (family_subscription.second.timer.IsExpired()) {
       logger_.Verbose("[SubscriptionsManager] Trigger command [action=%u] after interval:%u ms\n",
                       family_subscription.second.command.action, family_subscription.second.timer.GetDelay());
@@ -83,7 +83,7 @@ auto SubscriptionsManager::ProcessActionSubscribe(Command& cmd) -> void {
 
     ConvertSubscribeToReadCommand(cmd);
 
-    std::pair<SubsciptionsMapFamily::iterator, bool> const emplace_result{
+    std::pair<SubscriptionsMapFamily::iterator, bool> const emplace_result{
         subscriptions_family_.emplace(SubscriptionKeyFamily{family_code, device_attribute},
                                       SubscriptionInfo{Timer{subscription_interval.value}, cmd})};
     if (emplace_result.second) {
@@ -146,7 +146,7 @@ auto SubscriptionsManager::ProcessActionUnsubscribe(Command& cmd) -> void {
     logger_.Debug(F("[SubscriptionsManager] Unsubscribing from device family: 0x%X, attribute: %u"), family_code,
                   device_attribute);
 
-    SubsciptionsMapFamily::iterator found_subscription(
+    SubscriptionsMapFamily::iterator found_subscription(
         subscriptions_family_.find(SubscriptionKeyFamily{family_code, device_attribute}));
     if (found_subscription != subscriptions_family_.end()) {
       subscriptions_family_.erase(found_subscription);

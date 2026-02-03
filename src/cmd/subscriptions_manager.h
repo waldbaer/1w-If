@@ -63,8 +63,8 @@ class SubscriptionsManager final {
   using SubscriptionsMapDevice = std::map<SubscriptionKeyDevice, SubscriptionInfo>;
   SubscriptionsMapDevice subscriptions_device_{};
 
-  using SubsciptionsMapFamily = std::map<SubscriptionKeyFamily, SubscriptionInfo>;
-  SubsciptionsMapFamily subscriptions_family_{};
+  using SubscriptionsMapFamily = std::map<SubscriptionKeyFamily, SubscriptionInfo>;
+  SubscriptionsMapFamily subscriptions_family_{};
 };
 
 }  // namespace cmd
