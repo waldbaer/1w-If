@@ -4,7 +4,10 @@
     {
       "label": "1wIf: Build",
       "type": "shell",
-      "command": "${workspaceFolder}/build.sh",
+      "command": "./build.sh",
+      "options": {
+        "cwd": "${workspaceFolder}/firmware/"
+      },
       "args": [],
       "group": {
         "kind": "build",
@@ -15,7 +18,38 @@
     {
       "label": "1wIf: Flash",
       "type": "shell",
-      "command": "${workspaceFolder}/flash.sh",
+      "command": "./flash.sh",
+      "options": {
+        "cwd": "${workspaceFolder}/firmware"
+      },
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "1wIf: Flash+FS",
+      "type": "shell",
+      "command": "./flash.sh && ./flash-fs.sh",
+      "options": {
+        "cwd": "${workspaceFolder}/firmware"
+      },
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "1wIf: monitor",
+      "type": "shell",
+      "command": "./monitor.sh",
+      "options": {
+        "cwd": "${workspaceFolder}/firmware"
+      },
       "args": [],
       "group": {
         "kind": "build",
@@ -26,7 +60,24 @@
     {
       "label": "1wIf: Build, Flash & Monitor",
       "type": "shell",
-      "command": "${workspaceFolder}/build.sh && ${workspaceFolder}/flash.sh && ${workspaceFolder}/monitor.sh",
+      "command": "./flash.sh && ./monitor.sh",
+      "options": {
+        "cwd": "${workspaceFolder}/firmware"
+      },
+      "args": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+    },
+    {
+      "label": "1wIf: Build, Flash+FS & Monitor",
+      "type": "shell",
+      "command": "./flash.sh && ./flash-fs.sh && /monitor.sh",
+      "options": {
+        "cwd": "${workspaceFolder}/firmware"
+      },
       "args": [],
       "group": {
         "kind": "build",

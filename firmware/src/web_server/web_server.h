@@ -49,6 +49,8 @@ class WebServer {
   static constexpr char const* kHeaderSetCookie{"Set-Cookie"};
   static constexpr char const* kSessionCookieName{"OWIF_SESSION_ID="};
 
+  static constexpr char const* kTemplateVarHostname{"HOSTNAME"};
+
   static constexpr char const* kLoginParamUser{"user"};
   static constexpr char const* kLoginParamPassword{"pass"};
 

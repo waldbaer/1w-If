@@ -179,7 +179,14 @@ auto WebServer::RedirectTo(AsyncWebServerRequest* request, char const* location)
 }
 
 auto WebServer::HandleLoginGet(AsyncWebServerRequest* request) -> void {
-  request->send(LittleFS, "/login.html", kContextTypeHtml);
+  request->send(LittleFS, "/login.html", kContextTypeHtml, false, [this](String const& var) {
+    if (var == kTemplateVarHostname) {
+      return String{ETH.getHostname()};
+    } else {
+      logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
+      return String{};
+    }
+  });
 }
 
 auto WebServer::HandleLoginPost(AsyncWebServerRequest* request) -> void {
@@ -245,6 +252,8 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
   request->send(LittleFS, "/index.html", kContextTypeHtml, false, [this](String const& var) {
     if (var == "OW_DEVICES") {
       return web_socket::WebSocketProtocol::SerializeOneWireDeviceMap(*one_wire_system_);
+    } else if (var == kTemplateVarHostname) {
+      return String{ETH.getHostname()};
     } else if (var == "VERSION_INFO") {
       return String{kOwIfVersion};
     } else if (var == "UPTIME") {
@@ -254,10 +263,9 @@ auto WebServer::HandleDashboard(AsyncWebServerRequest* request) -> void {
     } else if (var == "ETH_INFO") {
       std::uint8_t constexpr formatted_eth_info_size{100};
       char formatted_eth_info[formatted_eth_info_size];
-      // snprintf(formatted_eth_info, formatted_eth_info_size, "IP: %s MAC: %s Speed: %u Mbit/s (%s) Hostname: %s");
-      snprintf(formatted_eth_info, formatted_eth_info_size, "IP: %s MAC: %s Speed: %u Mbit/s (%s) Hostname: %s",
+      snprintf(formatted_eth_info, formatted_eth_info_size, "IP: %s MAC: %s Speed: %u Mbit/s (%s)",
                ETH.localIP().toString().c_str(), ETH.macAddress().c_str(), ETH.linkSpeed(),
-               ETH.fullDuplex() ? F("FULL_DUPLEX") : F("HALF_DUPLEX"), ETH.getHostname());
+               ETH.fullDuplex() ? F("FULL_DUPLEX") : F("HALF_DUPLEX"));
 
       return String{formatted_eth_info};
     } else if (var == "BOARD_TEMP") {
@@ -425,8 +433,11 @@ auto WebServer::HandleConfig(AsyncWebServerRequest* request) -> void {
   request->send(LittleFS, "/config.html", kContextTypeHtml, false,
                 [this, logging_config, onewire_config, ethernet_config, ota_config, webserver_config, mqtt_config,
                  ntp_config](String const& var) {
+                  if (var == kTemplateVarHostname) {
+                    return String{ETH.getHostname()};
+                  }
                   // LoggingConfig
-                  if (var == "LOG_LEVEL") {
+                  else if (var == "LOG_LEVEL") {
                     return String{static_cast<std::underlying_type_t<logging::LogLevel>>(logging_config.GetLogLevel())};
                   } else if (var == "LOG_SERIAL") {
                     return ToTemplateCheckOption(logging_config.GetSerialLogEnabled());
@@ -492,7 +503,15 @@ auto WebServer::HandleOta(AsyncWebServerRequest* request) -> void {
     RedirectTo(request, "/login");
     return;
   }
-  request->send(LittleFS, "/ota.html", kContextTypeHtml);
+  request->send(LittleFS, "/ota.html", kContextTypeHtml, false, [this](String const& var) {
+    if (var == kTemplateVarHostname) {
+      return String{ETH.getHostname()};
+    }  // Unknown
+    else {
+      logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
+      return String();
+    }
+  });
 }
 
 auto WebServer::HandleOtaRequest(AsyncWebServerRequest* request) -> void {
@@ -537,7 +556,15 @@ auto WebServer::HandleConsole(AsyncWebServerRequest* request) -> void {
     RedirectTo(request, "/login");
     return;
   }
-  request->send(LittleFS, "/console.html", kContextTypeHtml);
+  request->send(LittleFS, "/console.html", kContextTypeHtml, false, [this](String const& var) {
+    if (var == kTemplateVarHostname) {
+      return String{ETH.getHostname()};
+    }  // Unknown
+    else {
+      logger_.Warn(F("[WebServer] Ignoring HTML template variable: %s"), var);
+      return String();
+    }
+  });
 }
 
 auto WebServer::ToTemplateCheckOption(bool check_option) -> String {
