@@ -8,6 +8,7 @@
 #include "cmd/ds2438_command_handler.h"
 #include "cmd/json_builder.h"
 #include "cmd/json_constants.h"
+#include "logging/status_led.h"
 
 namespace owif {
 namespace cmd {
@@ -54,6 +55,8 @@ auto CommandHandler::ProcessCommandQueue() -> void {
 
   if (queue_receive_result == pdTRUE) {
     if (cmd.timer.IsExpired()) {
+      logging::status_led_g.Off();
+
       switch (cmd.action) {
         case cmd::Action::Restart:
           ProcessActionRestart(cmd);
@@ -74,6 +77,9 @@ auto CommandHandler::ProcessCommandQueue() -> void {
           logger_.Error(F("[CmdHandler] Unknown/Unsupport command action type: %u"), cmd.action);
           SendErrorResponse(cmd, "Unknown/Unsupport command action type");
       }
+
+      logging::status_led_g.On();
+
     } else {
       EnqueueCommand(cmd);
     }
