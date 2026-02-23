@@ -28,6 +28,8 @@ static constexpr char const* kRootAction{"action"};
 static constexpr char const* kActionRestart{"restart"};
 static constexpr char const* kActionRestartAcknowledge{"acknowledge"};
 
+static constexpr char const* kActionSysInfo{"sysinfo"};
+
 static constexpr char const* kActionScan{"scan"};
 static constexpr char const* kAttributePresence{"presence"};
 
@@ -40,6 +42,16 @@ static constexpr char const* kActionSubscribe{"subscribe"};
 static constexpr char const* kActionSubscribeInterval{"interval"};
 static constexpr char const* kActionSubscribeAcknowledge{"acknowledge"};
 static constexpr char const* kActionUnsubscribe{"unsubscribe"};
+
+// SysInfo attributes
+static constexpr char const* kVersion{"version"};
+static constexpr char const* kUptime{"uptime"};
+static constexpr char const* kBoardTemp{"board_temp"};
+static constexpr char const* kEthernetInfo{"ethernet"};
+static constexpr char const* kEthernetIpAddress{"ip"};
+static constexpr char const* kEthernetMacAddress{"mac"};
+static constexpr char const* kEthernetLinkSpeed{"link_speed"};
+static constexpr char const* kEthernetLinkMode{"link_mode"};
 
 // General attributes
 static constexpr char const* kTime{"time"};

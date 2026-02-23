@@ -14,10 +14,11 @@ namespace cmd {
 
 enum class Action : std::uint8_t {
   Restart = 0x00,
-  Scan = 0x01,
-  Read = 0x02,
-  Subscribe = 0x03,
-  Unsubscribe = 0x04,
+  SysInfo = 0x01,
+  Scan = 0x02,
+  Read = 0x03,
+  Subscribe = 0x04,
+  Unsubscribe = 0x05,
 };
 
 enum class SubAction : std::uint8_t {
