@@ -5,6 +5,7 @@ class MqttProtocol:
     """
 
     # --- Common field names ---
+    ATTRIB_STATE = "state"
     ATTRIB_TIME = "time"
     ATTRIB_ACTION = "action"
     ATTRIB_DEVICE = "device"
@@ -30,3 +31,7 @@ class MqttProtocol:
     ACTION_READ = "read"
     ACTION_SUBSCRIBE = "subscribe"
     ACTION_UNSUBSCRIBE = "unsubscribe"
+
+    # ---- Common attribute values ----
+    VALUE_STATE_ONLINE = "online"
+    VALUE_STATE_OFFLINE = "offline"

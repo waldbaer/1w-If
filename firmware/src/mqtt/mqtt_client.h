@@ -66,7 +66,12 @@ class MqttClient {
                MqttRetain retain = MqttRetain::kNoRetain) -> MqttMsgId;
   auto Subscribe(String topic, MessageHandler handler, MqttQoS qos = MqttQoS::kQoS0) -> MqttMsgId;
 
+  auto GetTopicCmd() -> char const*;
+  auto GetTopicStatus() -> char const*;
+
  private:
+  static constexpr std::size_t kReconnectDelay{10 * 1000};  // ms
+
   auto OnConnectionStateChange(ethernet::ConnectionState connection_state) -> void;
 
   auto Connect() -> void;
@@ -81,17 +86,24 @@ class MqttClient {
 
   auto NotifyConnectionStateChangeHandlers() -> void;
 
+  auto SetLwtOffline() -> void;
+  auto SendLwtOnline() -> void;
+
   logging::Logger& logger_{logging::logger_g};
 
   config::MqttConfig config_;
   ::AsyncMqttClient mqtt_client_{};
 
   std::size_t reconnect_time_{0};
-  static constexpr std::size_t kReconnectDelay{10 * 1000};  // ms
 
   ConnectionState connection_state_{ConnectionState::kDisconnected};
   std::vector<ConnectionStateChangeHandler> connection_state_change_handlers_{};
   std::map<String, MessageHandler> topic_handlers_{};
+
+  String topic_cmd_{};
+  String topic_status_{};
+
+  String lwt_offline_{};
 };
 
 extern MqttClient mqtt_client_g;

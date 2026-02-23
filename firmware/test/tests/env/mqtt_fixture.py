@@ -7,6 +7,8 @@ import paho.mqtt.client as mqtt
 import pytest
 
 from tests.env.mqtt_message import MqttMessage
+from tests.env.mqtt_protocol import MqttProtocol as p
+from tests.env.time_util import TimeUtil
 
 logger = logging.getLogger(__name__)
 
@@ -149,7 +151,7 @@ def mqtt_capture(request: pytest.FixtureRequest) -> MqttCaptureFixture:
     assert mqtt_config_marker is not None
     mqtt_config = mqtt_config_marker.args[0]
 
-    result = MqttCaptureFixture(
+    mqtt_capture = MqttCaptureFixture(
         decode_utf8=False,
         host=mqtt_config.broker,
         port=mqtt_config.port,
@@ -160,5 +162,12 @@ def mqtt_capture(request: pytest.FixtureRequest) -> MqttCaptureFixture:
 
     time.sleep(0.05)
 
-    yield result
-    result.finalize()
+    # Wait for LWT online sent immediately after subscription to status topic
+    mqtt_capture.wait_for_messages()
+    assert len(mqtt_capture.messages) == 1
+    lwt_online_msg = mqtt_capture.messages[0].as_json()
+    TimeUtil.assert_timestamp(lwt_online_msg.get(p.ATTRIB_TIME), TimeUtil.DISABLE_MAX_DELTA_CHECK)
+    mqtt_capture.messages.clear()
+
+    yield mqtt_capture
+    mqtt_capture.finalize()

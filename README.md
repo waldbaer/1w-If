@@ -56,7 +56,7 @@ Default login:
 
 General MQTT topic for commands: `%topic%/cmd`
 
-General MQTT topic for responses: `%topic%/stat`
+General MQTT topic for responses and status: `%topic%/stat`
 
 Payload Format:
 
@@ -283,6 +283,33 @@ Example of the `Read` command for attribute `presence` cyclically triggered by t
   "time": "2026-01-20 14:55:36.781"
 }
 ```
+
+### Last Will and Testament
+
+The MQTT Last Will and Testament (LWT) message is published to the `%topic%/stat` topic.
+
+The LWT contains the attribute `state` with the value `offline`.
+It also includes the timestamp of when the LWT was registered with the MQTT broker.
+
+Example:
+```
+{
+  "state": "offline",
+  "time": "2026-02-27 21:52:59.016"
+}
+```
+
+During startup and registration with the MQTT broker, the same message is published with `state` set to `online`.
+In this case, the timestamp contains the time of the initial MQTT subscription performed by the 1-Wire interface.
+
+Example:
+```
+{
+  "state": "online",
+  "time": "2026-02-27 22:04:17.125"
+}
+```
+
 
 ## Development
 

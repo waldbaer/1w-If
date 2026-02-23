@@ -21,6 +21,8 @@ class JsonBuilder final {
 
   ~JsonBuilder() = delete;
 
+  static auto AddTimestamp(JsonDocument& json) -> void;
+
   static auto AddDeviceAttributes(one_wire::OneWireSystem* one_wire_system, JsonObject& json,
                                   one_wire::OneWireAddress const& ow_address) -> void;
 };
