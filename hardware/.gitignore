@@ -36,3 +36,7 @@ fp-info-cache
 # Production output
 jlcpcb/production_files
 jlcpcb/gerber
+
+# 3D-Print
+*.3mf
+*.gcode

@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "./build.sh",
       "options": {
-        "cwd": "${workspaceFolder}/firmware/"
+        "cwd": "${workspaceFolder}"
       },
       "args": [],
       "group": {
@@ -20,7 +20,7 @@
       "type": "shell",
       "command": "./flash.sh",
       "options": {
-        "cwd": "${workspaceFolder}/firmware"
+        "cwd": "${workspaceFolder}"
       },
       "args": [],
       "group": {
@@ -34,7 +34,7 @@
       "type": "shell",
       "command": "./flash.sh && ./flash-fs.sh",
       "options": {
-        "cwd": "${workspaceFolder}/firmware"
+        "cwd": "${workspaceFolder}"
       },
       "args": [],
       "group": {
@@ -48,7 +48,7 @@
       "type": "shell",
       "command": "./monitor.sh",
       "options": {
-        "cwd": "${workspaceFolder}/firmware"
+        "cwd": "${workspaceFolder}"
       },
       "args": [],
       "group": {
@@ -62,7 +62,7 @@
       "type": "shell",
       "command": "./flash.sh && ./monitor.sh",
       "options": {
-        "cwd": "${workspaceFolder}/firmware"
+        "cwd": "${workspaceFolder}"
       },
       "args": [],
       "group": {
@@ -76,7 +76,7 @@
       "type": "shell",
       "command": "./flash.sh && ./flash-fs.sh && /monitor.sh",
       "options": {
-        "cwd": "${workspaceFolder}/firmware"
+        "cwd": "${workspaceFolder}"
       },
       "args": [],
       "group": {
