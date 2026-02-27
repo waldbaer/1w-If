@@ -5,6 +5,7 @@
 
 #include "cmd/command.h"
 #include "cmd/command_handler.h"
+#include "cmd/json_builder.h"
 #include "cmd/json_constants.h"
 #include "cmd/json_parser.h"
 #include "config/mqtt_config.h"
@@ -19,16 +20,13 @@ auto MqttMessageHandler::Begin(MqttClient* mqtt_client, cmd::CommandHandler* com
   bool result{true};
 
   mqtt_client_ = mqtt_client;
-  mqtt_config_ = config::persistency_g.LoadMqttConfig();
-  mqtt_topic_cmd_ = mqtt_config_.GetTopic() + "/cmd";
-  mqtt_topic_stat_ = mqtt_config_.GetTopic() + "/stat";
 
   command_handler_ = command_handler;
 
   mqtt_client_->OnConnectionStateChange([this](ConnectionState connection_state) {
     if (connection_state == ConnectionState::kConnected) {
       MqttMsgId msg_id{mqtt_client_->Subscribe(
-          mqtt_topic_cmd_.c_str(),
+          mqtt_client_->GetTopicCmd(),
           [this](String topic, String payload, MqttMsgProps props) { ProcessMessage(topic, payload, props); })};
     }
   });
@@ -206,12 +204,12 @@ auto MqttMessageHandler::HandleErrorResponse(void* ctx, char const* error_messag
 }
 
 auto MqttMessageHandler::SendCommandResponse(JsonDocument& command_result) -> void {
-  AddTimestamp(command_result);
+  cmd::json::JsonBuilder::AddTimestamp(command_result);
 
   String command_result_serialized{};
   serializeJson(command_result, command_result_serialized);
 
-  mqtt_client_->Publish(mqtt_topic_stat_.c_str(), command_result_serialized.c_str());
+  mqtt_client_->Publish(mqtt_client_->GetTopicStatus(), command_result_serialized.c_str());
 }
 
 auto MqttMessageHandler::SendErrorResponse(char const* error_message, char const* request_json) -> void {
@@ -240,11 +238,11 @@ auto MqttMessageHandler::SendErrorResponse(char const* error_message, JsonDocume
     json_error[cmd::json::kErrorRequest] = nullptr;
   }
 
-  AddTimestamp(json);
+  cmd::json::JsonBuilder::AddTimestamp(json);
 
   String error_result_serialized{};
   serializeJson(json, error_result_serialized);
-  mqtt_client_->Publish(mqtt_topic_stat_.c_str(), error_result_serialized.c_str());
+  mqtt_client_->Publish(mqtt_client_->GetTopicStatus(), error_result_serialized.c_str());
 }
 
 // ---- Utilities ----
@@ -261,14 +259,6 @@ auto MqttMessageHandler::InitEmptyCommand(cmd::Action const action) -> cmd::Comm
                       cmd::CommandResultCallback{&MqttMessageHandler::HandleCommandResponse, this},
                       // Error Result Callback
                       cmd::ErrorResultCallback{&MqttMessageHandler::HandleErrorResponse, this}};
-}
-
-auto MqttMessageHandler::AddTimestamp(JsonDocument& json) -> void {
-  time::DateTime const now{time::TimeUtil::Now()};
-  time::FormattedTimeString formatted_timestamp{};
-  time::TimeUtil::Format(now, formatted_timestamp);
-
-  json[cmd::json::kTime] = formatted_timestamp;
 }
 
 // ---- Global Instance ----

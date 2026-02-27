@@ -5,6 +5,8 @@
 #include <string>
 #include <type_traits>
 
+#include "cmd/json_builder.h"
+#include "cmd/json_constants.h"
 #include "config/persistency.h"
 #include "ethernet/ethernet.h"
 #include "util/language.h"
@@ -36,6 +38,9 @@ auto MqttClient::Begin() -> bool {
   // Register Ethernet connection state change handler starting / stopping the WebServer
   ethernet::ethernet_g.OnConnectionStateChange(
       [this](ethernet::ConnectionState connection_state) { OnConnectionStateChange(connection_state); });
+
+  // Set Last Will and Testament (LWT)
+  SetLwtOffline();
 
   return true;
 }
@@ -80,6 +85,20 @@ auto MqttClient::Subscribe(String topic, MessageHandler handler, MqttQoS qos) ->
   return MqttMsgId{mqtt_client_.subscribe(topic.c_str(), static_cast<std::underlying_type_t<MqttQoS>>(qos))};
 }
 
+auto MqttClient::GetTopicCmd() -> char const* {
+  if (topic_cmd_.isEmpty()) {
+    topic_cmd_ = config_.GetTopic() + "/cmd";
+  }
+  return topic_cmd_.c_str();
+}
+
+auto MqttClient::GetTopicStatus() -> char const* {
+  if (topic_status_.isEmpty()) {
+    topic_status_ = config_.GetTopic() + "/stat";
+  }
+  return topic_status_.c_str();
+}
+
 // ---- Private APIs ---------------------------------------------------------------------------------------------------
 
 auto MqttClient::Connect() -> void {
@@ -105,6 +124,8 @@ auto MqttClient::OnConnected(bool session_present) -> void {
 
   connection_state_ = ConnectionState::kConnected;
   NotifyConnectionStateChangeHandlers();
+
+  SendLwtOnline();
 }
 
 auto MqttClient::OnDisconnect(AsyncMqttClientDisconnectReason reason) -> void {
@@ -146,6 +167,30 @@ auto MqttClient::NotifyConnectionStateChangeHandlers() -> void {
   for (ConnectionStateChangeHandler& handler : connection_state_change_handlers_) {
     handler(connection_state_);
   }
+}
+
+auto MqttClient::SetLwtOffline() -> void {
+  JsonDocument lwt_json{};
+  lwt_json[cmd::json::kRootState] = cmd::json::kStateOffline;
+  cmd::json::JsonBuilder::AddTimestamp(lwt_json);
+
+  String lwt_serialized{};
+  serializeJson(lwt_json, lwt_offline_);
+
+  mqtt_client_.setWill(/*topic=*/GetTopicStatus(),
+                       /*qos=*/static_cast<std::underlying_type_t<MqttQoS>>(MqttQoS::kQoS1),
+                       /*retain=*/true,
+                       /*payload=*/lwt_offline_.c_str());
+}
+
+auto MqttClient::SendLwtOnline() -> void {
+  JsonDocument lwt_json{};
+  lwt_json[cmd::json::kRootState] = cmd::json::kStateOnline;
+  cmd::json::JsonBuilder::AddTimestamp(lwt_json);
+
+  String lwt_serialized{};
+  serializeJson(lwt_json, lwt_serialized);
+  Publish(GetTopicStatus(), lwt_serialized.c_str(), MqttQoS::kQoS1, MqttRetain::kRetain);
 }
 
 // ---- Global Instance ----

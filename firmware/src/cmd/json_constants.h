@@ -12,6 +12,11 @@ namespace owif {
 namespace cmd {
 namespace json {
 
+// Status / LWT
+static constexpr char const* kRootState{"state"};
+static constexpr char const* kStateOnline{"online"};
+static constexpr char const* kStateOffline{"offline"};
+
 // Error Handling
 static constexpr char const* kRootError{"error"};
 static constexpr char const* kErrorMessage{"message"};

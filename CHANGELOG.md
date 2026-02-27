@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - (not yet released)
+
+### Features
+* Support MQTT Last Will and Testament (LWT)
+
+### Fixes / Improvements
+* Improve housing
+
 ## [1.0.0] - 2026-02-06
 
 **Initial release**
