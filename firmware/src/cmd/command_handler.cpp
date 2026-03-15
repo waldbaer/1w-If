@@ -8,7 +8,10 @@
 #include "cmd/ds2438_command_handler.h"
 #include "cmd/json_builder.h"
 #include "cmd/json_constants.h"
+#include "ethernet/ethernet.h"
 #include "logging/status_led.h"
+#include "time/time_util.h"
+#include "version_info.h"
 
 namespace owif {
 namespace cmd {
@@ -60,6 +63,9 @@ auto CommandHandler::ProcessCommandQueue() -> void {
       switch (cmd.action) {
         case cmd::Action::Restart:
           ProcessActionRestart(cmd);
+          break;
+        case cmd::Action::SysInfo:
+          ProcessActionSysInfo(cmd);
           break;
         case cmd::Action::Scan:
           ProcessActionScan(cmd);
@@ -117,6 +123,34 @@ auto CommandHandler::ProcessActionRestart(Command& cmd) -> void {
 
   logger_.Info(F("[CmdHandler] >> RESTART Hardware << (requested via remote command)"));
   ESP.restart();
+}
+
+/*!
+ * no parameters
+ */
+auto CommandHandler::ProcessActionSysInfo(Command& cmd) -> void {
+  JsonDocument response_json{};
+  response_json[json::kRootAction] = json::kActionSysInfo;
+  response_json[json::kRootState] = json::kStateOnline;
+  response_json[json::kVersion] = String{kOwIfVersion};
+
+  // uptime
+  time::FormattedTimeString formatted_uptime{};
+  time::TimeUtil::Format(time::TimeUtil::TimeSinceStartup(), formatted_uptime);
+  response_json[json::kUptime] = String{formatted_uptime};
+
+  // Board temperature
+  float const board_temperature_rounded{roundf(temperatureRead() * 10.0f) / 10.0f};
+  response_json[json::kBoardTemp] = board_temperature_rounded;
+
+  // Ethernet info
+  JsonObject json_eth_info{response_json[json::kEthernetInfo].to<JsonObject>()};
+  json_eth_info[json::kEthernetIpAddress] = ETH.localIP().toString();
+  json_eth_info[json::kEthernetMacAddress] = ETH.macAddress().c_str();
+  json_eth_info[json::kEthernetLinkSpeed] = ETH.linkSpeed();
+  json_eth_info[json::kEthernetLinkMode] = ETH.fullDuplex() ? F("FULL_DUPLEX") : F("HALF_DUPLEX");
+
+  SendCommandResponse(cmd, response_json);
 }
 
 /*!

@@ -53,6 +53,8 @@ auto MqttMessageHandler::ProcessMessage(String topic, String payload, MqttMsgPro
 
     if (action == cmd::json::kActionRestart) {
       ProcessActionRestart(json);
+    } else if (action == cmd::json::kActionSysInfo) {
+      ProcessActionSysInfo(json);
     } else if (action == cmd::json::kActionScan) {
       ProcessActionScan(json);
     } else if (action == cmd::json::kActionRead) {
@@ -76,6 +78,16 @@ auto MqttMessageHandler::ProcessActionRestart(JsonDocument json) -> void {
   logger_.Debug("[MqttMessageHandler] Process action 'restart'");
 
   cmd::Command const cmd{InitEmptyCommand(cmd::Action::Restart)};
+  command_handler_->EnqueueCommand(cmd);
+}
+
+/*!
+ * no parameters
+ */
+auto MqttMessageHandler::ProcessActionSysInfo(JsonDocument json) -> void {
+  logger_.Debug("[MqttMessageHandler] Process action 'sysinfo'");
+
+  cmd::Command const cmd{InitEmptyCommand(cmd::Action::SysInfo)};
   command_handler_->EnqueueCommand(cmd);
 }
 

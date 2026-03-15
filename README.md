@@ -85,6 +85,32 @@ Response:
 }
 ```
 
+#### Command 'SysInfo'
+
+Get system info.
+```
+{
+  "action": "sysinfo",
+}
+```
+
+Response:
+```
+{
+  "action": "sysinfo",
+  "state": "online",
+  "version": "1.1.0",
+  "uptime": "14d 12:07:12.834",
+  "board_temp": 43.9,
+  "ethernet": {
+    "ip": "192.168.0.100",
+    "mac": "89:30:5A:47:7D:0C",
+    "link_speed": 100,
+    "link_mode": "FULL_DUPLEX"
+  },
+  "time": "2026-03-15 17:02:09.720"
+}
+```
 
 #### Command 'Scan'
 

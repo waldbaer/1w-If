@@ -33,6 +33,7 @@ class MqttMessageHandler {
   auto ProcessMessage(String topic, String payload, MqttMsgProps props) -> void;
 
   auto ProcessActionRestart(JsonDocument json) -> void;
+  auto ProcessActionSysInfo(JsonDocument json) -> void;
   auto ProcessActionScan(JsonDocument json) -> void;
   auto ProcessActionRead(JsonDocument json) -> void;
   auto ProcessActionSubscribe(JsonDocument json) -> void;
